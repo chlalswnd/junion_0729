@@ -1,0 +1,105 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.boot.DAO.CompanyListDAO">
+
+<!-- 	민중  com_job, com_stack, notice_num, com_scrap, com_no 제외--> <!-- 기업 리스트 목록 페이지-->
+ <!-- 07/25 민중 com_year dateformat 년도만 추출 추가-->
+<!--    <select id="comList" resultType="com.boot.DTO.CompanyInfoDTO">-->
+<!--	   select com_email, com_pw, com_pw_check, com_name, com_serial_number, -->
+<!--		  user_type, com_tel, com_star, com_location, date_format(com_year, "%Y") as com_year, com_content, -->
+<!--		  com_sale, com_type, com_salary, com_CEO, com_site, com_employee, -->
+<!--		  com_person, update_date,-->
+<!--	        TIMESTAMPDIFF(YEAR, com_year, CURDATE()) AS experienceYears,-->
+<!--	        TIMESTAMPDIFF(MONTH, com_year, CURDATE()) % 12 AS experienceMonths-->
+<!--	    FROM COM_TB-->
+<!--	    ORDER BY update_date DESC-->
+<!--    </select>-->
+ <!-- 07/25 민중 com_tb + com_stack 연결 변경-->
+<!--    <select id="comList" resultType="com.boot.DTO.CompanyListDTO">-->
+<!--    select ct.com_email, com_pw, com_pw_check, com_name, com_serial_number, -->
+<!--		  user_type, com_tel, com_star, com_location, date_format(com_year, "%Y") as com_year, com_content, -->
+<!--		  com_sale, com_type, com_salary, com_CEO, com_site, com_employee, -->
+<!--		  com_person, update_date, cs.stack as com_stack,-->
+<!--	        TIMESTAMPDIFF(YEAR, com_year, CURDATE()) AS experienceYears,-->
+<!--	        TIMESTAMPDIFF(MONTH, com_year, CURDATE()) % 12 AS experienceMonths-->
+<!--	    FROM COM_TB ct -->
+<!--        left join com_stack cs-->
+<!--        on ct.com_email = cs.com_email-->
+<!--	    ORDER BY update_date DESC-->
+<!--    </select>-->
+<!--    <select id="comList" resultType="com.boot.DTO.CompanyInfoDTO">-->
+<!--		  select com_email, com_pw, com_pw_check, com_name, com_serial_number, -->
+<!--		  user_type, com_tel, com_star, com_location, com_year, com_content, -->
+<!--		  com_sale, com_type, com_salary, com_CEO, com_site, com_employee, -->
+<!--		  com_person, update_date from COM_TB-->
+<!--		  order by update_date desc-->
+<!--    </select>-->
+
+<!--//	0725 10:40 민중-->
+    <select id="getStackList" resultType="String"> 
+    	SELECT stack_name FROM stack 
+    </select>
+	
+	<select id="getLocationList" resultType="String"> 
+		SELECT location_name FROM location
+	</select>
+	<!-- 민중 끝-->
+    <select id="getTotalCount" resultType="int"> 
+		SELECT count(*) FROM com_tb
+	</select>
+	
+	
+		<sql id="orderType">
+<!--		<if test='(orderType == "recommendation" and cri.login_usertype == "1")'> 큰 따옴표 때문에 char타입이 적용이 안됐음 -->
+<!--		<if test="(orderType == 'recommendation' and cri.login_usertype == '1')">-->
+<!--			ORDER BY r.resume_num-->
+<!--			ORDER BY stack_names like concat ('%','Android','%') DESC-->
+<!--		</if>-->
+<!--		<if test="(orderType == 'recommendation' and cri.login_usertype == '2')">-->
+<!--			ORDER BY stack_names like concat ('%','JAVA','%') DESC-->
+<!--		</if>-->
+		<if test='(orderType == "latest")'>
+			ORDER BY update_date DESC
+		</if>
+	</sql>
+	<sql id="criteria4">
+		<if test='(cri.stackType != null and cri.stackType != "")'>
+<!--			AND com_name IN (select com_email from com_stack where stack_name = #{cri.stackType})-->
+			where com_name IN (select com_email from com_stack where stack = #{cri.stackType})
+		</if>
+<!--		<if test='(cri.locationType != null and cri.locationType != "")'>-->
+<!--			AND com_location = #{cri.locationType}-->
+<!--		</if>-->
+	</sql>
+<!--	    <![CDATA[ : mybatis 에서 특수문자 인식처리 -->
+    <select id="comList" resultType="com.boot.DTO.CompanyListDTO">
+<![CDATA[ 
+		   SELECT rownum, com_email, com_name, com_star, com_location, com_year, experienceYears, update_date, stack_names
+FROM (SELECT rownum, com_email, com_name, com_star, com_location, com_year, experienceYears, update_date, stack_names
+    FROM (SELECT row_number() OVER (ORDER BY com_email DESC) AS rownum,
+               c.com_email,
+               c.com_name,
+               c.com_star,
+               c.com_location,
+               TIMESTAMPDIFF(YEAR, c.com_year, CURDATE()) AS experienceYears,
+               DATE_FORMAT(c.com_year, '%Y') AS com_year,
+               c.update_date,
+               (SELECT GROUP_CONCAT(cs.stack)
+                FROM com_stack cs
+                WHERE cs.com_email = c.com_email) AS stack_names
+        FROM com_tb c
+									  ]]>
+									  <include refid="criteria4"></include>
+									  <include refid="orderType"></include>
+									  <![CDATA[
+									  ) a
+			where rownum <= (#{cri.pageNum} * #{cri.amount})
+				)aa
+		where rownum > (#{cri.pageNum}-1) * #{cri.amount} 
+		]]>
+    </select>
+</mapper>
+
+

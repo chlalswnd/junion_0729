@@ -1,0 +1,132 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.DAO.jobpostingIndividualDAO">
+
+<!--    <select id="jobpostingIndividualSupport" resultType="com.boot.DTO.jobpostingIndividualDTO"> -->
+<!--		SELECT -->
+<!--		    u.user_name,-->
+<!--		    u.user_gender,-->
+<!--		    r.resume_age,-->
+<!--		    r.career_month,-->
+<!--		    r.resume_writeDate,-->
+<!--		    r.resume_num,-->
+<!--		    YEAR(CURDATE()) - YEAR(r.resume_age) + 1 AS korean_age,-->
+<!--		    (SELECT -->
+<!--		        GROUP_CONCAT(rs.stack_name)-->
+<!--		     FROM-->
+<!--		        resume_stack rs-->
+<!--		     WHERE rs.resume_num = r.resume_num-->
+<!--		    ) AS stack_names-->
+<!--		FROM -->
+<!--		    resume_tb r-->
+<!--		JOIN user_tb u ON r.user_email = u.user_email-->
+<!--		ORDER BY -->
+<!--		    r.resume_num DESC-->
+<!--	</select>-->
+	
+	
+<!--	<sql id="userType">-->
+<!--		<if test='(cri.login_usertype == "1")'>-->
+<!--			ORDER BY r.resume_num-->
+<!--		</if>-->
+<!--		<if test='(cri.login_usertype == "2")'>-->
+<!--			ORDER BY r.resume_num DESC-->
+<!--		</if>-->
+<!--	</sql>-->
+	<sql id="orderType">
+<!--		<if test='(orderType == "recommendation" and cri.login_usertype == "1")'> 큰 따옴표 때문에 char타입이 적용이 안됐음 -->
+		<if test="(orderType == 'recommendation' and cri.login_usertype == '1')">
+<!--			ORDER BY r.resume_num-->
+			ORDER BY stack_names like concat ('%','Android','%') DESC
+		</if>
+		<if test="(orderType == 'recommendation' and cri.login_usertype == '2')">
+			ORDER BY stack_names like concat ('%','JAVA','%') DESC
+		</if>
+		<if test='(orderType == "latest")'>
+			ORDER BY r.resume_num DESC
+		</if>
+	</sql>
+	<sql id="criteria3">
+		WHERE resume_offer = '예'
+		<if test='(cri.stackType != null and cri.stackType != "")'>
+			AND resume_num IN (select resume_num from resume_stack where stack_name = #{cri.stackType})
+		</if>
+		<if test='(cri.locationType != null and cri.locationType != "")'>
+			AND user_location = #{cri.locationType}
+		</if>
+		<if test='(cri.careerType != null and cri.careerType != "" and (cri.careerType == "0" or cri.careerType == "1" or cri.careerType == "2"))'>
+			AND TIMESTAMPDIFF(YEAR, career_start, career_end) = #{cri.careerType}
+		</if>
+		<if test='(cri.careerType != null and cri.careerType != "" and (cri.careerType != "0" or cri.careerType != "1" or cri.careerType != "2"))'>
+			AND TIMESTAMPDIFF(YEAR, career_start, career_end) >= #{cri.careerType}
+		</if>
+	</sql>
+<!--    <![CDATA[ : mybatis 에서 특수문자 인식처리 -->
+    <select id="jobpostingIndividualSupport" resultType="com.boot.DTO.jobpostingIndividualDTO">
+    <![CDATA[ 
+		select rownum, user_name, user_gender, resume_age, career_month, resume_writeDate, resume_num, stack_names
+			from (select rownum, user_name, user_gender, resume_age, career_month, resume_writeDate, resume_num, stack_names
+			from (select row_number() over(ORDER BY r.resume_num DESC) as rownum,
+									    u.user_name,
+									    u.user_gender,
+									    r.resume_age,
+									    r.career_month,
+									    r.resume_writeDate,
+									    r.resume_num,
+									    YEAR(CURDATE()) - YEAR(r.resume_age) + 1 AS korean_age,
+									    (SELECT 
+									        GROUP_CONCAT(rs.stack_name)
+									     FROM
+									        resume_stack rs
+									     WHERE rs.resume_num = r.resume_num
+									    ) AS stack_names 
+									  FROM resume_tb r
+									  JOIN user_tb u ON r.user_email = u.user_email
+									  ]]>
+									  <include refid="criteria3"></include>
+									  <include refid="orderType"></include>
+									  <![CDATA[
+									  ) a
+			where rownum <= (#{cri.pageNum} * #{cri.amount})
+				)aa
+		where rownum > (#{cri.pageNum}-1) * #{cri.amount} 
+		]]>
+    </select>
+	
+
+    <select id="getStackList" resultType="String"> 
+		SELECT 
+		    stack_name
+		FROM 
+		    stack
+	</select>
+
+    <select id="getLocationList" resultType="String"> 
+		SELECT
+			location_name
+		FROM
+			location;
+	</select>
+
+    <select id="getTotalCount" resultType="int"> 
+		SELECT
+			count(*)
+		FROM
+			resume_tb;
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

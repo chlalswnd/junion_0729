@@ -1,0 +1,109 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.DAO.ResumeDAO">
+
+    <select id="resumeList" resultType="com.boot.DTO.ResumeDTO">
+	    SELECT 
+		user_email, resume_num, resume_title, resume_pay, resume_offer,
+	    CONCAT(
+	        FLOOR(period_diff(DATE_FORMAT(career_end, '%Y%m'), DATE_FORMAT(career_start, '%Y%m')) / 12), '년 ', 
+	        period_diff(DATE_FORMAT(career_end, '%Y%m'), DATE_FORMAT(career_start, '%Y%m')) % 12, '개월'
+	    ) AS career_month
+		FROM resume_tb 
+		where user_email=#{user_email};        
+    </select>    
+    
+    <select id="userInfo" resultType="com.boot.DTO.UserDTO">
+    	select user_email, user_name, user_gender, user_tel, user_location, user_location2, user_birthdate from user_tb where user_email=#{user_email};
+    </select>
+    
+    <select id="resumeInfo" resultType="com.boot.DTO.ResumeDTO">
+        select 
+        r.resume_num, resume_title, u.user_name, resume_age, u.user_gender, u.user_email, GROUP_CONCAT(rs.stack_name SEPARATOR ', ') AS stack_name,
+        u.user_tel, u.user_location, u.user_location2, resume_pay, career_start, career_end, 
+        resume_comName, resume_comPart, resume_comPosition, resume_status,        
+        resume_eduStart, resume_eduEnd, resume_eduName, resume_eduMajor, resume_eduStatus,
+        resume_exStart, resume_exEnd, resume_exName, resume_exContent,
+        resume_licenseDate, resume_licenseContent,
+        resume_portfolio_name, resume_portfolio_url,
+        resume_intro
+        from resume_tb r
+        LEFT JOIN user_tb u ON r.user_email = u.user_email 
+        left join resume_stack rs ON r.resume_num = rs.resume_num
+        where r.resume_num = #{resume_num}
+    </select>
+    
+    <insert id="resumeWrite"> 
+    <selectKey keyProperty="resume_num" order="BEFORE" resultType="int">
+    		select ifnull(max(resume_num),0)+1 from resume_tb
+	</selectKey>  	
+        insert into resume_tb
+        (resume_num, resume_title, user_email, resume_pay, career_start, career_end, 
+        resume_comName, resume_comPart, resume_comPosition, resume_status,        
+        resume_eduStart, resume_eduEnd, resume_eduName, resume_eduMajor, resume_eduStatus,
+        resume_exStart, resume_exEnd, resume_exName, resume_exContent,        
+        resume_licenseDate, resume_licenseContent,
+        resume_portfolio_name, resume_portfolio_url, resume_intro
+        ) 
+        
+       select ifnull(max(resume_num),0)+1,#{resume_title},#{user_email},#{resume_pay},#{career_start},#{career_end},
+        #{resume_comName},#{resume_comPart},#{resume_comPosition},#{resume_status},        
+        #{resume_eduStart},#{resume_eduEnd},#{resume_eduName},#{resume_eduMajor},#{resume_eduStatus},
+        #{resume_exStart},#{resume_exEnd},#{resume_exName},#{resume_exContent},
+        #{resume_licenseDate},#{resume_licenseContent},
+        #{resume_portfolio_name},#{resume_portfolio_url}, #{resume_intro}
+        from resume_tb 
+    </insert>
+        
+    <update id="resumeModify">
+		update resume_tb 
+		set 
+		resume_num=#{resume_num},resume_title=#{resume_title}, user_email=#{user_email},
+		resume_pay=#{resume_pay},career_start=#{career_start},career_end=#{career_end},
+        resume_comName=#{resume_comName},resume_comPart=#{resume_comPart},resume_comPosition=#{resume_comPosition},
+        resume_status=#{resume_status}, resume_eduStart=#{resume_eduStart},resume_eduEnd=#{resume_eduEnd},
+        resume_eduName=#{resume_eduName},resume_eduMajor=#{resume_eduMajor},resume_eduStatus=#{resume_eduStatus},
+        resume_exStart=#{resume_exStart},resume_exEnd=#{resume_exEnd},resume_exName=#{resume_exName},
+        resume_exContent=#{resume_exContent},
+        resume_licenseDate=#{resume_licenseDate},resume_licenseContent=#{resume_licenseContent},
+        resume_portfolio_name=#{resume_portfolio_name},resume_portfolio_url=#{resume_portfolio_url},
+        resume_intro=#{resume_intro}				 
+		where resume_num=#{resume_num}
+    </update>    
+    
+     <delete id="resumeDelete">
+        delete from resume_tb where resume_num= #{resume_num}
+    </delete>
+    
+    <!-- 이력서 목록에서 셀렉트 박스 선택시 공유 여부 업데이트 되는 쿼리-->
+    <update id="resumeOfferUpdate">
+		update resume_tb set resume_offer=#{param2} where resume_num= #{param1}
+    </update>
+    
+	<!-- 스택관리 입력 -->	
+    <insert id="insertResumeStack">
+        insert into RESUME_STACK (resume_num, stack_name) values(#{resume_num},#{stack_name})        
+    </insert>
+    
+    <!-- 스택관리 수정 -->	
+    <update id="modifyResumeStack">
+		update RESUME_STACK set stack_name=#{stack_name} where resume_num=#{resume_num}
+    </update>
+    
+    <!-- 스택관리 삭제 -->
+    <delete id="deleteResumeStack">
+        delete from RESUME_STACK where resume_num= #{resume_num}
+    </delete>
+    
+</mapper>
+
+
+
+
+
+
+
+
+

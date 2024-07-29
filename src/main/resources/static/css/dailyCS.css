@@ -1,0 +1,253 @@
+:root 
+{
+  /* 컬러 모음 */
+  --main-color:#FFA500;
+  --color-black: #111;
+  --color-white: #fff;
+  --color-gray: #787878;
+  --font-gray:#777;
+  --input-gray: #e5e5ec;
+  --button-gray: #f7f7f7;
+  --border-color-gray: #dadada;
+  --font-size32: 32px;
+  --font-size24: 24px;
+  --font-size20: 20px;
+  --font-size16: 16px;
+  --font-size14: 14px;
+  --font-size12: 12px;
+}
+
+.inputTabBtn 
+{
+  padding: 8px 20px;
+  font-size: var(--font-size14);
+  color: var(--font-gray);
+  border: 1px solid var(--border-color-gray);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.inputTabBtn.active 
+{
+  border: 1px solid var(--color-black);
+  background-color: var(--color-black);
+  color: var(--color-white);
+} 
+
+/*    섹션    */
+section 
+{
+	padding-top : 90px;
+  display: flex;
+  justify-content: center;
+}
+
+.wrap
+{
+  min-width: 1200px;
+  padding: 50px 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.wrap .sectionTitle 
+{
+  font-size: var(--font-size32);
+  color: var(--color-black);
+  margin-bottom: 20px;
+}
+
+.tabWrap, .tabWrap .tab  
+{
+  display: flex;
+  align-items: center;
+}
+
+.tabWrap .tab 
+{
+  gap: 0 12px;
+}
+
+.questionCardWrap 
+{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0 40px;
+  max-width: 1200px;
+  margin-top: 40px;
+}
+
+.questionCardWrap .card 
+{  
+  border: 1px solid var(--input-gray);
+  border-radius: 6px;
+}
+
+.cardH, .cardB
+{
+  padding: 0 24px;
+}
+
+.cardH .cardTitle 
+{
+  font-size: var(--font-size20);
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.cardB 
+{
+  color: var(--font-gray);
+  font-size: var(--font-size14);
+  border-bottom: 1px solid var(--input-gray);
+  padding-bottom: 24px;  
+}
+
+.cardF 
+{
+  display: flex;
+  align-items: center;
+  gap: 0 12px;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.cardF .check 
+{
+  display: flex;
+  gap: 0 8px;
+  font-size: var(--font-size16);
+}
+
+button.popOpen 
+{
+  font-size: var(--font-size14);
+  background-color: var(--main-color);
+  padding: 12px 20px;
+  color: var(--color-white);
+  border:0;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+
+/* 문제 푸는 영역 POP */
+
+.questionPop 
+{
+  width: 100vw;
+  min-height: 100vh;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 99;
+  top: 0;
+  left: 0;
+  display: none;
+}
+
+.popInner 
+{
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 700px;
+  height: 700px;
+  overflow: auto;
+  background-color: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 16px 16px 30px rgba(35, 48, 59, 0.3);
+}
+
+.popHeader 
+{
+  display: flex;
+  align-items: center;
+  padding: 24px 24px 8px 24px;
+  justify-content: center;
+}
+
+.popHeader h3 
+{
+  font-size: var(--font-size24);
+}
+
+.popHeader i 
+{
+  position: absolute;
+  right: 24px;
+  font-size: var(--font-size24);
+  cursor: pointer;
+}
+
+.popBody, .popFooter 
+{
+  padding: 0 24px;
+}
+.cs_type 
+{
+  font-size:var(--font-size16);
+  text-align: center;
+  color: var(--font-gray);
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+.questionWrap 
+{
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px 0;
+}
+
+.questionWrap .question, .questionExplane 
+{
+  text-align: left;
+  height: 56px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: #fff;
+  font-size: var(--font-size14);
+  border: 1px solid var(--border-color-gray);
+  cursor: pointer;
+}
+
+.popFooter 
+{
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.questionExplane  
+{
+  cursor: initial;
+  padding: 12px;
+  background-color: var(--button-gray);
+  height: initial;
+  display: none;
+}
+
+.questionComplete 
+{
+  padding: 16px 20px;
+  background: var(--main-color);
+  color: var(--color-white);
+  font-size: var(--font-size14);
+  border: none;
+  margin-top: 40px;
+  margin-bottom: 24px;
+  min-width: 240px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.question { margin: 5px; }
+.correct { border: 2px solid green !important; }
+.incorrect { border: 2px solid red !important; }
+.correct-answer { border: 2px solid green !important; }
+
