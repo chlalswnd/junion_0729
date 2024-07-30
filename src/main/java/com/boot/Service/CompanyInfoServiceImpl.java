@@ -15,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@Service("CompanyInfo")
-public class CompanyInfoImpl implements CompanyInfo{
+@Service("CompanyInfoService")
+public class CompanyInfoServiceImpl implements CompanyInfoService{
 
 	
 	@Autowired

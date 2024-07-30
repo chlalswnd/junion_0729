@@ -66,17 +66,26 @@
 		</if>
 	</sql>
 	<sql id="criteria4">
-<!--	검색로직-->
-		<if test='cri.keyword != null and cri.keyword != ""'>
-        	WHERE com_name LIKE concat('%', #{cri.keyword}, '%')
-    	</if>
-    	<if test="cri.stackType != null and cri.stackType != ''">
-			AND com_name IN (SELECT com_email FROM com_stack WHERE stack = #{cri.stackType})
-		</if>
-<!--		<if test='(cri.locationType != null and cri.locationType != "")'>-->
-<!--			AND com_location = #{cri.locationType}-->
-<!--		</if>-->
+    <!-- 검색로직 -->
+    	<where>
+	        <if test='cri.keyword != null and cri.keyword != ""'>
+	            com_name LIKE concat('%', #{cri.keyword}, '%')
+	        </if>
+	        <if test='cri.stackType != null and cri.stackType != ""'>
+	            <if test='cri.keyword != null and cri.keyword != ""'>
+	                AND
+	            </if>
+	            com_email IN (SELECT com_email FROM com_stack WHERE stack = #{cri.stackType})
+	        </if>
+	        <if test='cri.locationType != null and cri.locationType != ""'>
+	            <if test='(cri.keyword != null and cri.keyword != "") or (cri.stackType != null and cri.stackType != "")'>
+	                AND
+	            </if>
+	            SUBSTRING(com_location, 1, 2) = SUBSTRING(#{cri.locationType}, 1, 2)
+	        </if>
+	    </where>
 	</sql>
+
 <!--	    <![CDATA[ : mybatis 에서 특수문자 인식처리 -->
     <select id="comList" resultType="com.boot.DTO.CompanyListDTO">
 <![CDATA[ 
@@ -94,11 +103,11 @@ FROM (SELECT rownum, com_email, com_name, com_star, com_location, com_year, expe
                 FROM com_stack cs
                 WHERE cs.com_email = c.com_email) AS stack_names
         FROM com_tb c
-									  ]]>
-									  <include refid="criteria4"></include>
-									  <include refid="orderType"></include>
-									  <![CDATA[
-									  ) a
+					]]>
+            <include refid="criteria4"></include>
+            <include refid="orderType"></include>
+		  <![CDATA[
+		  ) a
 			where rownum <= (#{cri.pageNum} * #{cri.amount})
 				)aa
 		where rownum > (#{cri.pageNum}-1) * #{cri.amount} 

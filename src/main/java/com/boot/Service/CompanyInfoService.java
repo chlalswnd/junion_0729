@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import com.boot.DTO.CompanyInfoDTO;
 
-public interface CompanyInfo {
+public interface CompanyInfoService {
 	public CompanyInfoDTO companyInfo(String email);//기업 정보 페이지
 	public CompanyInfoDTO InfoMini(String email);//기업 기본정보 조회 페이지
 	public void modify_Info(HashMap<String, String> param);//기업 기본정보 수정

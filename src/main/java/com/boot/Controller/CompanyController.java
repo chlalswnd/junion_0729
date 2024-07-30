@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.boot.DTO.CompanyInfoDTO;
 import com.boot.DTO.JoinDTO;
-import com.boot.Service.CompanyInfo;
+import com.boot.Service.CompanyInfoService;
 import com.boot.Service.JoinService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyController {
 	
 	@Autowired
-	private CompanyInfo infoService;
+	private CompanyInfoService infoService;
 	@Autowired
 	private JoinService joinService;
 

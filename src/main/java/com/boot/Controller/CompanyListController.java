@@ -14,7 +14,7 @@ import com.boot.DTO.CompanyInfoDTO;
 import com.boot.DTO.CompanyListDTO;
 import com.boot.DTO.CompanyPageDTO;
 import com.boot.DTO.Criteria4;
-import com.boot.Service.CompanyInfo;
+import com.boot.Service.CompanyInfoService;
 import com.boot.Service.CompanyListService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CompanyListController {
 	@Autowired
-	private CompanyInfo infoService;
+	private CompanyInfoService infoService;
 	
 	@Autowired
 	private CompanyListService companyListService;

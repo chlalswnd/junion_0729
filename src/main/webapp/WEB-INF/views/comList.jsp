@@ -311,19 +311,6 @@
 										<input type="hidden" name="orderType" id="orderType" value="${orderType}">
 										<div class="filterbox">
 											<div class="left">
-												<!-- 직군/직무 사용 X -->
-												<!-- <div class="sbox">
-													<select class="select1" id="jobSelect" name="jobType">
-														<option value="" <c:out
-															value="${pageMaker.cri.jobType == null ? 'selected':''}" />
-														>직군/직무 무관</option>
-														<c:forEach var="job" items="${jobList}">
-															<option value="${job}" <c:out
-																value="${pageMaker.cri.jobType eq job ? 'selected':''}" />
-															>${job}</option>
-														</c:forEach>
-													</select>
-												</div> -->
 												<div class="sbox">
 													<select class="select1" id="stackSelect" name="stackType">
 														<option value="" <c:out
@@ -363,12 +350,13 @@
 											<div class="right">
 												<div class="f1">
 													<button
-														class="tab-btn ${orderType == 'recommendation' ? 'active' : ''}"
+														id="tab-btn ${orderType == 'recommendation' ? 'active' : ''}"
+														class="fil2"
 														onclick="switchTab('recommendation', event)">추천순</button>
 												</div>
 												<div class="f1">
-													<button class="tab-btn ${orderType == 'latest' ? 'active' : ''}"
-														onclick="switchTab('latest', event)">최신순</button>
+													<button id="tab-btn ${orderType == 'latest' ? 'active' : ''}"
+														class="fil2" onclick="switchTab('latest', event)">최신순</button>
 												</div>
 												${orderType}
 											</div>
@@ -475,7 +463,6 @@
 										<!-- 페이징 검색시 페이지 번호 클릭할 때 필요한 파라미터 -->
 										<input type="hidden" name="stackType" value="${pageMaker.cri.stackType}">
 										<input type="hidden" name="locationType" value="${pageMaker.cri.locationType}">
-										<!-- <input type="hidden" name="jobType" value="${pageMaker.cri.jobType}"> -->
 										<!-- hidden 값 미스매치로 페이지가 나오지 않는 오류 있었음 -->
 									</form>
 
@@ -534,7 +521,7 @@
 						// document.querySelectorAll('.form-box').forEach(function (el) {
 						// 	el.classList.remove('active');
 						// });
-						document.querySelectorAll('.tab-btn').forEach(function (el) {
+						document.querySelectorAll('#tab-btn').forEach(function (el) {
 							el.classList.remove('active');
 						});
 
