@@ -14,6 +14,7 @@ public interface CompanyListDAO {
 //	public ArrayList<CompanyInfoDTO> comList(@Param("orderType") String orderType, @Param("cri") Criteria4 cri);//기업목록
 	public ArrayList<CompanyListDTO> comList(@Param("orderType") String orderType, @Param("cri") Criteria4 cri);//기업목록
 	
+//	public ArrayList<CompanyInfoDAO> comList(Criteria4 cri);
 	/*
 	07/25 10:40 민중
 	드롭다운 db추가

@@ -2,25 +2,12 @@ package com.boot.Controller;
 
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.ibatis.javassist.expr.NewArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.boot.DAO.CompanyInfoDAO;
-import com.boot.DAO.CompanyListDAO;
 import com.boot.DTO.ComNoticeDTO;
-import com.boot.DTO.CompanyInfoDTO;
-import com.boot.DTO.CompanyListDTO;
-import com.boot.DTO.Criteria4;
-import com.boot.DTO.CompanyPageDTO;
-import com.boot.Service.CompanyInfo;
-import com.boot.Service.CompanyListService;
-import com.boot.Service.CompanyPageService;
 import com.boot.Service.MainService;
 
 import lombok.extern.slf4j.Slf4j;

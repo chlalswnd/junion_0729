@@ -61,12 +61,13 @@ public class CompanyListController {
 //    	model.addAttribute("paging", new CompanyPageDTO(123, std));
     	
 //    	ArrayList<CompanyInfoDTO> list = infoService.comList(orderType, cri);
-    	ArrayList<CompanyListDTO> list = companyListService.comList(orderType, cri);
-    	model.addAttribute("comList", list);
-    	
+//    	ArrayList<CompanyListDTO> list = companyListService.comList(orderType, cri);
+//    	model.addAttribute("comList", list);
+    	ArrayList<CompanyListDTO> comList = companyListService.comList(orderType, cri);
     	int total = companyListService.getTotalCount();
-    	
+    	model.addAttribute("comList", comList);
     	model.addAttribute("pageMaker", new CompanyPageDTO(total, cri));
+    	
     	log.info("@# companyPage controller cri!!=>"+cri);
 		
 		return "comList";
