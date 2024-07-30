@@ -310,13 +310,37 @@ display:inline-block;
     margin-bottom: 60px;
 }
 
-.paging ul
+ .paging ul
 {
     display: flex;
     justify-content: center;
     gap: 10px;
     list-style: none;
 }
+.div_page 
+{
+   margin-top: 40px;   
+}
+
+.div_page ul 
+{
+   display: flex;
+    align-items: center;
+    justify-content: center;   
+   gap: 0 20px;
+}
+
+.paginate_button 
+{
+   text-decoration: none;
+   padding: 8px 14px;
+   border-radius: 6px;
+}
+.paginate_button a 
+{
+   color: #111;
+}
+
 
 </style>
 <!-- 사진 이미지 수정하기-->
@@ -399,21 +423,21 @@ display:inline-block;
                     </div> <!-- 레프트 끝-->
 
                     <div class="right">
-                        <button class="fil2">
+                        <button class="fil2" id="firstButton">
                             <div class="f1">
                                 <h5 class="but1">
                                     추천순
                                 </h5>
                             </div>
                         </button>
-                        <button class="fil2">
+                        <button class="fil2" id="secondButton">
                             <div class="f1">
                                 <h5 class="but1">
                                     최신순
                                 </h5>
                             </div>
                         </button>
-                        <button class="fil2">
+                        <button class="fil2" id="thirdButton">
                             <div class="f1">
                                 <h5 class="but1">
                                     조회순
@@ -483,10 +507,11 @@ display:inline-block;
                             </c:if>
 
                             <c:forEach var="num" begin="${paging.startpage}" end="${paging.endpage}">
-                                <li class="paginate_button" ${paging.std.pageNum == num ? "style='background-color: yellow'" : ""}>
+                                <!-- <li class="paginate_button" ${paging.std.pageNum == num ? "style='background-color: yellow'" : ""}> -->
+                                <li class="paginate_button"  ${paging.std.pageNum == num ? "style='border: 1px solid var(--main-color)'" : ""}>
                                     <!-- [${num}] -->
                                     <a href="${num}">
-                                        [${num}]
+                                        ${num}
                                     </a>
                                 </li>
                             </c:forEach>
@@ -511,7 +536,7 @@ display:inline-block;
     
     <%@ include file="../footer.jsp" %>
 </div>
-        <form id="" method="get" action="cardPageList">
+        <form id="actionForm" method="get" action="cardPageList">
             <input type="hidden" name="pageNum" value="${paging.std.pageNum}">
             <input type="hidden" name="amount" value="${paging.std.amount}">
         </form>
@@ -522,7 +547,7 @@ $(document).ready(function() {
     //버튼 클릭시 활성화
     $(".scrap .fa-bookmark").click(function() {
         
-        var noticeNum = $this.data('notice-num');
+        var noticeNum = $this.data('notice_num');
         $.ajax({
             type : "POST",
             url : "/scrapNotice",
@@ -538,9 +563,16 @@ $(document).ready(function() {
             // }
         });
     });
-
-   
-
-
 });//document).ready(function()
+
+    var actionForm = $("#actionForm");
+    $(".paginate_button a").on("click", function(e){
+        e.preventDefault();//기본 동작을 막음 : 페이지 링크를 통해서 이동
+
+        actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+        actionForm.attr("action","cardPageList").submit();
+        
+    });
+
+
 </script>

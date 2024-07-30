@@ -33,11 +33,21 @@
     				order by notice_hit desc, notice_num desc limit 5
     </select>
 <!--추천 기업-->
-    <select id="mainRecommendCom">
-    	select c.com_name, c.com_email, count(s.com_email)
+    <select id="mainRecommendCom" resultType="com.boot.DTO.ComNoticeDTO">
+    	select c.com_name, c.com_email, count(s.com_email) as scrapCount
 			from com_tb c join com_scrap s on c.com_email = s.com_email
-				where s.com_email = c.com_email
-					group by c.com_name, c.com_email order by count(s.com_email) desc limit 12;
+				group by com_email order by count(s.com_email) desc limit 12;
+    </select>
+    
+<!--메인 공고 사진 불러오기-->
+    <select id="mainRegistFileList" resultType="com.boot.DTO.ComNoticeAttachDTO">
+		select uuid, uploadPath, fileName, image, notice_num
+			from notice_attach where notice_num=#{notice_num}
+    </select>
+<!--메인 기업 사진 불러오기-->
+    <select id="mainComFileList" resultType="com.boot.DTO.CompanyAttachDTO">
+		select uuid, uploadPath, fileName, image, com_email
+			from com_attach where com_email=#{com_email}
     </select>
     
     

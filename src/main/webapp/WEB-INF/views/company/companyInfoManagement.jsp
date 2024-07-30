@@ -11,7 +11,7 @@
 <!--    <link rel="stylesheet" href="css/default.css">-->
 <!--    <link rel="stylesheet" href="css/style.css">-->
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/company_InfoMamagement.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/companyInfoMamagement.css">
     <!-- import font-awesome, line-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
@@ -114,7 +114,8 @@
                                     <div class="main">
                                         <div class="sub1">
                                             <h5 class="name">${companyInfo.com_name}</h5>
-                                            <h5 class="locationC">${companyInfo.com_location}ㆍ(${year})</h5>
+                                            <h5 class="locationC" id="localyear">${companyInfo.com_location}ㆍ업력 <span class="getyear"></span></h5>
+                                            <!-- <h5 class="locationC" id="localyear">${companyInfo.com_location}<span class="getyear"></span></h5> -->
                                         </div>
                                     </div>
                 
@@ -132,7 +133,8 @@
                                         <div class="boerder"></div>
                                         <div class="columnAA">
                                             <h5 class="detail">
-                                                ${companyInfo.com_content}
+                                                <!-- ${companyInfo.com_content} -->
+                                                <div class="introduce"><c:out value="${companyInfo.com_content}" /></div>
                                             </h5>
                                         </div>
                                     </div>
@@ -154,7 +156,7 @@
                                             <h5 class="title">회사 위치</h5>
                                         </div>
                                         <div class="columnBB">
-                                            <!-- <h5 class="loc">${companyInfo.com_location}</h5> -->
+                                            <h5 class="comloc">${companyInfo.com_location}</h5>
                                         </div>
                                     </div>
                 
@@ -171,18 +173,18 @@
                                                     </h5>
                                                 </div>
                                                 <div class="comname2">
-                                                    <h5 class="name">
-                                                        (${year}년 설립)
+                                                    <h5 class="name" id="yearlenght">
+                                                        <span class="getyear"></span>(<span>${year}</span>년 설립)
                                                     </h5>
                                                 </div>
                                                 <div class="comname1">
                                                     <h5 class="name">
-                                                        매출액 (2024년)
+                                                        매출액 (<span class="nowYear"></span>년)
                                                     </h5>
                                                 </div>
                                                 <div class="comname2">
-                                                    <h5 class="name">
-                                                        ${companyInfo.com_sale} 
+                                                    <h5 class="name" id="salay">
+                                                        ${companyInfo.com_sale}만원
                                                     </h5>
                                                 </div>
                                                 <div class="comname1">
@@ -201,8 +203,8 @@
                                                     </h5>
                                                 </div>
                                                 <div class="comname2">
-                                                    <h5 class="name">
-                                                        ${companyInfo.com_salary} 
+                                                    <h5 class="name" id="money">
+                                                        ${companyInfo.com_salary}만원
                                                     </h5>
                                                 </div>
                                                 <div class="comname1">
@@ -231,7 +233,7 @@
                                                     </h5>
                                                 </div>
                                                 <div class="comname2">
-                                                    <h5 class="name">
+                                                    <h5 class="name" id="people">
                                                         ${companyInfo.com_employee}명 
                                                     </h5>
                                                 </div>
@@ -295,6 +297,7 @@
 </html>
 <script>
     $(document).ready(function () {
+        // var comStack = "${companyInfo.com_stack}";
         var comStack = "${companyInfo.com_stack}";
 
         if(comStack){
@@ -318,27 +321,77 @@
                 }
                 console.log("str@@##"+str);
                 $("#stack").html(str);
-            // });
-
-            // var comLocation ="${companyInfo.com_location}";
-            // var comYear = "${companyInfo.com_year}";
-            // if (!comLocation && !comYear) {
-            //     $(".locationC").css("display","none");
-            // }else{
-            //     $(".locationC").css("display","flex");
-            // }
+        
         }
+
+        var years = new Date();
+        var nowYear = years.getFullYear();
+        console.log(nowYear);
+        $('.nowYear').text(nowYear);
+
     });//end of ready
      // 24-07-09 하진
-     function pwchange() {
+     function pwchange() {// 비밀번호 설정 외부 팝업 띄우는 코드
             // window.name = "부모창 이름"; 
         
             var popupURL = "/companyPW";
             // window.name = "company_InfoManagement";
-            var popupProperties = "width=600, height=400, resizable = no, scrollbars = no";
+            // var popupProperties = "width=600, height=400, resizable = no, scrollbars = no";
+            var popupProperties = "width=500, height=300, resizable = no, scrollbars = no";
             // window.open("open할 window", "자식창 이름", "팝업창 옵션");
             window.open(popupURL, "companyPW.jsp", popupProperties);    
         }
+
+        // 24.07.27 하진 : 연혁 계산 및 값이 없을 경우, 문자가 보이지 않도록 하는 로직
+        var locationC = $(".main .sub1 .locationC").val();
+        var getyear = "${companyInfo.experience_years}";
+        console.log(getyear);
+        console.log(locationC);
+
+        // if (!locationC && getyear == 0) {
+        if (locationC == null) {
+            $("#localyear").css({"display": "none"});
+        }else{
+            let elements = document.querySelectorAll('.getyear');
+            if (getyear == 0) {
+                // let elements = document.querySelectorAll('.getyear');
+                elements.forEach(element => {
+                    element.textContent = '1년 미만';
+                    // element.textContent = 'ㆍ업력 1년 미만';
+                });
+                // $(".getyear").val("1년 미만");
+            }else{
+                // let elements = document.querySelectorAll('.getyear');
+                elements.forEach(element => {
+                    element.textContent = getyear+"년";
+                    // element.textContent = "ㆍ업력 "+getyear+"년";
+                });
+            }
+    }
+    
+    var yearlenghtElem = $("#yearlenght");
+    var salayElem = $("#salay");
+    var moneyElem = $("#money");
+    var peopleElem = $("#people");
+
+    // 각 요소의 값을 가져옴
+    var yearlenght = yearlenghtElem.val();
+    console.log(yearlenght);
+    var salay = salayElem.val();
+    console.log(salay);
+    var money = moneyElem.val();
+    console.log(money);
+    var people = peopleElem.val();
+    console.log(people)
+
+    // 모든 값이 비어 있는 경우 요소 숨김
+    // if (!yearlenght && !salay && !money && !people) {
+    if (yearlenght == null && salay  == null && money  == null && people == null) {
+        yearlenghtElem.css("display", "none");
+        salayElem.css("display", "none");
+        moneyElem.css("display", "none");
+        peopleElem.css("display", "none");
+    }
 
 </script>
 <script>

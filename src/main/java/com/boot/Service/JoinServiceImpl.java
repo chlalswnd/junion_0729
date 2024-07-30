@@ -126,6 +126,12 @@ public class JoinServiceImpl implements JoinService{
 //		dao.insertJob(param);		
 	}
 
+	//24.07.24 하진 : 기업 회원가입시 join 테이블에 값을 넣어줌
+	public void joinCompanyStack(String com_email) {
+		
+		JoinDAO dao = sqlSession.getMapper(JoinDAO.class);
+		dao.joinCompanyStack(com_email);
+	}
 
 
 	

@@ -131,14 +131,14 @@
     width: 250px;
     border-radius: 6px;
     border: 1px solid var(--border-color-gray);
-    padding: 0 20px;
+    padding: 0 10px;
 }
 </style>
 </head>
 <body>
     
     <div class="popU">
-        <form method="post" action="/passwordchange">
+        <!-- <form method="post" action="/passwordchange"> -->
             <div class="popCon disF flexD">
                 <div class="popMain">
                     <div class="popM">
@@ -149,7 +149,7 @@
                             <div class="pwRE on">
                                 <h5 class="nowPw">현재 비밀번호</h5>
                                 <div class="nowPwIn">
-                                    <input type="password" class="pwValue" id="user_pw_check" minlength="8" maxlength="20" required >
+                                    <input type="password" class="pwValue" id="userPwCheck" minlength="8" maxlength="20" required >
                                 </div>
                             </div>
                             <div class="disW" id="passwordCheck"></div>
@@ -169,70 +169,96 @@
                         </div><!--popX 내용-->
                     </div>
                     <div class="popB">
-                        <button type="submit" class="submit tabBtn">전송</button>
+                        <!-- <button type="submit" class="submit tabBtn">전송</button> -->
+                        <button type="button" class="submit tabBtn" id="validation">전송</button>
                     </div>
                 </div><!--popCon disF flexD-->
             </div><!--popMain-->
-        </form>
+        <!-- </form> -->
     </div><!--popU-->
 </body>
 </html>
 <script>
-$(document).ready(function(){
-    var sessionPassword = "${login_pw}";
-    
-    function validatePasswords() {
+// $(document).ready(function(){
+// $(".submit tabBtn").on("click", function validatePasswords() {
+$("#validation").click(function validatePasswords() {
+// var sessionPassword = "${login_pw}";
+
+    // function validatePasswords() {
+        var com_email = "${login_email}";
+        var sessionPassword = "${login_pw}";
+        console.log(sessionPassword);
     // 비밀번호 자릿수 체크 + 숫자&특문포함 + 중복일치			
 		var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/;
         // console.log(sessionPassword);
 		// var nowPassword = document.getElementById('user_pw_check').val();
-		var nowPassword = $('#user_pw_check').value;
+		var nowPassword = $('#userPwCheck').val();
 		// var changePassword = document.getElementById('changePassword').value;
-		var changePassword = $('#changePassword').value;
+		var changePassword = $('#changePassword').val();
 		// var changePasswordCh = document.getElementById('changePasswordCh').value;
-		var changePasswordCh = $('#changePasswordCh').value;
+		var changePasswordCh = $('#changePasswordCh').val();
+		var passwordCheck = document.getElementById('passwordCheck');
 		var resultPassword = document.getElementById('resultPassword');
-
+        var check = false;
 
         if (nowPassword === sessionPassword) {
+            console.log("비밀번호 확인 1차 통과");
                     if (passwordRegex.test(changePassword)) {
+                        console.log("비밀번호 유효성 검사 통과");
                         if (changePassword === changePasswordCh) {
                             resultPassword.innerHTML='비밀번호가 일치합니다.';
-                            resultPassword.css('color', 'var(--main-color)');
-                            return true;
+                            // resultPassword.css('color', 'var(--main-color)');
+                            resultPassword.style.color = 'var(--main-color)';
+                            check = true;
+                            // return true;
+                            // return check;
                         } else {
                             resultPassword.innerHTML='변경 비밀번호가 일치하지 않습니다.';
                             resultPassword.style.color = 'red';
-                            return false;
+                            $('#changePasswordCh').focus();
+                            // return false;
+                            check = false;
+                            // return check;
+                        // }
                         }
                     } else {
                         resultPassword.innerHTML = '비밀번호는 최소 8자리에서 20자리까지, 영문자, 숫자, 특수문자를 포함해야합니다.';
 			            resultPassword.style.color = 'red';
-                        return false;
+                        $('#changePassword').focus();
+                        // return false;
+                        check = false;
+                        // return check;
                     }
                 } else {
-                    resultPassword.innerHTML='현재 비밀번호가 일치하지 않습니다.';
-                    resultPassword.style.color = 'red';
-                    return false;
+                    passwordCheck.innerHTML='현재 비밀번호가 일치하지 않습니다.';
+                    passwordCheck.style.color = 'red';
+                    $('#userPwCheck').focus();
+                    // return false;
+                    check = false;
+                    // return check;
                 }
-            }
-            // $('#user_pw_check, #changePassword, #changePasswordCh').on('keyup', function() {
-            $(nowPassword, changePassword, changePasswordCh).on('keyup', function() {
-                var check = validatePasswords();
-                console.log(check);
-                // 입력 값의 변경을 실시간으로 확인하기 위해 keyup 이벤트를 사용
-
-                if(check){
+                console.log("비밀번호 변경 결과는 "+check);
+            // }
+            // // $('#user_pw_check, #changePassword, #changePasswordCh').on('keyup', function() {
+            // $(nowPassword, changePassword, changePasswordCh).on('keyup', function() {
+            //     var check = validatePasswords();
+            //     console.log(check);
+            //     // 입력 값의 변경을 실시간으로 확인하기 위해 keyup 이벤트를 사용
+                if(check == true){
                     $.ajax({
                             type : "post",
                             url : "/comPwChange",
-                            data : {changePassword : changePassword, changePasswordCh :changePasswordCh },
-                            success : function(){
+                            data : {changePassword : changePassword, 
+                                    changePasswordCh :changePasswordCh, 
+                                    com_email : com_email},
+                            success : function(data){
+                            // success : function(){
+                                // alert(data);
                                 alert("비밀번호 변경이 완료되었습니다.");
                                 window.close();
                             }
-                    })//end of ajax
+                    });//end of ajax
                 }//if문
-            });//end of keyup function
-    });
+            // });//end of keyup function
+    });// end of validatePasswords function
 </script>

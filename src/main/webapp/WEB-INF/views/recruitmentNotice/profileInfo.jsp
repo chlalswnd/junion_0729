@@ -36,24 +36,40 @@
   --font-size12: 12px;
 }
 
+
 section
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* section */
+/* .sectionInner */
+.container
 {
     padding: 70px 30px;
     width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-section .noticeProfile
+/* section .noticeProfile */
+.sectionInner .noticeProfile
 {
     margin-bottom: 20px;
     border-bottom: 1px solid var(--border-color-gray);
 }
 
-section .noticeProfile .comName
+/* section .noticeProfile .comName */
+.sectionInner.noticeProfile .comName
 {
 
     font-size: var(--font-size16);
 }
-section .title
+/* section .title */
+.sectionInner .title
 {
 
     font-size: var(--font-size20);
@@ -61,7 +77,8 @@ section .title
     margin-bottom: 10px;
 }
 
-section .sectionInner .list .profileList
+/* section .sectionInner .list .profileList */
+.sectionInner .list .profileList
 {
 
     width: 500px;
@@ -73,24 +90,35 @@ section .sectionInner .list .profileList
     font-size: var(--font-size16);
 }
 
-section .sectionInner .name
+.sectionInner .list .option
+{
+    height: 40px;
+    font-size: var(--font-size16);
+}
+
+/* section .sectionInner .name */
+.sectionInner .name
 {
     border: none;
 }
 
-section .sectionInner .user
+/* section .sectionInner .user */
+.sectionInner .user
 {
     font-size: var(--font-size14);
     margin-bottom: 10px;
 }
 
-section .sectionInner .resumeButton
+/* section .sectionInner .resumeButton */
+.sectionInner .resumeButton
 {
     display: flex;
     justify-content: center;
+    gap: 20px;
 }
 
-section .sectionInner .resumeButton .resume
+/* section .sectionInner .resumeButton .resume */
+.sectionInner .resumeButton .resume
 {
     padding: 10px 40px;
     background-color: var(--main-color);
@@ -100,15 +128,28 @@ section .sectionInner .resumeButton .resume
     border: none;
     cursor: pointer;
 }
+.sectionInner .resumeButton .rewirte
+{
+    padding: 10px 40px;
+    background-color: var(--button-gray);
+    font-size: var(--font-size14);
+    border-radius: 6px;
+    color: var(--color-black);
+    border: none;
+    cursor: pointer;
+}
 
 </style>
 <body>
-    <div class="container">
-        <section>
+    <section>
+        <div class="container">
             <div class="sectionInner">
                     <!-- <form method="post" action="/resumeUser"> -->
                         <input type="hidden" name="notice_num" id="notice_num">
-                        <input type="hidden" name="com_email" id="com_email" value=${notice.com_email}>
+                        <!-- <input type="hidden" name="com_email" id="com_email" value=${notice.com_email}> -->
+                        <!-- <input type="hidden" name="user_email" id="user_email" value=${user_email}> -->
+                        <!-- <input type="hidden" name="user_email" id="user_email" value=${login_email}> -->
+                        <!-- <div id="com_email">${notice.com_email}</div> com_email 값이 들어갔는지 확인-->
                     <div class="noticeProfile">
                         <div class="comName">${notice.com_name}</div>
                         <div class="noticeTitle">
@@ -122,25 +163,28 @@ section .sectionInner .resumeButton .resume
                         <div class="list">
                             <select name="resume_num" class="profileList" id="resume_num">
                             <!-- <select name="resume_num" id="resume_num" class="profileList"> -->
-                                <option value="" selected>이력서를 선택해 주세요</option>
+                                <option value="" class="option" selected>이력서를 선택해 주세요</option>
                                 <c:forEach var="userProfile" items="${userProfile}">
-                                    <option value="${userProfile.resume_num}">${userProfile.resume_title}
+                                    <option class="option" value="${userProfile.resume_num}">${userProfile.resume_title}
                                     <!-- <input type="hidden" name="${userProfile.resume_num}"> -->
                                     </option>
                                 </c:forEach>
                             </select>
                             <div class="user">
-                                지원자명  :${user_name}
+                                <!-- 지원자 이메일  :${login_email} : 출력됨 -->
+                                <!-- 지원자명  :${user_name} -->
+                                지원자명  :${login_name}
                             </div>
                         </div><!--list-->
                     </div><!--profile : 이력서 영역-->
                     <div class="resumeButton">
-                        <button type="button" class="resume" onclick="resumeOK()">지원하기</button>
+                        <button type="button" class="rewirte">수정하기</button>
+                        <button type="button" class="resume" onclick="resumeOK()">지원하기</button><!--ajax로 값을 보내고, 그에 따른 결과를 출력한 후에 창 종료를 위해 form/submit 대신 button/ajax 사용-->
                     </div>
                 <!-- </form> -->
                 </div><!--sectionInner-->
-        </section>  
-    </div><!--container-->
+            </div><!--container-->
+    </section>  
 </body>
 </html>
 <script>
@@ -164,31 +208,46 @@ $(document).ready(function() {
     }
 
     insertQueryValue();// 함수 실행
-
+ 
 });
 
-//24.07.13 하진
+$(".rewirte").on("click", function () {
+    window.close();
+    location.href="resumeList";
+})
+// 2024-07-13 하진
+// 2024-07-25 하진
+// 2024-07-28 하진
 function resumeOK(){
     var notice_num = document.getElementById("notice_num").value;
-    console.log("submit!!"+notice_num);
+    // var notice_num = document.getElementById("#notice_num").value;
+    console.log("submit!! notice_num->"+notice_num);
     var resume_num = document.getElementById("resume_num").value;
-    console.log("submit!!"+resume_num);
+    // var resume_num = document.getElementById('#resume_num').val();
+    console.log("submit!! resume_num ->"+resume_num);
+    // var com_email = document.getElementById("#com_email").value;
+    var com_email = "${notice.com_email}";
+    console.log("submit com_email!!"+com_email);
+
+    // var user_email = "${user_email}";//controller에서 user_email이란 이름으로 model에 보낸 값을 받는 변수
+    var user_email = "${login_email}";// session 값을 직접 가져오도록 로직 수정
+    console.log("submit user_email!!"+user_email);
 
     if(resume_num){
         $.ajax({
                 type : "POST",
                 url : "/resumeUser",
-                data : {notice_num : notice_num, resume_num : resume_num},
-                success : function(){
-                    // if(resumeResult == true){
-                    //     console.log(resumeResult);
+                data : {notice_num : notice_num, resume_num : resume_num, com_email : com_email, user_email : user_email},
+                success : function(result){
+                    if(result == false){
                     alert("지원이 완료되었습니다!");
                     window.close();
-                    }
-                //     else{
-                //     alert("해당 이력서로 이미 지원한 공고입니다.");
-                // }
-            // }    
+                }
+                else{
+                    alert("이미 지원한 공고입니다.");
+                    window.close();
+                }
+            }    
         });//end of ajax
     }else{
         alert("이력서를 선택해주세요.");

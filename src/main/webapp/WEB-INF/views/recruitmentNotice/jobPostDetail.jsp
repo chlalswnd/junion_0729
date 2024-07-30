@@ -44,7 +44,8 @@
 
 	section 
 	{
-	    display: flex;
+	    padding-top: 90px;
+		display: flex;
 	    justify-content: center;
 
 	}
@@ -188,6 +189,13 @@
 	{line-height:200%;
 	}
 
+	.textarea
+	{
+	/* white-space: pre-wrap;*//*줄바꿈을 그대로 출력(ChatGPT) 실패 */
+	white-space: pre;/*줄바꿈을 그대로 출력*/
+	line-height :1.5;/* 글자 위아래 간격 조절 (1.5배) */
+	}
+
 	/* 라이트 시작 */
 
 	.wrap .right
@@ -276,6 +284,7 @@
 	.wrap .right .box4 .p1
 	{
 	    font-size: var(--font-size16);
+		color: var(--color-black);
 	    font-weight: 200;
 	}
 
@@ -318,6 +327,12 @@
 	{
 	    color: var(--color-grayblack);
 	    font-size: var(--font-size14);
+		margin: 10px 12px 10px 0;
+		background-color: var(--button-gray);
+		border: 1px solid var(--input-gray);
+		border-radius: 6px;
+		padding: 12px 20px;
+		width: initial;
 	    font-weight: 200;
 	}
 
@@ -332,7 +347,7 @@
 	  
 	}
 
-	.columnAA .detail .sectionConBody .Bodycon button.tech 
+	.columnAA .detail .sectionConBody .Bodycon button.tech
 	{
 	  margin: 10px 12px 10px 0;
 	  border: 1px solid var(--input-gray);
@@ -435,7 +450,21 @@
 	    {
 	        background: var(--main-color);
 	        color: #fff;
+			border: none;
 	    }
+	    &.active 
+	    {
+	        background: var(--main-color);
+	        color: #fff;
+			border: none;
+	    }
+	}
+
+	#user_resume.active
+	{
+		background: var(--main-color);
+		color: #fff;
+		border: none;
 	}
 
 	.box3
@@ -455,6 +484,14 @@
 	    
 	}
 	/*버튼끝*/
+
+	.uploadResult img
+	{
+		width: 720px;
+		height: 410px;
+    	border-radius: 15px;
+	}
+
 </style>
 
 
@@ -475,7 +512,12 @@
                     <!-- 컴퍼니 시작-->
 
                     <div class="company">
-                        <img class="imgg" src="images/company.svg" alt="#">
+						<div class="uploadResult">
+							<ul>
+
+							</ul>
+						</div>
+                        <!-- <img class="imgg" src="images/company.svg" alt="#"> -->
                     </div>
                     <div class="main">
                         <div class="sub1">
@@ -502,7 +544,6 @@
 
                 <div class="column"> <!-- 컬럼 시작-->
 
-
                     <div class="col1">
                         <div class="columnA">
                             <h5 class="title">근무 환경</h5>
@@ -511,7 +552,7 @@
                         <div class="columnAA">
                             <!-- <div class="detail"> -->
                                 <p>
-                                급   여 : ${company.notice_pay1} ${company.notice_pay2}만원<br>
+                                급   여 : ${company.notice_pay1} ${company.notice_pay2} 만원<br>
                             <!-- </div> -->
                             <!-- <div class="detail"> -->
                                 근무 부서 :${company.notice_department}<br>
@@ -520,7 +561,7 @@
                                 직    책 : ${company.notice_position}<br>
                             <!-- </div> -->
                             <!-- <div class="detail"> -->
-                                모집 인원 : ${company.notice_recruitNum}<br>
+                                모집 인원 : ${company.notice_recruitNum} 명<br>
                             <!-- </div> -->
                             </p>
                         </div>
@@ -533,7 +574,7 @@
                         </div>
                         <div class="columnAA">
                             <h5 class="detail">
-                                <div style="white-space:pre;"><c:out value="${company.notice_jobInfo}" /></div>
+                                <div class="textarea"><c:out value="${company.notice_jobInfo}" /></div>
                             </h5>
                         </div>
                     </div>
@@ -544,7 +585,8 @@
                         </div>
                         <div class="columnAA">
                             <h5 class="detail">
-                                ${company.notice_condition}
+                                <!-- ${company.notice_condition} -->
+                                <div class="textarea"><c:out value="${company.notice_condition}" /></div>
                             </h5>
                         </div>
                     </div>
@@ -555,7 +597,8 @@
                         </div>
                         <div class="columnAA">
                             <h5 class="detail">
-                                ${company.notice_prefer}
+                                <!-- ${company.notice_prefer} -->
+                                <div class="textarea"><c:out value="${company.notice_prefer}" /></div>
                             </h5>
                         </div>
                     </div>
@@ -566,7 +609,8 @@
                         </div>
                         <div class="columnAA">
                             <h5 class="detail">
-                                ${company.notice_benefit}
+                                <!-- ${company.notice_benefit} -->
+								<div class="textarea"><c:out value="${company.notice_benefit}" /></div>
                             </h5>
                         </div>
                     </div>
@@ -618,7 +662,8 @@
                                     </script>
                                 </div> -->
                                 <!--<h5 class="loc">${com_location}</h5>-->
-                                <h5 class="loc">${com_location}</h5>
+                                <!-- <h5 class="loc">${com_location}</h5> -->
+                                <h5 class="loc">${company.com_location}</h5>
                             <!-- </h5> -->
                         </div>
                     </div>
@@ -629,51 +674,42 @@
                 <div class="right">
                     
                     <div class="box1">
-                        <h5 class="t">채용중인 다른 포지션</h5>
+                        <!-- <h5 class="t">채용중인 다른 포지션</h5> -->
+                        <h5 class="t">이 기업에서 진행중인 다른 공고</h5>
                     </div>
 
 
                     <div class="side">
-
-                        <div class="box2">
-                            <div class="box">
-                                <div class="t1">개발</div>
-                                <h5 class="t2">B2B 탄소회계 SaaS 웹 개발자</h5>
-                                <h5 class="t3">서울 성동구 ∙ 경력 1-10년 ∙ 상시  </h5>
-                            </div>
-                            <div class="boxbox">
-                                <button class="iconn">
-                                    <i class="fa-regular fa-bookmark" style = font-size:20px;></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="box2">
-                            <div class="box">
-                                <h5 class="t1">영업</h5>
-                                <h5 class="t2">B2B 탄소회계 Customer Succes Manager</h5>
-                                <h5 class="t3">서울 성동구 ∙ 신입 ∙ 상시  </h5>
-                            </div>
-                            <div class="boxbox">
-                                <button class="iconn">
-                                    <i class="fa-regular fa-bookmark" style = font-size:20px;></i>
-                                </button>
-                            </div>
-                        </div>
+						<c:forEach var="dto" items="${otherPost}" begin="0" end="1">
+							<a href="/jobPostDetail?notice_num=${dto.notice_num}">
+								<div class="box2">
+									<div class="box">
+										<!-- <div class="t1">개발</div>--><!--여기 들어갈 후보 : 근무 조건, 직책, 부서 -->
+										<div class="t1">${dto.notice_department} ∙ ${dto.notice_contactType}</div><!--여기 들어갈 후보 : 부서, 근무 조건으로 -->
+										<h5 class="t2"> ${dto.notice_title}</h5>
+										<h5 class="t3">${dto.notice_area1} ${dto.notice_area2} ∙ <span class="career">경력</span><span class="noticeCareer">${dto.notice_career}</span> ∙ ${dto.notice_endDate}</h5>
+									</div>
+									<div class="boxbox">
+										<button class="iconn">
+											<i class="fa-regular fa-bookmark" style = font-size:20px;></i>
+										</button>
+									</div>
+								</div>
+							</a>
+						</c:forEach>
 
                         <div class="pos" >
                             <button class="box3" >
-                                    <h5 class="m1">3개의 포지션</h5>
+                                    <!-- <h5 class="m1">${postNum}개의 포지션</h5> -->
+                                    <h5 class="m1" id="otherNotice">${postNum}개의 공고</h5>
                             </button>
                         </div>
                         <div class="pos">
-                            <button class="box3" onclick="resume()">
+                            <button class="box3" id="user_resume" onclick="resume()">
+                            <!-- <button class="box3 resume"> -->
                                     <h5 class="m1">지원하기</h5>
                             </button>
                         </div>
-                        
-
-
 
                     </div> <!-- side 끝-->
                     
@@ -699,24 +735,38 @@
             /*
             2024-07-09 서연주 
 
-            2024-07-13 임하진 연주님 코드 가져와서 수정함.
-			배열로 저장된 정보 : 콤마(,)기준으로 나눠서 하나씩 버튼에 넣기
+            2024-07-13 임하진 : 연주님 코드 가져와서 수정함.
+			배열로 가져온 정보 : 콤마(,)기준으로 나눠서 하나씩 버튼에 넣기
+
+			2024-07-24 임하진 : 스택 출력 문제로 span으로 태그 변경
             */
-     const noticeStack = "<c:out value='${company.notice_stack}'/>";
-            console.log(noticeStack);
+    //  const noticeStack = "<c:out value='${company.notice_stack}'/>";
+    //  const noticeStack = "<c:out value='${company.notice_stack}'/>";
+     var noticeStack = "${company.notice_stack}";
+	 console.log(noticeStack.length);
+	 if(noticeStack.length > 0){
+	 		console.log(noticeStack);
             const stacks = noticeStack.split(','); // 콤마로 나눠서 배열로 저장
             console.log(stacks);
             let output = "";
             for (let i = 0; i < stacks.length; i++) {
-                output += "<div class=mm1>" + stacks[i].trim() + "</div>";
+                // output += "<span class='mm1'>" + stacks[i].trim() + "</span>"; 통일성을 위해 button으로 변경
+                output += "<button class='mm1'>" + stacks[i].trim() + "</button>";
             }
             console.log("@# output=>" + output);
             $('.col6 .tech').html(output);
+		}			
 			
 	});
-    
 
-        // 24-07-09 하진
+// 24.07.29 하진
+// : 기업 회원의 경우 버튼 비활성화
+// : 개인이나 비회원의 경우, 버튼 활성화 및 외부팝업 발생
+var user_type = "${login_usertype}";
+console.log("user_type = "+user_type);
+// if (user_type == null || user_type == 1) {
+if (!user_type || user_type == 1) {
+        // 24-07-09 임하진 : 외부 팝업
         function resume() {
             // $(".pos .box3").add(".active");
             // var com_name = "${company.com_name}";
@@ -725,54 +775,92 @@
           
           //   const currentUrl =window.location.href;
             // // const urlParams = new url.searchParams(window.location.href);
+
+			$("#user_resume").toggleClass("active");// 내부 팝업이었으면 addClass로 설정하고 팝업 종료시 removieClass로 처리하면 되는데...아깝다.
             const urlParams = new URLSearchParams(location.search);
             // const urlParams = new URLSearchParams(currentUrl);
-            const notice_num = urlParams.get('notice_num');
+            var notice_num = urlParams.get('notice_num');
             console.log(notice_num);
-            var popupProperties = "width=600, height=400, resizable = no, scrollbars = no";
+            // var popupProperties = "width=600, height=400, resizable = no, scrollbars = no";
+            var popupProperties = "width=500, height=270, resizable = no, scrollbars = no";
             window.open("/profileInfo?notice_num="+notice_num,"profileInfo.jsp", popupProperties);
             // document.location.href="/profileInfo?"+notice_num;
-            /*
-            var popupURL = "/profileInfo";
-            var popupProperties = "width=600, height=400, resizable = no, scrollbars = no";
-            $.ajax({
-                url: "/profileInfo", // 보낼 URL
-                type: "POST", 
-                data: {com_name : com_name, notice_title:notice_title},
-                // data: {"com_name":"aaa"},
-                // success: function(response) {
-                    success: function() {
-                        window.open("","profileInfo.jsp", popupProperties);
-                    }
-                });
-                */
-            /*
-            var popupURL = "/profileInfo?notice_titlie="+notice_title+"&com_name="+com_name;
-            var popupURL = "/profileInfo";
-            // window.name = "부모창 이름"; 
-            var popupProperties = "width=600, height=400, resizable = no, scrollbars = no";
-            // window.open("open할 window", "자식창 이름", "팝업창 옵션");
-            // var pop = window.open("about:blank","content","width=300,height=300");
-            var pop = window.open(popupURL, "profileInfo.jsp", popupProperties);    
-            // */
-            // var popupProperties = "width=600, height=400, resizable = no, scrollbars = no";
-            // var com_name = "${company.com_name}";
-            // var notice_title = "${company.notice_title}";
-            // $.ajax({
-            //     url: "/profileList", // 보낼 URL
-            //     type: "POST", 
-            //     data: { com_name : com_name, notice_title:notice_title},
-            //     // data: {com_name, notice_title},
-            //     // data: {"com_name":"aaa"},
-            //     // success: function(response) {
-            //         success: function(location) {
-            //             console.log(location);
-            //             // alert("페이지 이동");
-            //         // //    pop.location.href="/profileInfo";
-            //         // document.location.href="/profileInfo?+notice";
-            //         window.open("/profileInfo?notice_num="+notice_num,"profileInfo.jsp", popupProperties);
-            //         }
-            //     });
+            
     }
+}else{
+	$("#user_resume").css("display","none");
+}
+
+// 24.07.28 side 부분 구현 -> 다른 채용 공고가 없을 경우의 로직
+	var postNum = "${postNum}";
+	if (postNum == 0) {
+		$("#otherNotice").text("다른 공고 보러 가기");
+		$(".t").css({"display":"none"});
+		$("#otherNotice").parent().on("click",function() {
+			$(this).addClass("active");
+			location.href="cardPageList";
+		});
+	}
+
+	// 24.07.29 하진
+	// 사이드 채용공고의 값이 신입이나 경력무관이면 .career class의 경력 문구 숨기기
+	var career =  document.querySelectorAll(".noticeCareer");
+	console.log("career.length = "+career.length);
+		for (let i = 0; i < career.length ; i++) {
+			var element = career[i];
+			var careerValue = element.textContent.trim();  // 요소의 텍스트 내용을 가져옴
+			console.log(careerValue);
+			// if (career[i] == "경력무관" || career[i] == "신입") {
+			if (careerValue == "경력무관" || careerValue == "신입") {
+				$(".career").css("display","none");
+			}
+		}
 
 </script>
+<script>
+	//24.07.30 지수
+	//파일 가져오기
+	$(document).ready(function () {
+		
+		var noticeNum = "${noticeNumber}";
+		console.log("notice_num=>","${noticeNumber}");
+		var uploadResultContainer = $(this).find('.uploadResult ul');
+
+		if (noticeNum) {
+			$.ajax({
+				url: '/registGetFileList',
+				type: 'GET',
+				data: { notice_num: noticeNum },
+				dataType: 'json',
+				success: function(data) {
+					showUploadResult(data, uploadResultContainer);
+				},
+				error: function(xhr, status, error) {
+					console.error('Error fetching file list for notice_num ' + noticeNum + ':', error);
+				}
+			});
+		} 
+   });
+   
+   function showUploadResult(uploadResultArr, uploadResultContainer){
+	   if (!uploadResultArr || uploadResultArr.length == 0) {
+		   return;
+	   }
+   
+	   var str = "";
+   
+	   $(uploadResultArr).each(function (i, obj) {
+		   var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+   
+		   str += "<li data-path='" + obj.uploadPath + "'";
+		   str += " data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'>";
+		   str += "<div>";
+		   str += "<span style='display:none;'>" + obj.fileName + "</span>";
+		   str += "<img src='/registDisplay?fileName=" + fileCallPath + "' alt='" + obj.fileName + "'>"; 
+		   str += "</div></li>";
+	   });
+   
+	   uploadResultContainer.empty().append(str);
+   }
+   
+   </script>

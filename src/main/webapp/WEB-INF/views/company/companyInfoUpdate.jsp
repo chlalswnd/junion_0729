@@ -10,7 +10,7 @@
 <!--    <link rel="stylesheet" href="css/default.css">-->
 <!--    <link rel="stylesheet" href="css/style.css">-->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/company_InfoUpdate.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/companyInfoUpdate.css">
     <!-- import font-awesome, line-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
@@ -117,12 +117,14 @@
                             </tr>
                             <tr>
                                 <th>비밀번호</th>
-                                <td><input type="text" class="modify" class="changepw"  placeholder="변경 확인을 위해 비밀번호를 입력해주세요" required></td>
+                                <td><input type="password" class="modify" id="checkPW"  placeholder="변경 확인을 위해 비밀번호를 입력해주세요" required></td>
                             </tr>
+                            <!-- ${login_pw} : 세션 설정 비밀번호 -> 따로 모델에 실어 보내지 않더라도 호출 가능 -->
                         </table><!-- table끝 -->
                         
                     </div>
                     <div class="modify">
+                        <!-- <input type="button" value="수정완료" class="commodify" onclick="pwcheck()"> -->
                         <input type="submit" value="수정완료" class="commodify">
                     </div>
       			</form>
@@ -154,4 +156,17 @@
         }
     }
     document.getElementById("dropdownSub").addEventListener("click", dropdown); // 드롭다운 메뉴 끝
+
+    $(".commodify").on("click", function () {
+        var sessionPW = "${login_pw}";
+        var checkPW = $("#checkPW").val();
+
+        if (sessionPW == checkPW) {
+            alert("변경이 완료되었습니다.");
+        } else {
+            alert("비밀번호가 일치하지 않습니다.");
+            $("#checkPW").focus();
+            return false;
+        }
+    });//수정 완료 버튼 클릭시 비밀번호 검사 로직
 </script>

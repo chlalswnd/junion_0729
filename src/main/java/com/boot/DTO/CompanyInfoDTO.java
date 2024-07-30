@@ -37,8 +37,8 @@ public class CompanyInfoDTO {
 	private String com_stack;
 	private int notice_count;//기업이 올린 공고의 수
 	private int com_scrap;//스크랩 수
+	private int experience_years;//업력 계산값을 담을 필드
 	
 	private List<CompanyAttachDTO> companyAttachList;
-
 	
 }

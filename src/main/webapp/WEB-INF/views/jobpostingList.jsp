@@ -127,94 +127,137 @@
 				
 				
 					
-<!--	                <div class="filterall">
-	                    <button class="filter">최근등록일순</button>
-	                    <button class="filter">채용유형</button>
-	                </div>-->
-					<div class="dtbox">
-						<input type="checkbox" id="allCheck" name="allCheck" class="allCheck">
-						<div class = "deletebox">
-	                    	<button class="deleteData" onclick="deleteValue();">삭제</button>
-						</div>
-					</div>
-						<!-- 전체 공고 -->
-						<c:if test="${totalCount.totalCount > 0}">
-						    <div id="all" class="job-section">
-						        <c:forEach items="${jobpostingList}" var="dto">
-						            <div class="box">
-						                <div class="left">
-											<div class=boxbox>
-						                    	<input type="checkbox" class="checkbox" name="RowCheck" value="${dto.notice_num}">
-											</div>
-						                    <div>
-						                        <div class="job-title">
-						                            <a href="jobpostingSupport">${dto.notice_title}</a> / ${dto.notice_num}
-						                        </div>
-						                        <div class="dates">${dto.notice_startDate} ~ ${dto.notice_endDate} </div>
-						                        <div class="end">공고 : ${dto.notice_final}</div>
-						                    </div>
-						                </div>
-						                <div class="right">
-						                    <div class="applicant-count">지원자 ${supportCount.t_count}</div>
-						                </div>
-						            </div>
-						        </c:forEach>
-						    </div>
-						</c:if>
 
-						<!-- 진행중인 공고 -->
-						<c:if test="${totalCount.onCount > 0}">
-						    <div id="proposal" class="job-section" style="display: none;">
-						        <c:forEach items="${jobpostingList}" var="dto">
-						            <c:if test="${dto.notice_final == '진행중'}">
-						                <div class="box">
-						                    <div class="left">
-												<div class=boxbox>
-													<input type="checkbox" class="checkbox" name="RowCheck" value="${dto.notice_num}">
-												</div>
-						                        <div>
-						                            <div class="job-title">
-						                               <a href="jobpostingSupport">${dto.notice_title}</a> / ${dto.notice_num}
-						                            </div>
-						                            <div class="dates">${dto.notice_startDate} ~ ${dto.notice_endDate} </div>
-						                            <div class="end">공고 : ${dto.notice_final}</div>
-						                        </div>
-						                    </div>
-						                    <div class="right">
-						                        <div class="applicant-count">지원자 ${supportCount.t_count}</div>
-						                    </div>
-						                </div>
-						            </c:if>
-						        </c:forEach>
-						    </div>
-						</c:if>
+				<!-- 전체 공고 -->
+				<c:if test="${totalCount.totalCount > 0}">
+				    <div id="all" class="job-section">
+				        <c:forEach items="${jobpostingList}" var="dto">
+				            <div class="box">
+				                <div class="left">
+				                    <div class="job">
+				                        <div class="jobjob">
+				                            <h5 class="carh5">${dto.notice_career}</h5>
+				                        </div>
+				                    </div>
+									
+									
+									
+				                    <div>
+				                        <div class="job-title">
+				                            <a href="jobpostingSupport?notice_num=${dto.notice_num}">${dto.notice_title}</a> / ${dto.notice_num}
+											<!--"${pageContext.request.contextPath}/jobpostingSupport?notice_num=${dto.notice_num}&resume_num=${dto.resume_num}"-->
+				                        </div>
+				                        <div class="dates">${dto.notice_startDate} ~ ${dto.notice_endDate} </div>
+				                        <div class="end">공고 : ${dto.notice_final}</div>
+				                    </div>
+				                </div>
+				                <div class="right">
+				                    <div class="deletejobp">
+				                        <a href="#" class="jobjob">
+				                            <h5 class="carh5" href="#">공고이동<!--jobpostingSupport?notice_num=${dto.notice_num}--></h5>
+				                        </a>
+				                    </div>
+				                    <div class="deletejobp">
+				                        <a href="#" onclick="deleteJobPosting('${dto.notice_num}')" class="jobjob">
+				                            <h5 class="carh5">삭제</h5>
+				                        </a>
+				                    </div>
+				                    <div class="applicant-count">
+				                        <div class="jobjob">
+				                            <h5 class="carh6">지원자 ${dto.t_count}</h5>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
+				        </c:forEach>
+				    </div>
+				</c:if>
 
-						<!-- 마감된 공고 -->
-						<c:if test="${totalCount.offCount > 0}">
-						    <div id="post" class="job-section" style="display: none;">
-						        <c:forEach items="${jobpostingList}" var="dto">
-						            <c:if test="${dto.notice_final == '마감'}">
-						                <div class="box">
-						                    <div class="left	">
-												<div class=boxbox>
-													<input type="checkbox" class="checkbox" name="RowCheck" value="${dto.notice_num}">
-												</div>
-						                        <div>
-						                            <div class="job-title">
-						                                <a href="jobpostingSupport">${dto.notice_title}</a> / ${dto.notice_num}
-						                            </div>
-						                            <div class="dates">${dto.notice_startDate} ~ ${dto.notice_endDate} </div>
-						                            <div class="end">공고 : ${dto.notice_final}</div>
-						                        </div>
-						                    </div>
-						                    <div class="right">
-						                        <div class="applicant-count">지원자 ${supportCount.t_count}</div>
-						                    </div>
-						                </div>
-						            </c:if>
-						        </c:forEach>
-						    </div>
-						</c:if>	
+				<!-- 진행중인 공고 -->
+				<c:if test="${totalCount.onCount > 0}">
+				    <div id="proposal" class="job-section" style="display: none;">
+				        <c:forEach items="${jobpostingList}" var="dto">
+				            <c:if test="${dto.notice_final == '진행중'}">
+				                <div class="box">
+				                    <div class="left">
+				                        <div class="job">
+				                            <div class="jobjob">
+				                                <h5 class="carh5">${dto.notice_career}</h5>
+				                            </div>
+				                        </div>
+				                        <div>
+				                            <div class="job-title">
+				                                <a href="jobpostingSupport?notice_num=${dto.notice_num}">${dto.notice_title}</a> / ${dto.notice_num}
+				                            </div>
+				                            <div class="dates">${dto.notice_startDate} ~ ${dto.notice_endDate} </div>
+				                            <div class="end">공고 : ${dto.notice_final}</div>
+				                        </div>
+				                    </div>
+				                    <div class="right">
+				                        <div class="deletejobp">
+				                            <a href="#" class="jobjob">
+				                                <h5 class="carh5">공고이동</h5>
+				                            </a>
+				                        </div>
+				                        <div class="deletejobp">
+				                            <a href="#" onclick="deleteJobPosting('${dto.notice_num}')" class="jobjob">
+				                                <h5 class="carh5">삭제</h5>
+				                            </a>
+				                        </div>
+				                        <div class="applicant-count">
+				                            <div class="jobjob">
+				                                <h5 class="carh6">지원자 ${dto.t_count}</h5>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </c:if>
+				        </c:forEach>
+				    </div>
+				</c:if>
+
+				<!-- 마감된 공고 -->
+				<c:if test="${totalCount.offCount > 0}">
+				    <div id="post" class="job-section" style="display: none;">
+				        <c:forEach items="${jobpostingList}" var="dto">
+				            <c:if test="${dto.notice_final == '마감'}">
+				                <div class="box">
+				                    <div class="left">
+				                        <div class="job">
+				                            <div class="jobjob">
+				                                <h5 class="carh5">${dto.notice_career}</h5>
+				                            </div>
+				                        </div>
+				                        <div>
+				                            <div class="job-title">
+				                                <a href="jobpostingSupport?notice_num=${dto.notice_num}">${dto.notice_title}</a> / ${dto.notice_num}
+				                            </div>
+				                            <div class="dates">${dto.notice_startDate} ~ ${dto.notice_endDate} </div>
+				                            <div class="end">공고 : ${dto.notice_final}</div>
+				                        </div>
+				                    </div>
+				                    <div class="right">
+				                        <div class="deletejobp">
+				                            <a href="#" class="jobjob">
+				                                <h5 class="carh5">공고이동</h5>
+				                            </a>
+				                        </div>
+				                        <div class="deletejobp">
+				                            <a href="#" onclick="deleteJobPosting('${dto.notice_num}')" class="jobjob">
+				                                <h5 class="carh5">삭제</h5>
+				                            </a>
+				                        </div>
+				                        <div class="applicant-count">
+				                            <div class="jobjob">
+				                                <h5 class="carh6">지원자 ${dto.t_count}</h5>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </c:if>
+				        </c:forEach>
+				    </div>
+				</c:if>
 				
 
             </div> <!-- container끝 -->
@@ -254,91 +297,49 @@
 <!-- ------------------------------------------- 스크립트 시작 ------------------------------->
 <script>
 	
-	// Delete 구문 시작
-	
-	$(function(){
-		var chkObj = document.getElementsByName("RowCheck");
-		var rowCnt = chkObj.length;
-		
-		$("input[name='allCheck']").click(function(){
-			var chk_listArr = $("input[name='RowCheck']");
-			for(var i =0; i<chk_listArr.length; i++) 
-			{
-				chk_listArr[i].checked = this.checked;
-			}
-		});
-		$("input[name='RowCheck']").click(function(){
-			if($("input[name='RowCheck']:checked").length == rowCnt) 
-			{
-				$("input[name='allCheck']")[0].checked = true;
-			}
-			else 
-			{
-				$("input[name='allCheck']")[0].checked = false;
-			}	
-		});
-	});	
-
-	function deleteValue() 
-	{
-		var url="jobpostingDelete";
-		var valueArr = new Array();
-		var list = $("input[name='RowCheck']");
-		for(var i=0; i < list.length; i++) 
-		{
-			if(list[i].checked) 
-			{
-				valueArr.push(list[i].value);
-			}
-		}
-		if(valueArr.length ==0) 
-		{
-			alert("선택된 글이 없습니다.");
-		}
-		else 
-		{
-			var chk = confirm("정말 삭제하시겠습니까?");
-			$.ajax
-			({
-				url:url,
-				type:'POST',
-				traditional : true,
-				data: 
-				{
-					valueArr : valueArr
-				},
-				success : function(jdata) 
-				{
-					if(jdata =1) 
-					{
-						alert("삭제성공");
-						location.replace("jobpostingList")
-					}
-					else 
-					{
-						alert("삭제실패");
-					}
-				}
-			});// ajax 끝
-		}
-		
+	function sendNoticeNum(notice_num, resume_num) {
+	    $.ajax({
+	        url: '${pageContext.request.contextPath}/jobpostingSupport', // 서버의 컨트롤러 URL
+	        type: 'POST',
+	        data: { 
+	            notice_num: notice_num,
+	            resume_num: resume_num
+	        },
+	        success: function(response) {
+	            // 성공 시 처리할 로직 (예: 페이지 이동, 메시지 표시 등)
+	            window.location.href = response.redirectUrl;
+	        },
+	        error: function(xhr, status, error) {
+	            // 에러 시 처리할 로직
+	            console.error("전송 중 오류 발생: ", error);
+	            alert("전송 중 오류가 발생했습니다.");
+	        }
+	    });
 	}
-		
-		
-		$(document).ready(function()
-		{					
-			/* 삭제 */
-		     $(".icon.delete").click(function(){
-		         $(this).parent().siblings(".deletePop").show();
-		     });
-
-		     $(".icon.cancel").on("click",function(){
-		         $(this).parents(".deletePop").hide();
-		     });
-					
-		});
 	
-	// Delete 구문 끝
+	
+	
+	function deleteJobPosting(notice_num) {
+	           if (confirm("정말로 삭제하시겠습니까?")) {
+	               $.ajax({
+	                   url: '${pageContext.request.contextPath}/jobpostingDelete',
+	                   type: 'POST',
+	                   data: { notice_num: notice_num },
+	                   success: function(response) {
+	                       if (response === "success") {
+	                           alert("삭제되었습니다.");
+	                           location.reload();
+	                       } else {
+	                           alert("삭제 중 오류가 발생했습니다.");
+	                       }
+	                   },
+	                   error: function(xhr, status, error) {
+	                       console.error("삭제 중 오류 발생: ", error);
+	                       alert("삭제 중 오류가 발생했습니다.");
+	                   }
+	               });
+	           }
+	       }
 	
 	
 	// 탭 메뉴 클릭 시 해당 섹션 보여주는 함수

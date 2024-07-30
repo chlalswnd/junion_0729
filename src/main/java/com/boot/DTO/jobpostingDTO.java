@@ -1,6 +1,7 @@
 package com.boot.DTO;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -78,12 +79,67 @@ public class jobpostingDTO {
 	private String offer_agree;
 	private String resume_agree;
 	private String resume_submitDate;
+	private String resume_comName;
 //	private String user_email;
 //	private String com_email;
 //	private String notice_num;
 	
 	
 	
+	private String resume_title;
+	private String user_address;
+	private int resume_pay;
+	private Date career_start;
+	private Date career_end;
+	private String resume_status;
+	private String resume_comPart;
+	private String resume_comPosition;
+	private int careerNum;
+	private Date resume_eduStart;
+	private Date resume_eduEnd;
+	private String resume_eduStatus;
+	private String resume_eduName;
+	private String resume_eduMajor;
+	private String resume_eduDegree;
+	private int eduNum;
+	private Date resume_exStart;
+	private Date resume_exEnd;
+	private String resume_exName;
+	private String resume_exContent;
+	private int exNum;
+	private Date resume_licenseDate;
+	private String resume_licenseContent;
+	private int licenseNum;
+	private String resume_portfolio_name;
+	private String resume_portfolio_url;
+	private int portfolioNum;
+	private String resume_intro;
+	private String resume_offer;
+	private int calculated_age;
+	private int user_questionNum;
+	private String user_questionAnswer;
+	private String user_tel;
+	private int user_type;
+	private String user_location;
+	private String user_location2;
+	private Date user_birthdate;
+	private String user_gender;
+
+
+   private String stack_name;	
+	private ArrayList<String> stack_names; // stack_name 리스트를 ArrayList로 정의
+	
+	
+    private String submit_status; // 합격, 불합격, 보류
+    private String submit_check;  // 미열람, 열람
+    // 필터링에 사용할 추가 필드
+    private String filterSubmitStatus; // 필터링에 사용
+    private String filterSubmitCheck;  // 필터링에 사용
+    private String status; // status 필드 추가
+    private String submitStatus; // status 필드 추가
+    
+    
+    
 	
 // ===================================== jobpostingOffer 끝 ================================
 

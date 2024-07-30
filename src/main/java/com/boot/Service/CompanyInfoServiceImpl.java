@@ -1,7 +1,10 @@
 package com.boot.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.boot.DAO.CompanyAttachDAO;
 import com.boot.DAO.CompanyInfoDAO;
+import com.boot.DAO.IndividualDAO;
+import com.boot.DAO.JoinDAO;
+import com.boot.DAO.boardBoardDAO;
+import com.boot.DTO.ComNoticeDTO;
+import com.boot.DTO.ComScrapDTO;
 import com.boot.DTO.CompanyInfoDTO;
+import com.boot.DTO.JoinDTO;
+import com.boot.DTO.boardBoardDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,29 +32,26 @@ public class CompanyInfoServiceImpl implements CompanyInfoService{
 	@Autowired
 	private SqlSession sqlSession;
 
-	
-//	@Override
-//	public CompanyInfoDTO comInfoByNum(int com_num) {
-//		CompanyInfoDAO dao = sqlSession.getMapper(CompanyInfoDAO.class); 
-//		CompanyInfoDTO dto = dao.comInfoByNum(com_num);
-//		return dto;
-//	}
-
-	//관심기업 목록
-	@Override
-	public ArrayList<CompanyInfoDTO> comListById(String user_email) {
-		log.info("@# CompanyInfoImpl comListById");
+	@Override//민중 메인 기업정보
+	public ArrayList<CompanyInfoDTO> comList() {  
+		log.info("@# comList list");
 		
 		CompanyInfoDAO dao = sqlSession.getMapper(CompanyInfoDAO.class); 
-		ArrayList<CompanyInfoDTO> list = dao.comListById(user_email);
+		ArrayList<CompanyInfoDTO> list = dao.comList();  // dao값을 배열CompanyInfoDTO 'list' 에 집어넣음 
 		
-		log.info("@# comListByNum list=>"+list);
-    		
 		return list;
 	}
 	
 	
 	
+	
+	@Override
+	public ArrayList<ComNoticeDTO> getEndNotice(String com_email){//마감된 공고를 가져오는 메소드
+		CompanyInfoDAO dao= sqlSession.getMapper(CompanyInfoDAO.class);
+		ArrayList <ComNoticeDTO> list = dao.getEndNotice(com_email);
+		
+		return list;
+	}
 	
 	@Override
 	public CompanyInfoDTO companyInfo(String email) {//기업 정보 페이지
@@ -58,6 +65,12 @@ public class CompanyInfoServiceImpl implements CompanyInfoService{
 	}
 	
 	@Override
+	public void comPWchange(HashMap<String, String> param){//기업 마이페이지, 비밀번호 변경 팝업 값으로 비밀번호 변경
+		CompanyInfoDAO dao= sqlSession.getMapper(CompanyInfoDAO.class);
+		dao.comPWchange(param);
+	}
+	
+	@Override
 	public CompanyInfoDTO InfoMini(String email) {//기업 정보 수정(기본) 뿌릴 내용
 		
 		CompanyInfoDAO dao= sqlSession.getMapper(CompanyInfoDAO.class);
@@ -66,6 +79,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService{
 		
 		return dto;
 	}
+	
 	
 	@Override
 	public void modify_Info(HashMap<String, String> param) {//기업 기본정보 수정(업데이트)
@@ -83,6 +97,36 @@ public class CompanyInfoServiceImpl implements CompanyInfoService{
 		CompanyInfoDAO dao = sqlSession.getMapper(CompanyInfoDAO.class);
 		dao.modify_Detail(param);
 		
+		String com_email = param.get("com_email");
+		
+		
+		ArrayList <CompanyInfoDTO> list = dao.getStackList(com_email);
+		if (list.size()>= 2) {
+			for (int i = 1; i < list.size(); i++) {
+				String stack = list.get(i).getCom_stack();
+				log.info("stack 삭제 체크중 "+stack);
+
+				dao.removeStack(stack, com_email);
+				
+			}
+		}
+		
+		String stack = param.get("com_stack");
+		log.info(stack);
+		
+		String[] stacks = stack.split(",");
+
+		if (stacks.length < 2) {// 상세정보 수정시 선택 스택 값을 확인 후 추가하는 과정(3,4)
+			log.info("if문 속입니다."+stack);
+			dao.oneStack(stack, com_email);
+		} else {
+			stack = stacks[0];
+			dao.oneStack(stack, com_email);
+			for (int i = 1; i < stacks.length; i++) {				
+				stack = stacks[i].trim();
+				dao.addStacks(stack, com_email);
+			}
+		}
 	}
 
 
@@ -124,7 +168,17 @@ public class CompanyInfoServiceImpl implements CompanyInfoService{
 			
 		}
 
+	@Override
+	public ArrayList<CompanyInfoDTO> comListById(String user_email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	
+
+
+
+
+
+
 }
 

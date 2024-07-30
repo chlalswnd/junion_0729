@@ -6,14 +6,29 @@
 
 	<!-- 마감여부 포함 LIST 구하는 쿼리-->
     <select id="jobpostingList" resultType="com.boot.DTO.jobpostingDTO"> 
-       	SELECT notice_num, com_email, notice_title, notice_career, notice_startDate, notice_endDate, resume_num,
-       	CASE 
-        WHEN notice_endDate >= CURRENT_TIMESTAMP THEN '진행중'
-        ELSE '마감'
-       	END AS notice_final 
-        FROM notice_tb
-		where com_email = #{com_email}
-        order by notice_num desc
+		SELECT 
+		    n.notice_num,
+		    n.com_email,
+		    n.notice_title,
+		    n.notice_career,
+		    n.notice_startDate,
+		    n.notice_endDate,
+		    CASE 
+		        WHEN n.notice_endDate >= CURRENT_TIMESTAMP THEN '진행중'
+		        ELSE '마감'
+		    END AS notice_final,
+		    COALESCE(s.t_count, 0) AS t_count
+		FROM 
+		    notice_tb n
+		LEFT JOIN 
+		    (SELECT notice_num, COUNT(*) AS t_count
+		     FROM submit_tb
+		     GROUP BY notice_num) s
+		ON n.notice_num = s.notice_num
+		WHERE 
+		    n.com_email = #{com_email}
+		ORDER BY 
+		    n.notice_num DESC
     </select>
         
     <!-- 안전모드 켜져있으면 끄고 테스트하기 (delete구문 오류나면 확인하기)-->
@@ -43,34 +58,83 @@
     </select>
 	<!--================================================= jobposting 끝 =================================================-->
 	
-	<!-- t_count(지원자 수) 컬럼 가져오는 쿼리 -->
     <select id="jobpostingSupport" resultType="com.boot.DTO.jobpostingDTO"> 
-		SELECT 
-		    user_name, resume_gender, resume_age, resume_stack, career_month, resume_writeDate, resume_num,
-		    YEAR(CURDATE()) - YEAR(resume_age) + 1 AS korean_age
+	    SELECT 
+		    r.resume_num,r.resume_writeDate,r.resume_title,r.user_email AS resume_user_email,r.user_address,
+		    r.resume_pay,r.career_month, r.career_start,r.career_end,r.resume_status,r.resume_comName,r.resume_comPart,
+		    r.resume_comPosition,r.careerNum,r.resume_eduStart,r.resume_eduEnd,r.resume_eduStatus,r.resume_eduName,
+		    r.resume_eduMajor, r.resume_eduDegree, r.eduNum, r.resume_exStart, r.resume_exEnd, r.resume_exName, r.resume_exContent,
+		    r.exNum, r.resume_licenseDate, r.resume_licenseContent, r.licenseNum, r.resume_portfolio_name, r.resume_portfolio_url,
+		    r.portfolioNum, r.resume_intro, r.resume_offer,TIMESTAMPDIFF(YEAR, STR_TO_DATE(u.user_birthdate, '%Y-%m-%d'), CURDATE()) AS calculated_age, u.user_email, u.user_name, u.user_questionNum, u.user_questionAnswer,
+		    u.user_tel, u.user_type, u.user_location, u.user_location2, u.user_birthdate, u.user_gender, s.notice_num, s.com_email, s.joincompany_date
 		FROM 
-		    resume_tb 
-	    <!--where resume_num = '35'-->
-		ORDER BY 
-		    resume_num DESC
+		    RESUME_TB r
+		JOIN 
+		    USER_TB u ON r.user_email = u.user_email
+		JOIN 
+		    submit_tb s ON r.resume_num = s.resume_num
+		WHERE 
+		    s.notice_num = #{notice_num}
 
 	</select>
 	
-    <select id="jobpostingSupportCount" resultType="com.boot.DTO.jobpostingDTO"> 
-		SELECT 
-		    COUNT(*) AS t_count
-		FROM 
-		    resume_tb 
-		    
-		ORDER BY 
-		    resume_num DESC
-	</select>
+<!--    <select id="jobpostingSupportCount" resultType="int"> 
+		SELECT COUNT(*) AS t_count
+		FROM submit_tb
+		WHERE notice_num = #{notice_num}
+	</select>-->
 
+    <select id="jobpostingResumeStack" resultType="com.boot.DTO.jobpostingDTO"> 
+		SELECT resume_num,stack_name
+		FROM resume_stack
+		WHERE resume_num = #{resume_num}
+	</select>
+	
+	
+	<!-- 지원자 목록 필터링 쿼리 -->
+<select id="jobpostingSupportFiltered" parameterType="map" resultType="com.boot.DTO.jobpostingDTO">
+    SELECT 
+        r.resume_num, r.resume_writeDate, r.resume_title, r.user_email AS resume_user_email, r.user_address,
+        r.resume_pay, r.career_month, r.career_start, r.career_end, r.resume_status, r.resume_comName, r.resume_comPart,
+        r.resume_comPosition, r.careerNum, r.resume_eduStart, r.resume_eduEnd, r.resume_eduStatus, r.resume_eduName,
+        r.resume_eduMajor, r.resume_eduDegree, r.eduNum, r.resume_exStart, r.resume_exEnd, r.resume_exName, r.resume_exContent,
+        r.exNum, r.resume_licenseDate, r.resume_licenseContent, r.licenseNum, r.resume_portfolio_name, r.resume_portfolio_url,
+        r.portfolioNum, r.resume_intro, r.resume_offer,
+        TIMESTAMPDIFF(YEAR, STR_TO_DATE(u.user_birthdate, '%Y-%m-%d'), CURDATE()) AS calculated_age, u.user_email, u.user_name, u.user_questionNum, u.user_questionAnswer,
+        u.user_tel, u.user_type, u.user_location, u.user_location2, u.user_birthdate, u.user_gender, s.notice_num, s.com_email, s.joincompany_date,
+        s.submit_check
+    FROM 
+        RESUME_TB r
+    JOIN 
+        USER_TB u ON r.user_email = u.user_email
+    JOIN 
+        submit_tb s ON r.resume_num = s.resume_num
+    WHERE 
+        s.notice_num = #{notice_num}
+        <if test="submitStatus != null and submitStatus != ''">
+            AND r.resume_status = #{submitStatus}
+        </if>
+        <if test="submitCheck != null and submitCheck != ''">
+            AND s.submit_check = #{submitCheck}
+        </if>
+</select>
+
+
+    <!-- 상태 업데이트 쿼리 추가 -->
+	<update id="updateSubmitStatus">
+	    UPDATE submit_tb
+	    SET submit_status = #{status}
+	    WHERE resume_num = #{resume_num}
+	    AND notice_num = #{notice_num}
+	</update>
+    
+    
+    
 <!--================================================= jobposting List 끝 =================================================-->
 	
     <insert id="jobpostingOffer"> 
 		INSERT INTO offer (offer_title, offer_name, offer_content, offer_job, offer_career, offer_pay, resume_num)
-	    VALUES (#{offer_title}, #{offer_name}, #{offer_content}, #{offer_job}, #{offer_career}, #{offer_pay}, #{resume_num});
+	    VALUES (#{offer_title}, #{offer_name}, #{offer_content}, #{offer_job}, #{offer_career}, #{offer_pay}, #{resume_num})
 	</insert>
 	
 	

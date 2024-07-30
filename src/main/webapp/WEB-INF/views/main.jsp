@@ -42,15 +42,22 @@
                     <div class="sectionA">
                         <div class="sectionName">
                             <div class="subtitle">신입 개발자 채용</div>
-                                <a href="#" class="more">더보기
+                                <a href="cardPageList" class="more">더보기
                                     <i class="fa-solid fa-angle-right"></i>
                                 </a>
                         </div><!--sectionName-->
 
                         <div class="cardPost">
                             <c:forEach items="${mainNotice}" var="dto">
-                                <a class="con" href="jobPostDetail?notice_num=${dto.notice_num}">
-                                    <div class="image"></div>
+                                <a class="con" href="jobPostDetail?notice_num=${dto.notice_num}" data-notice-num="${dto.notice_num}">
+                                    <div class="image">
+                                        <div class="uploadResult">
+                                            <ul>
+
+                                            </ul>
+                                        </div>
+                                        <!-- <input type="hidden" name="notice_num" value="${dto.notice_num}"> -->
+                                    </div>
                                     <div class="postSub">
                                         <div class="category">
                                             ${dto.com_name}
@@ -67,14 +74,14 @@
                     <div class="sectionB">
                         <div class="sectionName">
                             <div class="subtitle">기업 공고</div>
-                            <a href="#" class="more">더보기
+                            <a href="cardPageList" class="more">더보기
                                 <i class="fa-solid fa-angle-right"></i>
                             </a>
                         </div><!--sectionName-->
                         <div class="themaCon">
                             <div class="postThema">
                                 <div class="sectionName">
-                                    <h5 class="subtitle"><span>신입</span> TOP 50</h5>
+                                    <h5 class="subtitle"><span style="color: #FFA500;">신입</span> TOP 5</h5>
                                     <a href="#" class="moreView">더보기
                                         <i class="fa-solid fa-angle-right"></i>
                                     </a>
@@ -98,7 +105,7 @@
                             </div><!--thema 영역-->
                             <div class="postThema">
                                 <div class="sectionName">
-                                    <div class="subtitle"><span>경력</span> 인기 TOP 50</div>
+                                    <div class="subtitle"><span style="color: #FFA500;">경력</span> 인기 TOP 5</div>
                                     <a href="#" class="moreView">더보기
                                         <i class="fa-solid fa-angle-right"></i>
                                     </a>
@@ -122,7 +129,7 @@
                             </div><!--thema 영역-->
                             <div class="postThema">
                                 <div class="sectionName">
-                                    <div class="subtitle"><span>오늘</span> 뜬 인기 TOP 50</div>
+                                    <div class="subtitle"><span style="color: #FFA500;">오늘</span> 뜬 인기 TOP 5</div>
                                     <a href="#" class="moreView">더보기
                                         <i class="fa-solid fa-angle-right"></i>
                                     </a>
@@ -148,7 +155,7 @@
                     </div><!--sectionB 끝-->
                 </section>
             </div><!--innerCon 끝-->
-
+            
             <div class="subBanner">
                 <a href="#" class="content">
                     <div class="bannerTitle">주니온에서 지원하는 신입개발자 취업성공패키지</div>
@@ -160,107 +167,27 @@
                 <div class="sectionC">
                     <div class="sectionName">
                         <div class="subtitle">추천 기업</div>
-                        <a href="#" class="more">더보기
+                        <a href="comList" class="more">더보기
                             <i class="fa-solid fa-angle-right"></i>
                         </a>
                     </div><!--sectionName 끝-->
                     <div class="postSection">
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
+                        <c:forEach items="${mainRecommendCom}" var="dto">
+                            <div class="a" data-com-email="${dto.com_email}">
+                                <div class="conImage">
+                                    <div class="uploadResult">
+                                        <ul>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="conProfile" onclick="location.href='comDetail?com_email=${dto.com_email}'" style="cursor:pointer;">
+                                    <div class="conTitle">${dto.com_name}</div>
+                                    <div class="conSec">여기에 뭐 넣어여?</div>
+                                </div>
+                                <button type="button" class="more" onclick="location.href='comDetail?com_email=${dto.com_email}'" style="cursor:pointer;">바로가기</button>
                             </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
-                        <div class="a">
-                            <div class="conImage"></div>
-                            <div class="conProfile">
-                                <div class="conTitle">투썸플레이스</div>
-                                <div class="conSec">숙박, 음식점</div>
-                            </div>
-                            <button type="button" class="more">바로가기</button>
-                        </div>
+                        </c:forEach>
                     </div><!--postSection 끝-->
                 </div><!--sectionC 끝-->
             </div><!--innerCon 끝-->
@@ -295,3 +222,73 @@
     </div>
 </body>
 </html>
+<script>
+
+ $(document).ready(function () {
+    // con클래스 반복하면서 데이터 가져옴
+    $('.con').each(function () {
+        // con클래스 data-notice-num 속성에서 값을 가져옴
+        var noticeNum = $(this).data('notice-num');
+        
+        // 현재 con클래스 .uploadResult 요소를 선택
+        var uploadResultContainer = $(this).find('.uploadResult ul');
+
+        if (noticeNum) {
+            $.ajax({
+                url: '/mainRegistFileList',
+                type: 'GET',
+                data: { notice_num: noticeNum },
+                dataType: 'json',
+                success: function(data) {
+                    showUploadResult(data, uploadResultContainer);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching file list for notice_num ' + noticeNum + ':', error);
+                }
+            });
+        } 
+    });
+    $('.a').each(function () {
+        var comEmail = $(this).data('com-email');
+        
+        var uploadResultContainer = $(this).find('.uploadResult ul');
+
+        if (comEmail) {
+            $.ajax({
+                url: '/mainComFileList',
+                type: 'GET',
+                data: { com_email: comEmail },
+                dataType: 'json',
+                success: function(data) {
+                    showUploadResult(data, uploadResultContainer);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching file list for com_email ' + comEmail + ':', error);
+                }
+            });
+        }
+    });
+});
+
+function showUploadResult(uploadResultArr, uploadResultContainer){
+    if (!uploadResultArr || uploadResultArr.length == 0) {
+        return;
+    }
+
+    var str = "";
+
+    $(uploadResultArr).each(function (i, obj) {
+        var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+
+        str += "<li data-path='" + obj.uploadPath + "'";
+        str += " data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'>";
+        str += "<div>";
+        str += "<span style='display:none;'>" + obj.fileName + "</span>";
+        str += "<img src='/mainDisplay?fileName=" + fileCallPath + "' alt='" + obj.fileName + "'>"; 
+        str += "</div></li>";
+    });
+
+    uploadResultContainer.empty().append(str);
+}
+
+</script>

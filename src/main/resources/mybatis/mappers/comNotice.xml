@@ -3,66 +3,36 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.boot.DAO.ComNoticeDAO">
-<!--하진-->
-   <!-- 	대메뉴 : 채용, 이동. 정보 뿌리기  -->
-	<select id="JobPostCard" resultType="com.boot.DTO.ComNoticeDTO">
-      select notice_num, notice_title, com_name, notice_area1,
-          notice_area2, notice_career
-          from notice_tb n 
-          left join com_tb c 
-          on n.com_email = c.com_email
-   </select>
-   
-<!--	채용공고 클릭, 상세페이지 이동시 조회수 증가-->
-	<update id="hitUP">
-	update  notice_tb set notice_hit= notice_hit+1  where notice_num=#{notice_num}
-	</update>
-	
-	
-<!-- 24.07.24(수) 하진 : 테이블 정규화로 인해 쿼리 수정 -> join -->
-   <select id="JobPost" resultType="com.boot.DTO.ComNoticeDTO">
-      select notice_title, n.com_email, c.com_name, notice_jobInfo, notice_condition, 
-         notice_prefer, notice_benefit, nt.stack, notice_startDate, notice_endDate, 
-         notice_area1, notice_area2, notice_career, notice_department, 
-         notice_position, notice_recruitNum, notice_pay1, notice_pay2 
-         from notice_tb n join notice_stack nt on n.com_email = nt.com_email
-               join com_tb c on n.com_email = c.com_email
-            where nt.notice_num=1;
-   </select>
-<!--	채공공고 상세 이동시, 회사 위치 찾아오기-->
-	<select id="comLocation" resultType="String">
-		select com_location from com_tb where com_email=#{com_email}
-	</select>
-	
-	
-<!--	지원하기 클릭, 공고 정보 가져오기 -->
-	<select id="getNoticeInfo" resultType="com.boot.DTO.ComNoticeDTO">
-		select notice_title, com_name, com_email 
-		from notice_tb n 
-        left join com_tb c 
-		where n.notice_num=#{notice_num}
-	</select>
-	
-<!--	지원하기 클릭, 이력서 정보 가져오기 -->
-	<select id="getProfileList" resultType="com.boot.DTO.ResumeDTO">
-		select resume_title, resume_num, user_email from resume_tb where user_email=#{user_email}
-	</select>
-	
-<!--	지원 버튼 클릭, 이력서 정보 가져오기 -->
-	<select id="getResumeNum" resultType="com.boot.DTO.ComNoticeDTO">
-		select resume_num from notice_tb where notice_num=#{notice_num}
-	</select>
-	
-<!--	버튼 클릭, 이력서 번호 비교 후 이를 공고 테이블에 추가-->
-	<update id="insertResumNum">
-	 	update notice_tb set resume_num=#{resume_num} where notice_num=#{notice_num}
-	</update>
-	
-	<!--	이력서제출시  submit테이블에 정보 추가-->
-	<insert id="updateSubmitData" parameterType="com.boot.DTO.SubmitDTO">
-		insert into submit_tb(notice_num, resume_num, user_email) 
-			   			values(#{notice_num}, #{resume_num}, #{user_email})
-    </insert>
+<!-- 하진 -->
+<!--  	대메뉴 : 채용, 이동. 정보 뿌리기   -->
+<!--  24.07.24(수) 하진 : 테이블 정규화로 인해 쿼리 수정  -> join  -->
+<select id="JobPostCard" resultType="com.boot.DTO.ComNoticeDTO"> select notice_num, notice_title, c.com_name, notice_area1, notice_area2, notice_career from notice_tb n join com_tb c on n.com_email = c.com_email </select>
+<!-- 	채용공고 클릭, 상세페이지 이동시 조회수 증가 -->
+<!-- 24.07.28 하진 : 조회수가 1에서 더이상 증가하지 않아 쿼리 확인, 쿼리 수정함 -->
+<update id="hitUP"> update notice_tb set notice_hit = notice_hit+1 where notice_num=#{notice_num} </update>
+<!--  채용공고 클릭시 상세정보 페이지 이동, 정보 뿌리기 -->
+<!--  2024-07-24 하진 : 테이블 정규화로 인해 쿼리 수정 -> join  -->
+<!--  2024-07-24 하진 : 재수정...join 오류 -->
+<select id="JobPost" resultType="com.boot.DTO.ComNoticeDTO"> SELECT n.notice_title, n.com_email, c.com_name, n.notice_jobInfo, c.com_location, n.notice_condition, n.notice_prefer, n.notice_benefit, nt.notice_stack, n.notice_startDate, n.notice_endDate, n.notice_area1, n.notice_area2, n.notice_career, n.notice_department, n.notice_position, n.notice_recruitNum, n.notice_pay1, n.notice_pay2 FROM notice_tb n JOIN (SELECT com_email, GROUP_CONCAT(stack SEPARATOR ', ') AS notice_stack FROM notice_stack WHERE notice_num = #{notice_num} GROUP BY com_email) nt ON n.com_email = nt.com_email JOIN com_tb c ON n.com_email = c.com_email WHERE n.notice_num = #{notice_num}; </select>
+<!-- 	채용공고 상세정보 페이지로 이동시 사이드에 해당 기업의 다른 공고를 출력하는 쿼리 -->
+<select id="otherJobPost" resultType="com.boot.DTO.ComNoticeDTO"> select notice_num, notice_title, notice_area1, notice_area2, notice_career, notice_endDate, notice_department, notice_contactType from notice_tb where notice_endDate > now() and com_email=(select com_email from notice_tb where notice_num=#{notice_num}) and notice_num != #{notice_num} order by notice_hit desc; </select>
+<!-- 	지원하기 클릭, 외부 팝업에 공고 정보 가져오기  -->
+<select id="getNoticeInfo" resultType="com.boot.DTO.ComNoticeDTO"> select notice_title, c.com_name, n.com_email from notice_tb n join com_tb c on n.com_email = c.com_email where notice_num=#{notice_num} </select>
+<!-- 	지원하기 클릭, 외부 팝업에 이력서 정보 가져오기  -->
+<select id="getProfileList" resultType="com.boot.DTO.ResumeDTO">
+<!-- 		select resume_title, resume_num, user_email from resume_tb where user_email=#{user_email} -->
+select resume_title, resume_num from resume_tb where user_email=#{user_email}
+</select>
+<!-- 	지원 버튼 클릭시, 지원 테이블에서 개인 회원 이메일 정보 가져오기(비교 목적)  -->
+<select id="getResumeNum" resultType="com.boot.DTO.SubmitDTO"> select user_email from submit_tb where notice_num=#{notice_num} </select>
+<!-- 	버튼 클릭, 이력서 번호 비교를 위한 쿼리 -->
+<!-- 	<select id="getCompareList" resultType="com.boot.DTO.SubmitDTO"> -->
+<!-- 	 	update notice_tb set resume_num=#{resume_num} where notice_num=#{notice_num} -->
+<!-- 	</select> -->
+<!-- 	이력서 제출시  submit테이블에 정보 추가 -->
+<!-- 	24.07.25  하진 : result type 변경 -->
+<!-- 	<insert id="updateSubmitData" parameterType="com.boot.DTO.SubmitDTO"> -->
+<insert id="updateSubmitData"> insert into submit_tb(notice_num, resume_num, user_email, com_email) values(#{notice_num}, #{resume_num}, #{user_email}, #{com_email}) </insert>
 
 <!--지수-->
 
@@ -113,6 +83,21 @@
     <delete id="registDeleteFile">
 		delete from notice_attach where notice_num=#{notice_num}
     </delete>
+
+
+
+
+
+<!-- 연주 -->
+	<!-- 최근본 공고 저장하기 -->
+	<insert id="updateRecentNotice" parameterType="com.boot.DTO.RecentNoticeDTO">
+		insert into RECENT_NOTICE(notice_num, user_email) values (#{notice_num}, #{user_email})
+    </insert>
+	
+	<!-- 최근본 공고 테이블에 이미 있는 데이터인지 확인하기 -->
+	<select id="checkRecentNotice" resultType="int">
+		SELECT COUNT(*) FROM RECENT_NOTICE WHERE notice_num =#{notice_num} AND user_email = #{user_email}
+    </select>
 
 </mapper>
 

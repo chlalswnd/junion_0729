@@ -46,6 +46,7 @@ public class boardBoardController {
 	public String boardWrite(boardBoardDTO boardDTO) {
 		log.info("@# 보드컨트롤러 boardWrite");
 		log.info("@# 보드컨트롤러 boardDTO=>"+boardDTO);
+		log.info("@# 보드컨트롤러 boardDTO=>"+boardDTO);
 		
 		if (boardDTO.getAttachList() != null) {
 			boardDTO.getAttachList().forEach(attach -> log.info("@# 보드컨트롤러 write / attach 호출=>"+attach));

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -102,7 +103,7 @@ main .mainContainer
   gap: 40px 0;
 }
 
-/*최근공고 타이틀+숫자*/
+/*스크랩공고 타이틀+숫자*/
 
 .mainContainer .recentJobPost
 {
@@ -186,12 +187,14 @@ main .mainContainer
 .mainContainer .searchWrap .optionSorRight
 {
   margin-left: auto ;
-}
-.mainContainer .searchWrap .optionSorRight .search_Form
-{
   display: flex;
   gap : 10px;
 }
+/* .mainContainer .searchWrap .optionSorRight .search_Form
+{
+  display: flex;
+  gap : 10px;
+} */
 
 
 /* 검색창*/
@@ -257,7 +260,7 @@ main .mainContainer .jobPostList
   border:1px solid var(--border-color-gray);
   cursor: pointer;
 }
-.mainContainer .jobPostList .postBox .boxLeft label
+.mainContainer .jobPostList .postBox .boxLeft a
 {
   font-size: var(--font-size14);
   color: var(--color-gray);
@@ -296,13 +299,14 @@ main .mainContainer .jobPostList
   display: flex;
   gap: 10px;
   align-items: baseline;
-  cursor: pointer;
 }
 .postBox .boxMiddle .resumeInfo a
 {
   color: var(--color-gray);
+  text-decoration: underline;
+  font-size: var(--font-size14);
 }
-.postBox .boxMiddle .resumeInfo .submitStatus .statusCon
+.postBox .boxMiddle .resumeInfo .statusCon
 {
   display: flex;
   gap: 7px;
@@ -315,20 +319,19 @@ main .mainContainer .jobPostList
   font-size: 14px;
 }
 
-
-.postBox .boxMiddle .resumeInfo .submitStatus 
+.postBox .boxMiddle .resumeInfo  
 {
   display: flex;
   gap: 10px;
 }
-.postBox .boxMiddle .resumeInfo .submitStatus .resumeIcon
+.postBox .boxMiddle .resumeInfo .resumeIcon
 {
   height: 16px;
 }
-.postBox .boxMiddle .resumeInfo .submitStatus p
+.postBox .boxMiddle .resumeInfo p
 {
   font-size: var(--font-size14);
-  text-decoration: underline;
+  /* text-decoration: underline; */
 }
 
 .boxMiddle .resumeInfo .submitDate 
@@ -343,7 +346,7 @@ main .mainContainer .jobPostList
 /*공고 박스 오른쪽*/
 .mainContainer .jobPostList .postBox .boxRight
 {
-  width: 200px;
+  width: 220px;
   display: flex;
   font-size: var(--font-size14);
   gap: 10px;
@@ -351,40 +354,20 @@ main .mainContainer .jobPostList
 }
 
 /*지원상태 탭*/
-.postBox .boxRight .submitCon
-{
-  width: 80px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items:center;
-  margin-top: 34px;
-}
-
-.postBox .boxRight .submitCon button
-{
-  width: 80px;
-  height: 32px;
-  background-color: var(--button-gray);
-  border:1px solid var(--border-color-gray);
-  color: var(--color-gray);
-  font-size: var(--font-size16);
-  border-radius: 6px;
-  align-items:center;
-  justify-content:center;
-}
-/*채용진행상태 탭*/
+.postBox .boxRight .submitCon,
 .postBox .boxRight .postCon
+
 {
-  width: 80px;
+  width: 90px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   align-items:center;
-  margin-top: 34px;
+  margin-top: 32px;
 }
 
-.postBox .boxRight .postCon button
+button.submitTab,
+button.postStatus
 {
   width: 80px;
   height: 32px;
@@ -396,6 +379,8 @@ main .mainContainer .jobPostList
   align-items:center;
   justify-content:center;
 }
+
+
 /*휴지통아이콘*/
 .postBox .boxRight .delIcon
 {
@@ -404,7 +389,7 @@ main .mainContainer .jobPostList
   align-items:center;
   justify-content:center;
   cursor: pointer;
-}
+} */
 .postBox .boxRight .delIcon i
 {
   font-size: 16px;
@@ -471,51 +456,48 @@ main .mainContainer .jobPostList
                 <div class="mainContainer">
                     <div class="recentJobPost">
                       <h3 class="title">스크랩 공고</h3>
-                      <h3 class="listNum">${noticeList.size()}</h3>
+                      <h3 class="listNum">${pageMaker.total}</h3>
                     </div>
                     <div class="listTable">
-                        <div class="searchWrap">
-                            <div class="optionSortLeft">
-                                <input type="checkbox" id="check_all" value="회사명">
-                                <button class="selectDel">삭제</button>
-                                <!-- 아래는 타임리프문법이라 바꾸긴 해야됨 -->
-                                <select id="orderBy" class="custom-select" 
-                                        th:onchange="|location.href='?searchText=' + document.querySelector('#searchText').value + '&amp;orderBy=' + this.value;|">
-                                    <option value="desc" th:selected="${orderBy == 'desc'}">최신순</option>
-                                    <option value="asc" th:selected="${orderBy == 'asc'}">오래된순</option>
-                                </select>
-                                <select id="orderBy" class="custom-select" 
-                                        th:onchange="|location.href='?searchText=' + document.querySelector('#searchText').value + '&amp;orderBy=' + this.value;|">
-                                    <option value="desc" th:selected="${orderBy == 'desc'}">지원완료</option>
-                                    <option value="asc" th:selected="${orderBy == 'asc'}">미지원</option>
-                                </select>
-                                <select id="orderBy" class="custom-select"
-                                        th:onchange="|location.href='?searchText=' + document.querySelector('#searchText').value + '&amp;orderBy=' + this.value;|">
-                                    <option value="desc" th:selected="${orderBy == ''}">채용중</option>
-                                    <option value="asc" th:selected="${orderBy == ''}">접수마감</option>
-                                </select>
-                                <!-- <select class="scrapDate" name="sort" id="sort" title="정렬순서" onchange="location.href=this.value">
-                                    <option value="/zf_user/pds-resume/resume-download/order/id" label="">최근 등록순</option>
-                                    <option value="//경로적어야//" label="최근등록순">최근 등록순</option>
-                                    <option value="//경로적어야//" label="오래된순">오래된순</option>
-                                </select>//이건 네이버게시판 -->
-                            </div><!-- optionSortLeft 끝 -->
-                            <div class="optionSorRight">
-                                <form method="get" id="searchForm">
-                                    <div class="search_Form">
-                                        <input type="text" id="keyword" name="keyword" placeholder="기업명, 채용공고제목" required >
-                                        <!-- <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}"> -->
-                                        <!-- <input type="hidden" name="amount" value="${pageMaker.cri.amount}">페이징 처리를 위한 amount -->
-                                        <button class="searchBtn" type="submit">검색하기</button>
-                                    </div>
-                                </form><!-- searchForm / optionSortBtn right 끝 --> 
-                            </div>                   
-                        </div><!-- searchWrap 끝 -->  
+                        <form method="get" id="searchForm">
+                            <div class="searchWrap">
+                                <div class="optionSortLeft">
+                                    <input type="checkbox" id="check_all" value="회사명">
+                                    <button class="selectDel">삭제</button>
+                                    <!-- <select id="orderByUpdate" class="custom-select" onchange="orderByUpdate(this.value);"> -->
+                                    <!-- <select id="orderByUpdate" class="custom-select" onchange="switchTab(this.value,event);"> -->
+                                    <select id="orderBy" name="orderBy" class="custom-select" onchange="switchTab(this.value);">
+                                    <!-- <select id="orderByUpdate" class="custom-select"> -->
+                                        <option value="desc" <c:if test="${pageMaker.cri.orderBy == 'desc'}">selected='selected'</c:if>>최신순</option>
+                                        <option value="asc" <c:if test="${pageMaker.cri.orderBy == 'asc'}">selected='selected'</c:if>>오래된순</option>
+                                        <!-- <option value="${pageMaker.cri.orderBy}" <c:if test="${pageMaker.cri.orderBy == 'asc'}">selected='selected'</c:if>>오래된순</option> -->
+                                    </select>
+                                    <!-- <select id="orderBySubmit" class="custom-select" onchange="switchTab2(this.value,event);"> -->
+                                    <select id="orderBy" name="orderBy" class="custom-select" onchange="switchTab(this.value);">
+                                        <option value="submit" <c:if test="${pageMaker.cri.orderBy == 'submit'}">selected='selected'</c:if>>지원완료</option>
+                                        <option value="noSubmit" <c:if test="${pageMaker.cri.orderBy == 'noSubmit'}">selected='selected'</c:if>>미지원</option>
+                                    </select>
+                                    <!-- <select id="orderByStatus" class="custom-select" onchange="switchTab3(this.value,event);"> -->
+                                    <select id="orderBy" name="orderBy" class="custom-select" onchange="switchTab(this.value);">
+                                        <option value="inProgress" <c:if test="${pageMaker.cri.orderBy == 'inProgress'}">selected='selected'</c:if>>채용중</option>
+                                        <option value="finished" <c:if test="${pageMaker.cri.orderBy == 'finished'}">selected='selected'</c:if>>접수마감</option>
+                                    </select>
+                                    <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
+                                    <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
+                                </div><!-- optionSortLeft 끝 -->
+                                <div class="optionSorRight">
+                                    <input type="text" id="keyword" name="keyword" placeholder="기업명, 채용공고제목" value="${pageMaker.cri.keyword}">
+                                    <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
+                                    <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
+                                    <button class="searchBtn" type="submit">검색하기</button>
+                                </div> <!-- optionSortBtn right 끝 -->                  
+                           </div><!-- searchWrap 끝 -->  
+                        <form><!-- searchForm  끝 --> 
                         <div class="jobPostList">
                           <c:forEach items="${noticeList}" var="dto">		
                             <div class="postBox">
                                 <div class="boxLeft">
-                                    <input type="checkbox" name="postListRow" id="com_name" class="normal"><!-- id값에 기업명가져와서 넣어줘야함-->
+                                    <input type="checkbox" name="postListRow" id="${dto.notice_num}" class="normal"><!-- id값에 공고번호 넣어줘야함-->
                                     <!-- <label for="com_name">브레인즈컴퍼니</label> -->
                                     <label for="com_name"><a href="/comDetail?com_email=${dto.com_email}">${dto.com_name}</a></label>
                                 </div><!-- boxLeft 끝-->
@@ -530,34 +512,62 @@ main .mainContainer .jobPostList
                                     </div><!-- jobPostInfo 끝-->
                                     <div class="resumeInfo">
                                         <!-- 지원완료:지원한이력서력서보기(지원일자), 미지원:기본이력서로지원하기 분기처리해야함 --> 
-                                        <a class="submitStatus" href="#">
-                                            <div class="statusCon">
-                                                <span class="resumeIcon">
-                                                    <i class="fa-regular fa-file-lines"></i>
-                                                </span>
-                                                <p class="title">지원한 이력서 보기</p>
-                                            </div>
-                                        </a>
-                                        <div class="submitDate">
-                                            <p class="text_date">지원일자</p>
-                                            <p class="data_date">2024.05.31</p>
+                                        <div class="statusCon">
+                                          <c:choose>
+                                            <c:when test="${dto.resume_num != null}">
+                                              <span class="resumeIcon">
+                                                  <i class="fa-regular fa-file-lines"></i>
+                                              </span>
+                                              <a href="resumeInfo?resume_num=${dto.resume_num}">지원한 이력서 보기</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                              <a class="title" href="#">지원하기</p><!-- 지원하기 팝업뜨도록 설계--> 
+                                            </c:otherwise>
+                                          </c:choose>
                                         </div>
-                                    </div><!-- resumeInfo 끝-->
-                                </div><!-- boxMiddle  끝-->
-                                <div class="boxRight">
-                                    <div class="submitCon">
-                                        <button class="submitTab" value="submit_status">지원완료</button><!-- 지원완료/미지원 분기 --> 
-                                        <p value-"resume_submitDate">2024.05.31</p><!-- 지원완료/미지원 분기 -->
-                                    </div> <!-- btnCon 끝 -->     
-                                    <div class="postCon">
-                                        <button class="postStatus" value="post_status">채용중</button><!-- 채용마감/채용중 분기 -->
-                                        <p value-"notice_endDate">~24.06.31</p>
-                                    </div>  
-                                    <div class="delIcon">
-                                        <i class="fa-regular fa-trash-can"></i>
-                                    </div>
-                                </div><!-- boxRight 끝 -->   
-                            </div><!-- postBox 하나의 공고 박스 끝 --> 
+                                        <div class="submitDate">
+                                          <c:if test="${dto.resume_num != null}">
+                                            <p class="text_date">지원일자</p>
+                                            <p class="joincompany_date">${dto.joincompany_date}</p>
+                                          </c:if>
+                                        </div>
+                                      </div><!-- resumeInfo 끝-->
+                                    </div><!-- boxMiddle  끝-->
+                                    <div class="boxRight">
+                                      <div class="submitCon">
+                                        <c:choose>
+                                          <c:when test="${dto.resume_num != null}">
+                                            <button class="submitTab" value="submit_status">지원완료</button><!-- 지원완료 분기 --> 
+                                            <p>${dto.joincompany_date}</p>
+                                          </c:when>
+                                          <c:otherwise>
+                                            <button class="submitTab" value="submit_status">미지원</button><!-- 미지원 분기 --> 
+                                          </c:otherwise>
+                                        </c:choose>
+                                      </div> <!-- submitCon 끝 -->
+                                      <div class="postCon">
+                                        <jsp:useBean id="now" class="java.util.Date" />
+                                        <!-- 현재 날짜를 yyyy-MM-dd 형식으로 포맷팅 -->
+                                        <fmt:formatDate var="today" value="${now}" pattern="yyyy-MM-dd" />
+                                        
+                                        <!-- notice_endDate, today를 yyyy-MM-dd 형식으로 파싱 -->
+                                        <fmt:parseDate var="endDateParsed" value="${dto.notice_endDate}" pattern="yyyy-MM-dd" />
+                                        <fmt:parseDate var="todayParsed" value="${today}" pattern="yyyy-MM-dd" />
+                                        <c:choose>
+                                          <c:when test="${endDateParsed >= todayParsed}">
+                                            <button class="postStatus" value="post_status">채용중</button><!-- 채용마감/채용중 분기 -->
+                                            <p>~${dto.notice_endDate}</p>
+                                          </c:when>
+                                          <c:otherwise>
+                                            <button class="postStatus" value="post_status">채용마감</button><!-- 채용마감/채용중 분기 -->
+                                          </c:otherwise>
+                                        </c:choose> 
+                                      </div> <!-- postCon 끝 -->   
+                                      <span class="delIcon">
+                                          <i class="fa-regular fa-trash-can"></i>
+                                      </span>
+                                   </div><!-- boxRight 끝 -->   
+                             </div><!-- postBox 하나의 공고 박스 끝 --> 
                           </c:forEach> 
                         </div><!-- jobPostList 끝 -->    
                     <!-- </div>listTable 끝  -->
@@ -577,7 +587,7 @@ main .mainContainer .jobPostList
                           <!-- <li ${pageMaker.cri.pageNum == num ? "style='color:#f00; font-weight: 600';'" : ""}>${num}</li> -->
                           <!-- <li ${pageMaker.cri.pageNum == num ? "style='color:#f00; font-weight: 600';'" : ""}> -->
                           <li class="paginate_button" ${pageMaker.cri.pageNum == num ? "style='border:2px solid #FFA500; font-weight: 900';'" : ""}>
-                            <a href="/interComlist?pageNum=${num}">
+                            <a href="/individualNoticeScrap?pageNum=${num}">
                               ${num}
                             </a>
                           </li>
@@ -591,7 +601,7 @@ main .mainContainer .jobPostList
                           </li>
                         </c:if>
                       </ul>
-                              </div><!-- div_page 끝 -->   
+                    </div><!-- div_page 끝 -->   
                     <!-- 데이터를 가지고 컨트롤러단으로 가기때문에 -->
                       <!-- <form action="listWithPaging" method="get" id="actionForm"> -->
                       <!-- <form action="list" method="get" id="actionForm"> -->
@@ -610,8 +620,8 @@ main .mainContainer .jobPostList
 </body>
 </html>
 <script>
-	$(document).ready(function()
-	{
+	$(document).ready(function(){
+	
 		
     /*
     2024-07-02 서연주 
@@ -635,73 +645,82 @@ main .mainContainer .jobPostList
     2024-07-02 서연주 
     체크박스 선택
     */
-   //체크박스 전체선택
-   $(".optionSortLeft input").on("click", function () {
-    var checked = $(this).is(":checked");
-    console.log("check_all");
-    console.log(checked);
-    
-    if(checked){
-        $(".jobPostList").find('input').prop("checked", true);
-    } else {
-        $(".jobPostList").find('input').prop("checked", false);
-    }
-});
+    //체크박스 전체선택
+    $(".optionSortLeft input").on("click", function () {
+      var checked = $(this).is(":checked");
+      console.log("check_all");
+      console.log(checked);
+      
+      if(checked){
+          $(".jobPostList").find('input').prop("checked", true);
+      } else {
+          $(".jobPostList").find('input').prop("checked", false);
+      }
+    });// 체크박스 전체 선택 끝
 
-// 체크박스 개별 선택
-$(".normal").on("click", function() {
-    var checked = $(this).is(":checked");
-    console.log("click normal");
-    console.log(checked);
+    // 체크박스 개별 선택
+    $(".normal").on("click", function() {
+      var checked = $(this).is(":checked");
+      console.log("click normal");
+      console.log(checked);
 
-    if (!checked) {
-        $(".optionSortLeft input").prop("checked", false);
-    }else {
-        var is_checked = true;
-        
-        $(".normal").each(function(){
-          is_checked = is_checked && $(this).is(":checked");
-        });
-        
-        $(".optionSortLeft input").prop("checked", is_checked);
-    }
-});
+      if (!checked) {
+          $(".optionSortLeft input").prop("checked", false);
+      }else {
+          var is_checked = true;
+          
+          $(".normal").each(function(){
+            is_checked = is_checked && $(this).is(":checked");
+          });
+          
+          $(".optionSortLeft input").prop("checked", is_checked);
+      }
+    });// 체크박스 개별 선택 끝
 
    
 
     /*
-    2024-07-02 서연주 
-    체크박스 누르고 삭제하기(체크한 그 목록이 없어지는지는 데이터넣고 확인!)
-    */
-    $(".selectDel").on("click",function(){
-        var cnt = $("input[name='postListRow']:checked").length;
-        var arr = new Array();
-        $("input[name='postListRow']:checked").each(function() {
-            arr.push($(this).attr('id'));
-        });
-        if(cnt == 0){
-            alert("선택된 항목이 없습니다.");
-        }
-        else{
-            alert("삭제되었습니다.")//데이터받아서 넘기고 받아야
-            // $.ajax = {
-            //     type: "POST"
-            //     url: "OOOO.do"
-            //     data: "RPRT_ODR=" + arr + "&CNT=" + cnt,
-            //     dataType:"json",
-            //     success: function(jdata){
-            //         if(jdata != 1) {
-            //             alert("삭제 오류");
-            //         }
-            //         else{
-            //             alert("삭제 성공");
-            //         }
-            //     },
-            //     error: function(){alert("서버통신 오류");}
-            // };
-        }
+		2024-07-27 서연주 
+		체크박스 누르고 삭제하기(휴지통버튼이나, 삭제하기 버튼 누르면)
+		*/
+		$(".selectDel").on("click", deleteValue);//삭제버튼 누르면 function 호출
+		$("span.delIcon").on("click", deleteValue);//삭제버튼 누르면 function 호출
 
-    });
+		function deleteValue() { //function 정의
+			var cnt = $("input[name='postListRow']:checked").length;
+			var arr = new Array();
+			$("input[name='postListRow']:checked").each(function() {
+				arr.push($(this).attr('id'));
+			});
+			//alert(arr);//com_email이 배열로 잘 담기는지 확인
+			if(cnt == 0){
+				alert("선택된 항목이 없습니다.");
+			}
+			else{
+				var chk = confirm("정말 삭제하시겠습니까?");
+				if (chk) {
+					$.ajax
+					({
+						url:"noticeScrapDelete",
+						type:'POST',
+						traditional : true, //배열로 보내는 방법
+						// dataType: 'json',
+						data:{"arrStr" : arr},
+						success: function(data) {
+							if (data != 1) {
+								alert("삭제성공");
+								location.href = "individualNoticeScrap";
+							} else {
+								alert("삭제에 실패했습니다.");
+							}
+						},
+						error: function() {
+							alert("삭제를 완료하지 못했습니다. 다시 시도해주세요."); // 오류 시 알림
+						}
+					});// ajax 끝
+				}
+			}
+		}// function deleteValue 끝
 
 
     
@@ -716,48 +735,58 @@ $(".normal").on("click", function() {
     // });
 
 
+        
 
     /*
-    2024-07-04 서연주 
-    휴지통 누르고 그 박스만 삭제하기
-    <휴지통아이콘 누른 그 박스를 선택하는 걸 못하겠음..>
-
+    2024-07-29 서연주 
+    필터링 선택하면 목록다시 조회(이벤트 리스너)
     */
-
-    $(".delIcon i").on("click",function(e){
-        e.preventDefault();
-        console.log("휴지통클릭");
-        
-        var this_checkbox =  document.getElementById('com_name');
-        // var this_checkbox =  $(this).parents('.boxLeft').children('#com_name');
-        // var this_checkbox =  $(this).parents('.boxLeft').children();
-        console.log(this_checkbox);
-        var checked= this_checkbox.checked;
-        
-        // var checked = this_checkbox.checked;
-        console.log(checked);
-
-        if(!checked){
-            alert("삭제할 공고를 선택해주세요.");
-        }else{
-            if(confirm("정말삭제하시겠습니까?") == true){
-            }else{
-                return;
-            }
-        }
-       
-
+    $('select#orderBy').on('change', function(event) {
+      alert("정렬버튼 누름")
+        switchTab(this.value);
     });
-
-// 	 최신순오래된순 구현하는 스크립트 노션에 참고자료있음 java단도 만들어야 
-// 
-//     document.querySelector('#orderBy').addEventListener('change', function() {
-//         var orderBy = document.querySelector('#orderBy').value;
-//         window.location.href = '/board/view?id=' + id + '&orderBy=' + orderBy;
-//     });
+    
+    function switchTab(value) {
+      // 선택된 값을 가진 새로운 폼을 동적으로 생성
+      var form = $('<form>', {
+          method: 'get',
+          action: $('#searchForm').attr('action')
+      });
+  
+      // 선택된 옵션값을 폼 데이터로 추가
+      form.append($('<input>', {
+          type: 'hidden',
+          name: 'orderBy',
+          value: value
+      }));
+  
+      // 기존의 숨겨진 필드들을 폼에 추가
+      form.append($('<input>', {
+          type: 'hidden',
+          name: 'pageNum',
+          value: $('input[name="pageNum"]').val()
+      }));
+  
+      form.append($('<input>', {
+          type: 'hidden',
+          name: 'amount',
+          value: $('input[name="amount"]').val()
+      }));
+  
+      // 폼을 바디에 추가하고 제출
+      form.appendTo('body').submit();
+  }
 
 
 	});
+
+
+
+
+ 
+
+
+
 </script>
 <script>
   // 드롭다운 메뉴 (하지수)

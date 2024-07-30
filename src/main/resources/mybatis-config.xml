@@ -31,8 +31,12 @@
 		<mapper resource="mybatis/mappers/comBoardPage.xml"/>
 		<mapper resource="mybatis/mappers/comBoardUpload.xml"/>
 		<mapper resource="mybatis/mappers/main.xml"/>
-		<mapper resource="mybatis/mappers/jobpostingIndividual.xml"/>
+		<mapper resource="mybatis/mappers/noticeBoardBoard.xml"/>
+		<mapper resource="mybatis/mappers/noticeBoardComment.xml"/>
+		<mapper resource="mybatis/mappers/noticeBoardPage.xml"/>
+		<mapper resource="mybatis/mappers/noticeBoardUpload.xml"/>
 		<mapper resource="mybatis/mappers/companyList.xml"/>
+		<mapper resource="mybatis/mappers/jobpostingIndividual.xml"/>
 	</mappers>
 </configuration>
 

@@ -287,11 +287,6 @@
 						<section>
 							<div class="wrap">
 								<div class="devlist">
-
-
-
-
-
 									<form method="get" id="searchForm">
 										<div class="selectbox">
 											<div class="select">

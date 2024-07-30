@@ -4,45 +4,27 @@
 
 <mapper namespace="com.boot.DAO.jobpostingIndividualDAO">
 
-<!--    <select id="jobpostingIndividualSupport" resultType="com.boot.DTO.jobpostingIndividualDTO"> -->
-<!--		SELECT -->
-<!--		    u.user_name,-->
-<!--		    u.user_gender,-->
-<!--		    r.resume_age,-->
-<!--		    r.career_month,-->
-<!--		    r.resume_writeDate,-->
-<!--		    r.resume_num,-->
-<!--		    YEAR(CURDATE()) - YEAR(r.resume_age) + 1 AS korean_age,-->
-<!--		    (SELECT -->
-<!--		        GROUP_CONCAT(rs.stack_name)-->
-<!--		     FROM-->
-<!--		        resume_stack rs-->
-<!--		     WHERE rs.resume_num = r.resume_num-->
-<!--		    ) AS stack_names-->
-<!--		FROM -->
-<!--		    resume_tb r-->
-<!--		JOIN user_tb u ON r.user_email = u.user_email-->
-<!--		ORDER BY -->
-<!--		    r.resume_num DESC-->
-<!--	</select>-->
-	
-	
-<!--	<sql id="userType">-->
-<!--		<if test='(cri.login_usertype == "1")'>-->
-<!--			ORDER BY r.resume_num-->
-<!--		</if>-->
-<!--		<if test='(cri.login_usertype == "2")'>-->
-<!--			ORDER BY r.resume_num DESC-->
-<!--		</if>-->
-<!--	</sql>-->
 	<sql id="orderType">
 <!--		<if test='(orderType == "recommendation" and cri.login_usertype == "1")'> 큰 따옴표 때문에 char타입이 적용이 안됐음 -->
 		<if test="(orderType == 'recommendation' and cri.login_usertype == '1')">
 <!--			ORDER BY r.resume_num-->
-			ORDER BY stack_names like concat ('%','Android','%') DESC
+<!--			ORDER BY stack_names like concat ('%','Android','%') DESC-->
+<!--			ORDER BY job_names like concat ('%','(SELECT job_name FROM user_job WHERE user_email = cri.login_email)','%') DESC-->
+			ORDER BY (CASE
+	            <foreach item="job" collection="cri.jobNames" separator=" " open="" close="">
+	                WHEN job_names LIKE '%${job}%' THEN 1
+	            </foreach>
+	            ELSE 0
+        	END) DESC
 		</if>
 		<if test="(orderType == 'recommendation' and cri.login_usertype == '2')">
-			ORDER BY stack_names like concat ('%','JAVA','%') DESC
+<!--			ORDER BY stack_names like concat ('%','(SELECT stack FROM com_stack WHERE com_email = cri.login_email)','%') DESC-->
+			ORDER BY (CASE
+	            <foreach item="stack" collection="cri.stackNames" separator=" " open="" close="">
+	                WHEN job_names LIKE '%${stack}%' THEN 1
+	            </foreach>
+	            ELSE 0
+        	END) DESC
 		</if>
 		<if test='(orderType == "latest")'>
 			ORDER BY r.resume_num DESC
@@ -50,6 +32,9 @@
 	</sql>
 	<sql id="criteria3">
 		WHERE resume_offer = '예'
+		<if test='(cri.jobType != null and cri.jobType != "")'>
+			AND r.user_email IN (select distinct user_email from user_job where job_name = #{cri.jobType})
+		</if>
 		<if test='(cri.stackType != null and cri.stackType != "")'>
 			AND resume_num IN (select resume_num from resume_stack where stack_name = #{cri.stackType})
 		</if>
@@ -66,8 +51,8 @@
 <!--    <![CDATA[ : mybatis 에서 특수문자 인식처리 -->
     <select id="jobpostingIndividualSupport" resultType="com.boot.DTO.jobpostingIndividualDTO">
     <![CDATA[ 
-		select rownum, user_name, user_gender, resume_age, career_month, resume_writeDate, resume_num, stack_names
-			from (select rownum, user_name, user_gender, resume_age, career_month, resume_writeDate, resume_num, stack_names
+		select rownum, user_name, user_gender, resume_age, career_month, resume_writeDate, resume_num, stack_names, job_names, career_years
+			from (select rownum, user_name, user_gender, resume_age, career_month, resume_writeDate, resume_num, stack_names, job_names, career_years
 			from (select row_number() over(ORDER BY r.resume_num DESC) as rownum,
 									    u.user_name,
 									    u.user_gender,
@@ -75,13 +60,20 @@
 									    r.career_month,
 									    r.resume_writeDate,
 									    r.resume_num,
-									    YEAR(CURDATE()) - YEAR(r.resume_age) + 1 AS korean_age,
+									    timestampdiff(YEAR, user_birthdate, CURDATE()) + 1 AS korean_age,
+									    timestampdiff(YEAR, career_start, career_end) AS career_years,
 									    (SELECT 
 									        GROUP_CONCAT(rs.stack_name)
 									     FROM
 									        resume_stack rs
 									     WHERE rs.resume_num = r.resume_num
-									    ) AS stack_names 
+									    ) AS stack_names,
+									    (SELECT 
+									        GROUP_CONCAT(u.job_name)
+									     FROM
+									        user_job u
+									     WHERE u.user_email = r.user_email
+									    ) AS job_names
 									  FROM resume_tb r
 									  JOIN user_tb u ON r.user_email = u.user_email
 									  ]]>
@@ -96,6 +88,13 @@
     </select>
 	
 
+    <select id="getJobList" resultType="String"> 
+		SELECT 
+		    job_name
+		FROM 
+		    job
+	</select>
+
     <select id="getStackList" resultType="String"> 
 		SELECT 
 		    stack_name
@@ -107,14 +106,42 @@
 		SELECT
 			location_name
 		FROM
-			location;
+			location
 	</select>
 
     <select id="getTotalCount" resultType="int"> 
 		SELECT
 			count(*)
 		FROM
-			resume_tb;
+			resume_tb
+	</select>
+
+    <select id="getJobNames" resultType="String"> 
+		SELECT
+			job_name
+		FROM
+			user_job
+		WHERE
+			user_email = #{login_email}
+	</select>
+
+    <select id="getStackNames" resultType="String"> 
+		SELECT
+			stack
+		FROM
+			com_stack
+		WHERE
+			com_email = #{login_email}
+	</select>
+
+    <select id="getOfferInfo" resultType="com.boot.DTO.OfferInfoDTO"> 
+		SELECT
+			notice_num, notice_title, notice_job, notice_career, notice_area1, notice_pay1, notice_pay2, com_name
+		FROM
+			notice_tb
+		WHERE
+			com_email = #{login_email}
+		AND datediff(notice_endDate, now()) >= 0
 	</select>
 	
 </mapper>

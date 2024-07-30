@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.boot.DTO.Criteria3;
+import com.boot.DTO.OfferInfoDTO;
 import com.boot.DTO.PageDTO2;
 import com.boot.DTO.jobpostingIndividualDTO;
 import com.boot.Service.jobpostingIndividualService;
@@ -76,35 +77,49 @@ public class jobpostingIndividualController {
     	
     	// 세션에 유저 정보 담아옴
     	HttpSession session = request.getSession();		
-    	String login_email = (String)session.getAttribute("login_email");
-    	char login_usertype = (char)session.getAttribute("login_usertype");
+    	log.info("@# session=>"+session);
     	
-    	cri.setLogin_email(login_email);
-    	cri.setLogin_usertype(login_usertype);
-    	
-    	log.info("@# login_email=>"+login_email);
-    	log.info("@# login_usertype=>"+login_usertype);
-    	log.info("@# cri.login_usertype=>"+cri.getLogin_usertype());
-    	
-//    	model.addAttribute("login_email",login_email);
-    	model.addAttribute("login_usertype",login_usertype);
-    	model.addAttribute("orderType",orderType);
-    	
-    	// 직군/직무 리스트
-    	ArrayList<String> stackList = jobpostingIndividualService.getStackList();
-    	model.addAttribute("stackList", stackList);
-    	
-    	// 지역 리스트
-    	ArrayList<String> locationList = jobpostingIndividualService.getLocationList();
-    	model.addAttribute("locationList",locationList);
-    	
-    	ArrayList<jobpostingIndividualDTO> jobpostingIndividualSupport = jobpostingIndividualService.jobpostingIndividualSupport(orderType, cri);
-//    	ArrayList<jobpostingIndividualDTO> jobpostingIndividualSupport = jobpostingIndividualService.jobpostingIndividualSupport(cri);
-    	int total = jobpostingIndividualService.getTotalCount();
-    	model.addAttribute("jobpostingIndividualSupport",jobpostingIndividualSupport);
-    	model.addAttribute("pageMaker", new PageDTO2(total, cri));
+    	if ((String)session.getAttribute("login_email") == null) {
+    		return "login";
+		} else {
+			String login_email = (String)session.getAttribute("login_email");
+			char login_usertype = (char)session.getAttribute("login_usertype");
 
-    	return "jobpostingIndividualSupport";
+			cri.setLogin_email(login_email);
+	    	cri.setLogin_usertype(login_usertype);
+	    	
+	    	log.info("@# login_email=>"+login_email);
+	    	log.info("@# login_usertype=>"+login_usertype);
+	    	log.info("@# cri.login_usertype=>"+cri.getLogin_usertype());
+	    	
+//	    	model.addAttribute("login_email",login_email);
+	    	model.addAttribute("login_usertype",login_usertype);
+	    	model.addAttribute("orderType",orderType);// 화면단에서 orderType 확인하기 위함
+	    	
+	    	// 직군/직무 리스트
+	    	ArrayList<String> jobList = jobpostingIndividualService.getJobList();
+	    	model.addAttribute("jobList", jobList);
+	    	
+	    	// 기술스택 리스트
+	    	ArrayList<String> stackList = jobpostingIndividualService.getStackList();
+	    	model.addAttribute("stackList", stackList);
+	    	
+	    	// 지역 리스트
+	    	ArrayList<String> locationList = jobpostingIndividualService.getLocationList();
+	    	model.addAttribute("locationList", locationList);
+	    	
+	    	// 지역 리스트
+	    	ArrayList<OfferInfoDTO> offerInfo = jobpostingIndividualService.getOfferInfo(login_email);
+	    	model.addAttribute("offerInfo", offerInfo);
+	    	
+	    	ArrayList<jobpostingIndividualDTO> jobpostingIndividualSupport = jobpostingIndividualService.jobpostingIndividualSupport(orderType, cri);
+//	    	ArrayList<jobpostingIndividualDTO> jobpostingIndividualSupport = jobpostingIndividualService.jobpostingIndividualSupport(cri);
+	    	int total = jobpostingIndividualService.getTotalCount();
+	    	model.addAttribute("jobpostingIndividualSupport",jobpostingIndividualSupport);
+	    	model.addAttribute("pageMaker", new PageDTO2(total, cri));
+	
+	    	return "jobpostingIndividualSupport";
+		}
     }
     
     

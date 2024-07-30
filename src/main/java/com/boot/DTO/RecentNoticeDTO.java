@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecentNoticeDTO {
-	private int noitice_num;
+	private int notice_num;
 	private String user_email;
 }

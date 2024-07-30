@@ -10,7 +10,7 @@
 <!--    <link rel="stylesheet" href="css/default.css">-->
 <!--    <link rel="stylesheet" href="css/company_InfoDetailUpdate.css">-->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/company_InfoDetailUpdate.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/companyInfoDetailUpdate.css">
     <!-- import font-awesome, line-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
@@ -47,12 +47,12 @@
                 <form id="comInfoUpdate" method="post" action="modifyDetail">
                     <input type="hidden" name="com_email" value="${login_email}">
                     <div class="company">
-                        <label for="photo">
+                        <div class="uploadResult">
+                            <ul class="comInfoImage">
+                            </ul>
+                        </div>
+                        <label for="photo" style='cursor: pointer;'>
                             <div class="imgg">기업 사진 수정하기</div>
-                            <div class="uploadResult">
-                                <ul class="comInfoImage">
-                                </ul>
-                            </div>
                         </label>
                         <input type="file" name="uploadFile" id="photo" accept="image/*,.txt">
                     </div>
@@ -63,7 +63,10 @@
                                     기업명
                                 </h5>
                                 <div class="write">
-                                    <input  type="text" name="com_name" class="comname" placeholder="${companyInfo.com_name}">
+                                    <!-- <input  type="text" name="com_name" class="comname" placeholder="${companyInfo.com_name}"> -->
+                                    <input  type="text" name="com_name" class="comname" value="${companyInfo.com_name}">
+                                    <!-- <div class="message">기업명을 확인해주세요</div> -->
+                                    <!-- <div class="message"></div> -->
                                 </div>
                             </div>
        
@@ -72,7 +75,7 @@
                             <div class="comadd">
                                 <h5 class="title">창립일 </h5>
                                 <div class="comadressyear">
-                                    <input  type="date" name="com_year" class="comadress">
+                                    <input  type="date" id="Date" name="com_year" class="comadress">
                                     <!-- <input  type="date" name="com_year" class="comadress"> -->
                                 </div>
                             </div>
@@ -92,7 +95,8 @@
                             <h5 class="title">회사 소개</h5>
                         </div>
                         <div class="columnAA">
-                            <textarea name="com_content" class="detailtext" placeholder="${companyInfo.com_content}"></textarea>
+                            <!-- <textarea name="com_content" class="detailtext" placeholder="${companyInfo.com_content}"></textarea> -->
+                            <textarea name="com_content" class="detailtext">${companyInfo.com_content}</textarea>
                         </div>
                     </div>
 
@@ -152,7 +156,8 @@
                                 </script>
                             </div> -->
                                 <div class="mapLocation">
-                                    <input  type="" name="com_location" class="maptext" placeholder="${companyInfo.com_location}">
+                                    <!-- <input  type="" name="com_location" class="maptext" placeholder="${companyInfo.com_location}"> -->
+                                    <input  type="" name="com_location" class="maptext" value="${companyInfo.com_location}">
                                 </div>
                         <!-- </div> -->
                     </div>
@@ -168,11 +173,12 @@
                                 <div class="contentDetail">
                                     <div class="comname1">
                                         <h5 class="name">
-                                            매출액 (2024년)
+                                            매출액 (<span class="nowYear"></span>년)
                                         </h5>
                                     </div>
                                     <div class="comname2">
-                                        <input type="text" name="com_sale" class="cominfotext" placeholder="${companyInfo.com_sale}">
+                                        <!-- <input type="text" name="com_sale" class="cominfotext" placeholder="${companyInfo.com_sale}"> -->
+                                        <input type="number" name="com_sale" class="cominfotext" placeholder="단위 : 만원" value="${companyInfo.com_sale}">
                                     </div>
                                 </div>
 
@@ -201,7 +207,8 @@
                                         </h5>
                                     </div>
                                     <div class="comname2">
-                                        <input type="text" name="com_salary" class="cominfotext" placeholder="${companyInfo.com_salary}">
+                                        <!-- <input type="text" name="com_salary" class="cominfotext" placeholder="${companyInfo.com_salary}"> -->
+                                        <input type="number" name="com_salary" class="cominfotext" placeholder="단위 : 만원" value="${companyInfo.com_salary}">
                                     </div>
                                 </div>
 
@@ -212,7 +219,8 @@
                                         </h5>
                                     </div>
                                     <div class="comname2">
-                                        <input type="text" name="com_CEO" class="cominfotext" placeholder="${companyInfo.com_CEO}">
+                                        <!-- <input type="text" name="com_CEO" class="cominfotext" placeholder="${companyInfo.com_CEO}"> -->
+                                        <input type="text" name="com_CEO" class="cominfotext" value="${companyInfo.com_CEO}">
                                     </div>
                                 </div>
 
@@ -223,7 +231,8 @@
                                         </h5>
                                     </div>
                                     <div class="comname2">
-                                        <input type="url" name="com_site" class="cominfotext" placeholder="${companyInfo.com_site}">
+                                        <!-- <input type="url" name="com_site" class="cominfotext" placeholder="${companyInfo.com_site}"> -->
+                                        <input type="url" name="com_site" class="cominfotext" value="${companyInfo.com_site}">
                                     </div>
                                 </div>
 
@@ -234,7 +243,8 @@
                                         </h5>
                                     </div>
                                     <div class="comname2">
-                                        <input type="number" name="com_employee" class="cominfotext" placeholder="단위 : 명">
+                                        <!-- <input type="number" name="com_employee" class="cominfotext" placeholder="단위 : 명"> -->
+                                        <input type="number" name="com_employee" class="cominfotext" placeholder="단위 : 명" value="${companyInfo.com_employee}">
                                     </div>
                                 </div>
                             </div>
@@ -242,7 +252,9 @@
                         </div>
                         <div class="submit">    
                             <input type="button" value="수정 취소" class="ytn" onclick="location.href='companyInfoManagement'">
-                            <input type="submit" class="btn" value="수정 완료">
+                            <!-- <input type="submit" class="btn" value="수정 완료"> -->
+                            <!-- <input type="button" class="btn" value="수정 완료" onclick="valuecheck()"> -->
+                            <input type="submit" class="btn" value="수정 완료" onclick="valuecheck()">
                         </div>
                             
                     </div>
@@ -425,7 +437,7 @@
 						str += "</div>";
 						str += "<div class='imgDelete'>";
 						// str += "<span data-file=\'"+ fileCallPath +"\'data-type='image'><i class='fa-regular fa-trash-can'></i></span>";
-						str += "<span data-file=\'"+ fileCallPath +"\'data-type='image'>이미지 삭제</span>";
+						str += "<span style='cursor: pointer;' data-file=\'"+ fileCallPath +"\'data-type='image'>이미지 삭제</span>";
 						str += "</div></li>";
 					} else {
 						// var fileCallPath = obj.uploadPath + obj.uuid + "_" + obj.fileName;
@@ -445,6 +457,7 @@
 
 				//div class 에 파일 목록 추가
 				uploadUL.append(str);
+                $('.imgg').css({"display":"none"});
 			}
 
 			$(".uploadResult").on("click","span",function(){
@@ -465,9 +478,68 @@
 						alert(result);
 						//브라우저에서 해당 썸네일이나 첨부파일이미지 제거
 						uploadResultItem.remove();
+
+                        if($(".uploadResult ul li").length === 0){
+							$('.imgg').css({"display":"flex"}); // 모든 파일이 삭제되면 보이기
+						}
 					}
 				});//end of ajax
 			});//end of click
 		});//end of change 
 	});//end of ready // 이미지 업로드 끝
+
+
+// 24.07.24 하진
+// 창립일 선택시 현재 날짜 이후의 날짜를 막는 코드
+var now = new Date(); // 지금 날짜를 가져옴
+console.log(now);
+var today = now.toISOString().substring(0,10);
+document.getElementById("Date").setAttribute("max", today);
+
+$("span").text(now.getFullYear());
+
+
+function valuecheck(){
+    var com_name = $(".comname").val();
+    console.log(com_name);
+    if (com_name.length == 0) {
+        $(".comname").focus();
+        // $(".message").addClass("active").text("기업명을 확인해주세요")
+        alert("기업명을 확인해주세요")
+       return false; // form 제출 막기
+    }
+    var com_year = $(".comadress").val();
+    if (com_year.length == 0) {
+        $(".comadress").focus();
+        alert("창립일이 선택되지 않았습니다.")
+       return false; // form 제출 막기
+    }
+    var detailtext = $(".detailtext").val();
+    if (detailtext.length < 5) {
+        $(".detailtext").focus();
+        alert("회사 소개를 입력해주세요")
+       return false; // form 제출 막기
+    }
+    var com_stack = $(".techValue").val();
+    if (com_stack.length == 0) {
+        $(".saveTech").focus();
+        alert("하나 이상의 스택을 선택해주세요.")
+       return false; // form 제출 막기
+    }
+    var cominfotext = $(".cominfotext").val();
+    if (cominfotext.length == 0) {
+        $(".cominfotext").focus();
+        // $(".message").addClass("active").text("기업명을 확인해주세요")
+        alert("매출액을 입력해주세요")
+       return false; // form 제출 막기
+    }
+    var com_type = $(".com_type").val();
+    if (com_type.length <4) {
+        $(".com_type").focus();
+        // $(".message").addClass("active").text("기업명을 확인해주세요")
+        alert("기업 유형을 선택해주세요.")
+       return false; // form 제출 막기
+    }
+    $("#comInfoUpdate").submit();
+}
 </script>

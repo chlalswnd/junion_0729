@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>개인-마이페이지-탈퇴</title>
+<title>개인-관심기업</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/individualMain.css">
 <!--<link rel="stylesheet" href="src/main/resources/static/css/style.css">-->
@@ -396,12 +396,12 @@
                             <div class="optionSorRight">
                                 <form method="get" id="searchForm">
                                     <div class="search_Form">
-                                        <input type="text" id="keyword" name="keyword" placeholder="기업명" required >
+                                        <input type="text" id="keyword" name="keyword" placeholder="기업명, 기업소개"  value="${pageMaker.cri.keyword}" >
                                         <!-- <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}"> -->
                                         <!-- <input type="hidden" name="amount" value="${pageMaker.cri.amount}">페이징 처리를 위한 amount -->
-                                        <button class="searchBtn" type="submit">검색하기</button>
+										<button class="searchBtn" type="submit">검색하기</button>
                                     </div>
-                            </form><!-- searchForm / optionSortBtn right 끝 --> 
+                            	</form><!-- searchForm / optionSortBtn right 끝 --> 
                             </div> <!-- optionSorRight 끝 -->                   
                         </div><!-- searchWrap 끝 -->  
                         <div class="comList">
@@ -438,6 +438,7 @@
                     </div><!-- listTable 끝 --> 
                     <div class="div_page">
                         <!-- <h5> 1  2  3  4  5  6  7  8 </h5> -->
+                        <!-- <h5>${pageMaker}</h5> -->
 						<ul>
 							<c:if test="${pageMaker.prev}">
 								<!-- <li>Previous</li> -->
@@ -453,6 +454,7 @@
 								<!-- <li ${pageMaker.cri.pageNum == num ? "style='color:#f00; font-weight: 600';'" : ""}> -->
 								<li class="paginate_button" ${pageMaker.cri.pageNum == num ? "style='border:2px solid #FFA500; font-weight: 900';'" : ""}>
 									<a href="/interComlist?pageNum=${num}">
+									<!-- <a> -->
 										${num}
 									</a>
 								</li>
@@ -485,182 +487,123 @@
 </body>
 </html>
 <script>
-	$(document).ready(function()
-	{
+	$(document).ready(function() {
+	
 		
-    /*
-    2024-07-02 서연주 
-    기업명,공고제목으로 검색하기
-    */
-    $("button.searchBtn").on("click",function(e){
-        e.preventDefault();
-        var keyword = document.getElementById('keyword');
-        console.log(keyword);
-        var searchForm = $("#searchForm");
-        // var keyword1 =searchForm.find(keyword).val();
-        if( keyword.value.length == 0){
-            alert("키워드를 입력하세요.");
-        }else{
-            searchForm.attr("action","#").submit();//serachForm 정보를 들고 컨트롤러단으로 감
-        }
-    });
+		/*
+		2024-07-02 서연주 
+		기업명,기업소개 검색하기
+		*/
+		$("button.searchBtn").on("click",function(e){
+			e.preventDefault();
+			var keyword = document.getElementById('keyword');
+			console.log(keyword);
+			var searchForm = $("#searchForm");
+			// var keyword1 =searchForm.find(keyword).val();
+			if( keyword.value.length == 0){
+				alert("키워드를 입력하세요.");
+			}else{
+				searchForm.attr("action","interComlist").submit();//serachForm 정보를 들고 컨트롤러단으로 감
+			}
+		});
 
 
-    /*
-    2024-07-02 서연주 
-    체크박스 선택
-    */
-   //체크박스 전체선택
-   $(".optionSortLeft input").on("click", function () {
-    var checked = $(this).is(":checked");
-    console.log("check_all");
-    console.log(checked);
-    
-    if(checked){
-        $(".comList").find('input').prop("checked", true);
-    } else {
-        $(".comList").find('input').prop("checked", false);
-    }
-});
+		/*
+		2024-07-02 서연주 
+		체크박스 선택
+		*/
+		//체크박스 전체선택
+		$(".optionSortLeft input").on("click", function () {
+			var checked = $(this).is(":checked");
+			console.log("check_all");
+			console.log(checked);
+			
+			if(checked){
+				$(".comList").find('input').prop("checked", true);
+			} else {
+				$(".comList").find('input').prop("checked", false);
+			}
+		});
 
-// 체크박스 개별 선택
-$(".normal").on("click", function() {
-    var checked = $(this).is(":checked");
-    console.log("click normal");
-    console.log(checked);
+		// 체크박스 개별 선택
+		$(".normal").on("click", function() {
+			var checked = $(this).is(":checked");
+			console.log("click normal");
+			console.log(checked);
 
-    if (!checked) {
-        $(".optionSortLeft input").prop("checked", false);
-    }else {
-        var is_checked = true;
-        
-        $(".normal").each(function(){
-          is_checked = is_checked && $(this).is(":checked");
-        });
-        
-        $(".optionSortLeft input").prop("checked", is_checked);
-    }
-});
+			if (!checked) {
+				$(".optionSortLeft input").prop("checked", false);
+			}else {
+				var is_checked = true;
+				
+				$(".normal").each(function(){
+				is_checked = is_checked && $(this).is(":checked");
+				});
+				
+				$(".optionSortLeft input").prop("checked", is_checked);
+			}
+		});
 
-   
+	
 
-    /*
-    2024-07-02 서연주 
-    체크박스 누르고 삭제하기(체크한 그 목록이 없어지는지는 데이터넣고 확인!)
-    */
-    $(".selectDel").on("click",function(){
-        var cnt = $("input[name='comListRow']:checked").length;
-        var arr = new Array();
-        $("input[name='comListRow']:checked").each(function() {
-            arr.push($(this).attr('id'));
-        });
-		alert(arr);//com_email이 배열로 잘 담기는지 확인
+		/*
+		2024-07-27 서연주 
+		체크박스 누르고 삭제하기(휴지통버튼이나, 삭제하기 버튼 누르면)
+		*/
+		$(".selectDel").on("click", deleteValue);//삭제버튼 누르면 function 호출
+		$("span.delIcon").on("click", deleteValue);//삭제버튼 누르면 function 호출
 
-        if(cnt == 0){
-            alert("선택된 항목이 없습니다.");
-        }
-        else{
-			var chk = confirm("정말 삭제하시겠습니까?");
-			if (chk) {
-				$.ajax
-				({
-					url:"comScrapDelete",
-					type:'POST',
-					traditional : true, //배열로 보내는 방법
-					// dataType: 'json',
-					data:{"arrStr" : arr},
-					success: function(data) {
-						if (data != 1) {
-							alert("삭제성공");
-							// location.href = "interComList";
-							location.replace("interComList");
-						} else {
-							alert("삭제에 실패했습니다.");
+		function deleteValue() { //function 정의
+			var cnt = $("input[name='comListRow']:checked").length;
+			var arr = new Array();
+			$("input[name='comListRow']:checked").each(function() {
+				arr.push($(this).attr('id'));
+			});
+			//alert(arr);//com_email이 배열로 잘 담기는지 확인
+			if(cnt == 0){
+				alert("선택된 항목이 없습니다.");
+			}
+			else{
+				var chk = confirm("정말 삭제하시겠습니까?");
+				if (chk) {
+					$.ajax
+					({
+						url:"comScrapDelete",
+						type:'POST',
+						traditional : true, //배열로 보내는 방법
+						// dataType: 'json',
+						data:{"arrStr" : arr},
+						success: function(data) {
+							if (data != 1) {
+								alert("삭제성공");
+								location.href = "interComlist";
+							} else {
+								alert("삭제에 실패했습니다.");
+							}
+						},
+						error: function() {
+							alert("삭제를 완료하지 못했습니다. 다시 시도해주세요."); // 오류 시 알림
 						}
-					},
-					error: function() {
-						alert("삭제를 완료하지 못했습니다. 다시 시도해주세요."); // 오류 시 알림
-					}
-				});// ajax 끝
+					});// ajax 끝
+				}
+			}
+		}// function deleteValue 끝
 
-				// $.ajax({
-				// 	url: "comScrapDelete",
-				// 	type: 'POST',
-				// 	processData: false, // 문자열화 방지
-				// 	contentType: 'application/json', // JSON으로 전송
-				// 	dataType: 'json',
-				// 	data: JSON.stringify({ comlist: arr }), // JSON 문자열로 변환
-				// 	success: function(jdata) {
-				// 		if (jdata == 1) {
-				// 			alert("삭제되었습니다.");
-				// 			location.replace("interComList");
-				// 		} else {
-				// 			alert("삭제 실패");
-				// 		}
-				// 	},
-				// 	error: function(xhr, status, error) {
-				// 		alert("에러가 발생했습니다: " + error);
-				// 	}
-				// }); // ajax 끝
-        	}
-		}
-    });
+		
 
-
-    
-
-    /*
-    2024-07-02 서연주 
-    자세히보기 누르면 기업정보 상세페이지로 새창(기업아이디를 가지고 이동해야함)
-    */
-    // $('button.detailBtn').click(function(e){
-    //     console.log("자세히보기 click");
-    //     window.open('http://www.naver.com','com_detail','top=100, left=200, width=1200, height=600, status=no, menubar=no, toolbar=no, resizable=yes');
-    // });
+		/*
+		2024-07-02 서연주 
+		자세히보기 누르면 기업정보 상세페이지로 새창(기업아이디를 가지고 이동해야함)
+		*/
+		// $('button.detailBtn').click(function(e){
+		//     console.log("자세히보기 click");
+		//     window.open('http://www.naver.com','com_detail','top=100, left=200, width=1200, height=600, status=no, menubar=no, toolbar=no, resizable=yes');
+		// });
 
 
 
-    /*
-    2024-07-04 서연주 
-    휴지통 누르고 그 박스만 삭제하기
-    <휴지통아이콘 누른 그 박스를 선택하는 걸 못하겠음..>
 
-    */
-
-    $(".delIcon i").on("click",function(e){
-        e.preventDefault();
-        console.log("휴지통클릭");
-        
-        var this_checkbox =  document.getElementById('com_name');
-        // var this_checkbox =  $(this).parents('.boxLeft').children('#com_name');
-        // var this_checkbox =  $(this).parents('.boxLeft').children();
-        console.log(this_checkbox);
-        var checked= this_checkbox.checked;
-        
-        // var checked = this_checkbox.checked;
-        console.log(checked);
-
-        if(!checked){
-            alert("삭제할 공고를 선택해주세요.");
-        }else{
-            if(confirm("정말삭제하시겠습니까?") == true){
-            }else{
-                return;
-            }
-        }
-       
-
-    });
-
-// 	 최신순오래된순 구현하는 스크립트 노션에 참고자료있음 java단도 만들어야 
-// 
-//     document.querySelector('#orderBy').addEventListener('change', function() {
-//         var orderBy = document.querySelector('#orderBy').value;
-//         window.location.href = '/board/view?id=' + id + '&orderBy=' + orderBy;
-//     });
-
-
-	});
+	});//document ready 끝
 
 	// 드롭다운 메뉴 (하지수)
 

@@ -29,31 +29,31 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class recentNoticeController {
-	@Autowired
-	private recentNoticeService service;
+//	@Autowired
+//	private recentNoticeService service;
 	
 	
-	@RequestMapping("/recentNotice")//최근 본 공고 목록보기
-	public String recentNotice(HttpServletRequest request, Model model) {
-		log.info("@# recentNotice");		
-		
-		HttpSession session = request.getSession();
-		String user_email = (String)session.getAttribute("login_email");
-		log.info("@# recentNotice user_email=>"+user_email);		
-		
-		// 사용자정보의 최근본 채용공고 목록배열 가져오기
-		String recent_noticeNumArr =service.getRecentNoticeArr(user_email);
-		log.info("@# recentNotice recent_noticeNumArr=>"+recent_noticeNumArr);		
-		
-		// 사용자정보의 최근본 채용공고 목록 가져오기
-		ArrayList<ComNoticeDTO> list =service.getRecentNoticeList(recent_noticeNumArr);
-		log.info("@# recentNotice recent_notice list=>"+list);		
-				
-		
-		model.addAttribute("noticeList", list);
-		
-		return "individualrecentJoblist";
-	}
+//	@RequestMapping("/recentNotice")//최근 본 공고 목록보기
+//	public String recentNotice(HttpServletRequest request, Model model) {
+//		log.info("@# recentNotice");		
+//		
+//		HttpSession session = request.getSession();
+//		String user_email = (String)session.getAttribute("login_email");
+//		log.info("@# recentNotice user_email=>"+user_email);		
+//		
+//		// 사용자정보의 최근본 채용공고 목록배열 가져오기
+//		String recent_noticeNumArr =service.getRecentNoticeArr(user_email);
+//		log.info("@# recentNotice recent_noticeNumArr=>"+recent_noticeNumArr);		
+//		
+//		// 사용자정보의 최근본 채용공고 목록 가져오기
+//		ArrayList<ComNoticeDTO> list =service.getRecentNoticeList(recent_noticeNumArr);
+//		log.info("@# recentNotice recent_notice list=>"+list);		
+//				
+//		
+//		model.addAttribute("noticeList", list);
+//		
+//		return "individualrecentJoblist";
+//	}
 
 	
 

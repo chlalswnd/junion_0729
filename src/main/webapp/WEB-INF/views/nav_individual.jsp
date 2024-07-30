@@ -216,7 +216,7 @@
 	                </a>
 	            </li>
 	            <li>
-	                <a href="recentNotice">
+	                <a href="individualrecentNotice">
 	                    <span class="icon">
 	                        <i class="fa-solid fa-list-check"></i>
 	                    </span>

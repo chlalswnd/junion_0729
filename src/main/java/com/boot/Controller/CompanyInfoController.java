@@ -3,6 +3,7 @@ package com.boot.Controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,11 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.boot.DTO.ComNoticeDTO;
 import com.boot.DTO.CompanyInfoDTO;
 import com.boot.DTO.JoinDTO;
 import com.boot.Service.CompanyInfoService;
@@ -25,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
-public class CompanyController {
+public class CompanyInfoController {
 	
 	@Autowired
 	private CompanyInfoService infoService;
@@ -33,8 +37,16 @@ public class CompanyController {
 	private JoinService joinService;
 
 	@RequestMapping("/companyMain")
-	public String companyMain() {
+	public String companyMain(HttpServletRequest request, Model model) {//기업 마이페이지 메인
 		log.info("CompanyMain!!");
+		
+		HttpSession session = request.getSession();
+		String com_email = (String) session.getAttribute("login_email");
+		
+		ArrayList<ComNoticeDTO> endlist = infoService.getEndNotice(com_email);// 마감된 공고를 가져감
+		model.addAttribute("endlist", endlist);
+		int endNum = endlist.size();
+		model.addAttribute("endNum", endNum);
 		
 		return "/company/companyMain";
 	}
@@ -42,7 +54,8 @@ public class CompanyController {
 	
 	@RequestMapping("/companyInfoManagement")
 	public String company_InfoManagement(HttpServletRequest request, Model model) throws Exception{//기업 정보 관리 메인
-		log.info("@# company_InfoManagement");
+//		log.info("@# company_InfoManagement");
+		log.info("@# companyInfoManagement");
 		
 		
 		HttpSession session = request.getSession();
@@ -51,29 +64,35 @@ public class CompanyController {
 		CompanyInfoDTO dto = infoService.companyInfo(email);
 		model.addAttribute("companyInfo", dto);
 		
-		String year = dto.getCom_year();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy");
-		Date date = format.parse(year);
 		
-		LocalDate now = LocalDate.now();
+		 
+		if (dto.getCom_year() != null) {// com_tb의 com_year 값이 있다면 simpleDateFormat 클래스의 메소드로 연도만 자름
+			String year = dto.getCom_year();
+			Date date = format.parse(year);
+//			LocalDate now = LocalDate.now();
+			
+			String getYear= format.format(date);
+			model.addAttribute("year", getYear);
+		}
 		
 		
-		String getYear= format.format(date);
-		model.addAttribute("year", getYear);
-		
-		return "company/company_InfoManagement";
+		return "company/companyInfoManagement";
 	}
+	
 	
 	@RequestMapping("/companyInfoUpdate")
 	public String Company_InfoUpdate(HttpServletRequest request, Model model) {//기업 정보 수정 페이지로 이동
-		log.info("@# company_InfoUpdate");		
+//		log.info("@# company_InfoUpdate");		
+		log.info("@# companyInfoUpdate");		
 		
 		HttpSession session = request.getSession();
 		String email = (String) session.getAttribute("login_email");
 		CompanyInfoDTO dto = infoService.InfoMini(email);
 		model.addAttribute("companyInfo", dto);
 		
-		return "company/company_InfoUpdate";
+//		return "company/company_InfoUpdate"; 24.07.24 파일명, 경로 수정
+		return "company/companyInfoUpdate";
 	}
 	
 	@RequestMapping("/modify_Info")
@@ -88,19 +107,32 @@ public class CompanyController {
 	}
 
 	@RequestMapping("/companyPW")
-	public String PWChange(HttpServletRequest request, Model model) {//비밀번호 변경 팝업
+	public String PWChange() {//비밀번호 변경 팝업
 		log.info("@# companyPW open!!");
 		
-		HttpSession session = request.getSession();
-		String login_pw = (String) session.getAttribute("login_pw");
-		model.addAttribute("login_pw", login_pw);
+//		HttpSession session = request.getSession();
+//		String login_pw = (String) session.getAttribute("login_pw");
+//		model.addAttribute("login_pw", login_pw);
 		return "/company/companyPW";
 	}
 	
 	@RequestMapping("/comPwChange")
-	public void comPwChange(@RequestParam HashMap<String, String> param) {
-		log.info("comPwChange");
+//	public void comPwChange(@RequestParam HashMap<String, String> param, HttpServletRequest request) {
+//	public String comPwChange(@RequestParam HashMap<String, String> param, HttpServletRequest request) {
+	public ResponseEntity<String> comPwChange(@RequestParam HashMap<String, String> param, HttpServletRequest request) {
+		log.info("comPwChange!!");
 		
+		log.info("comPwChange param!! ->"+param);
+		infoService.comPWchange(param);
+		
+		String com_pw = param.get("changePassword");
+		HttpSession session = request.getSession();
+		session.setAttribute("login_pw", com_pw);
+		String test = (String) session.getAttribute("login_pw");
+		log.info("session 결과는 ?? ->"+test);
+
+		return new ResponseEntity<String>("change",HttpStatus.OK);
+//		return "change";
 	}
 	
 		
@@ -128,7 +160,7 @@ public class CompanyController {
 		log.info("@# stack2 ==>" + stack2);
 		log.info("@# stack3 ==>" + stack3);
 
-		return "company/company_InfoDetailUpdate";
+		return "company/companyInfoDetailUpdate";
 		
 	}
 	

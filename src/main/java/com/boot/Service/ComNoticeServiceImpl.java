@@ -15,13 +15,14 @@ import org.springframework.stereotype.Service;
 import com.boot.DAO.ComNoticeDAO;
 import com.boot.DTO.ComNoticeAttachDTO;
 import com.boot.DTO.ComNoticeDTO;
+import com.boot.DTO.RecentNoticeDTO;
 import com.boot.DTO.ResumeDTO;
 import com.boot.DTO.SubmitDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service("JobPostService")
+@Service("ComNoticeService")
 public class ComNoticeServiceImpl implements ComNoticeService{
 
 	@Autowired
@@ -37,7 +38,6 @@ public class ComNoticeServiceImpl implements ComNoticeService{
 //		 log.info("@# JobPostCard =>"+dto);
 		
 		return dto;
-//		return null;
 	}
 	
 	public void hitUP(int notice_num){//채용공고 선택시 조회수 증가
@@ -56,16 +56,17 @@ public class ComNoticeServiceImpl implements ComNoticeService{
 		
 		return dto;
 	}
-	
-	public String comLocation(String com_email){//상세 채용공고-회사 위치 가져오기
 
-		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
-		String com_location = dao.comLocation(com_email);
-		
-		return com_location;
-	}
+	public ArrayList<ComNoticeDTO> otherJobPost(int notice_num){//상세 채용공고, 해당 기업의 다른 공고 정보 가져오기
 	
-	public ComNoticeDTO getNoticeInfo(int notice_num) {//지원하기 클릭, 공고 정보 가져오기
+		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
+		ArrayList<ComNoticeDTO> list = dao.otherJobPost(notice_num);
+		
+		return list;
+	}
+
+	
+	public ComNoticeDTO getNoticeInfo(int notice_num) {//지원하기 클릭, 지원 팝업에 공고 정보 가져오기
 	
 		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
 		ComNoticeDTO dto = dao.getNoticeInfo(notice_num);
@@ -73,68 +74,47 @@ public class ComNoticeServiceImpl implements ComNoticeService{
 		return dto;
 	}
 	
-	public ArrayList<ResumeDTO> getProfileList(String user_email){//지원하기 클릭, 이력서 정보 가져오기
+	public ArrayList<ResumeDTO> getProfileList(String user_email){//지원하기 클릭, 지원 팝업에이력서 정보 가져오기
 
 		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
 		ArrayList<ResumeDTO> dto = dao.getProfileList(user_email);
 		
 		return dto;
 	}
-	
-//	public ArrayList<ComNoticeDTO> getNoticeNum(HashMap<String, String> param){//이력서 선택, 지원 완료시 공고 테이블에 이력서 배열값 가져오기
-//	
-//		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
-//	}
-//	public boolean insertResumNum(HashMap<String, String> param){//이력서 선택, 지원 완료시 공고 테이블에 이력서 번호 추가
-		public void insertResumNum(HashMap<String, String> param){//이력서 선택, 지원 완료시 공고 테이블에 이력서 번호 추가
-
-		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
-		dao.insertResumNum(param);
-		
-//		int notice_num = Integer.parseInt(param.get("notice_num"));
-//		ArrayList<ComNoticeDTO> dto = dao.getResumeNum(notice_num);
-//		String resume_num = param.get("resume_num");
-//		boolean check = false;
-		
-//		if(dto.size()>0) {
-//			for (int i = 0; i < dto.size(); i++) {
-//				String splitResume = dto.get(i).getResume_num();
-//				String[] value = splitResume.split(",");
-//				for (String resumeValue : value) {
-//					if(resume_num.equals(resumeValue)) {
-//						check = true;
-//						break;
-//					}
-//						
-//				}
-//				if (check) {
-//				break;	
-//				}
-//			}
-//		}
-//		
-//		if(!check) {
-//			if (dto.size()>0) {
-//				ComNoticeDTO dtos = dto.get(0);
-//				String num = dtos.getResume_num() +","+resume_num;
-//				param.put("resume_num", num);
-//				log.info("Updated resumes: {}",  num);
-//			}
-//		dao.insertResumNum(param);
-//		log.info("된건가?");
-//		return true;
-//		}
-//		log.info("됐니?");
-//		return false;
-	}
 		
 	
 	@Override
-	public void updateSubmitData(SubmitDTO submitDTO){//이력서지원정보 저장
+		public boolean updateSubmitData(HashMap<String, String> param){//이력서지원정보 저장
+		log.info("@# 이력서 배열 들고와서 비교 후 저장 처리 서비스!!!");
+		
 		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
-		dao.updateSubmitData(submitDTO);
+//		dao.updateSubmitData(submitDTO);
+		int notice_num= Integer.parseInt(param.get("notice_num"));
+		ArrayList <SubmitDTO> list =  dao.getResumeNum(notice_num);
+		String user_email = param.get("user_email");
+		log.info("값을 잘 들고왔나요??"+user_email);
+		boolean result = false;
+		
+		if ( list.size()>0) {
+			for (int i = 0; i < list.size(); i++) {
+				if (user_email.equals(list.get(i).getUser_email())) {
+					
+					result = true;
+//					break;
+					return result;
+				}
+			}
+			if (result == false) {
+				log.info("경로 확인용 false = "+user_email);
+				dao.updateSubmitData(param);			
+			}
+		}else {
+			log.info("경로 확인용 size=0 -> "+user_email);
+			dao.updateSubmitData(param);
+		}
+		
+		return result;
 	}
-	
 	
 	
 	
@@ -217,6 +197,16 @@ public class ComNoticeServiceImpl implements ComNoticeService{
 				log.error("delete file error"+e.getMessage());
 			}
 		});//end of forEach
+	}
+
+	@Override
+	public void updateRecentNotice(RecentNoticeDTO dto) {//최근본 공고번호와 유저이메일 저장하기
+		log.info("@# ComNoticeServiceImpl updateRecentNotice");
+		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
+		int exists =dao.checkRecentNotice(dto);//이미 최근본공고테이블에 저장된 정보인지 확인(행갯수 반환)
+		if(exists == 0) {//저장된 정보가 아니면(처음 열람하는 공고면)
+			dao.updateRecentNotice(dto);//최근본공고테이블에 저장
+		}
 	}
 	
 
