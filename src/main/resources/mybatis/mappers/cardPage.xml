@@ -5,25 +5,9 @@
 <mapper namespace="com.boot.DAO.CardPageDAO">
 
 	<select id="cardPageList" resultType="com.boot.DTO.ComNoticeDTO">
-	
-	<![CDATA[ 
-	
-	 select row_noticeNum, notice_num, notice_title, com_name, notice_area1, notice_area2, notice_career 
-	FROM(select row_noticeNum, notice_num, notice_title, com_name, notice_area1, notice_area2, notice_career 
-		FROM(select row_number() over(order by notice_num desc) as row_noticeNum
-			, notice_num, notice_title, com_name, notice_area1
-			, notice_area2, notice_career 
-			FROM notice_tb n
-			left join com_tb c
-			ON n.com_email=n.com_email
-			order by notice_num desc) a
-		where row_noticeNum<= (#{pageNum} * #{amount})
-		)aa
-    where row_noticeNum > (#{pageNum}-1)* #{amount}
-   		
-   		 
-		]]>
-	</select>
+<!-- 	페이징을 위한 쿼리 -->
+<![CDATA[ select row_noticeNum, notice_num, notice_title, aa.com_name, notice_area1, notice_area2, notice_career FROM(select row_noticeNum, notice_num, notice_title, a.com_name, notice_area1, notice_area2, notice_career FROM(select row_number() over(order by notice_num desc) as row_noticeNum , notice_num, notice_title, c.com_name, notice_area1 , notice_area2, notice_career FROM notice_tb n join com_tb c on n.com_email = c.com_email order by notice_num desc) a where row_noticeNum<= (#{pageNum} * #{amount}) )aa where row_noticeNum > (#{pageNum}-1)* #{amount} ]]>
+</select>
 
 
 </mapper>

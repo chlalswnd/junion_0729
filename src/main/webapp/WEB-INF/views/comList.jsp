@@ -288,22 +288,25 @@
 							<div class="wrap">
 								<div class="devlist">
 
-									<div class="selectbox">
-										<div class="select">
-											<input class="title" type="text" placeholder="검색어를 입력해 주세요">
-										</div> <!-- 콘텐트박스 끝-->
-										<div class="icon">
-											<div class="i1">
-												<a href="#" class="fa-solid fa-magnifying-glass"
-													style="color: #ffa500;"></a>
-											</div>
-										</div>
-									</div> <!-- selectbox 끝-->
 
 
 
 
 									<form method="get" id="searchForm">
+										<div class="selectbox">
+											<div class="select">
+												<input class="title" type="text" name="keyword"
+													value="${pageMaker.cri.keyword}" placeholder="검색어를 입력해 주세요">
+											</div> <!-- 콘텐트박스 끝-->
+
+											<div class="icon">
+												<div class="i1">
+													<a href="#" class="fa-solid fa-magnifying-glass"
+														style="color: #ffa500;"></a>
+												</div>
+											</div>
+										</div> <!-- selectbox 끝-->
+
 										<!-- 추천순/최신순 탭 정보 보냄 -->
 										<input type="hidden" name="orderType" id="orderType" value="${orderType}">
 										<div class="filterbox">

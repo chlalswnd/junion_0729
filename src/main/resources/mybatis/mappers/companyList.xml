@@ -51,7 +51,7 @@
 	</select>
 	
 	
-		<sql id="orderType">
+<!--		com_star 사용예정-->
 <!--		<if test='(orderType == "recommendation" and cri.login_usertype == "1")'> 큰 따옴표 때문에 char타입이 적용이 안됐음 -->
 <!--		<if test="(orderType == 'recommendation' and cri.login_usertype == '1')">-->
 <!--			ORDER BY r.resume_num-->
@@ -60,14 +60,18 @@
 <!--		<if test="(orderType == 'recommendation' and cri.login_usertype == '2')">-->
 <!--			ORDER BY stack_names like concat ('%','JAVA','%') DESC-->
 <!--		</if>-->
+	<sql id="orderType">
 		<if test='(orderType == "latest")'>
 			ORDER BY update_date DESC
 		</if>
 	</sql>
 	<sql id="criteria4">
-		<if test='(cri.stackType != null and cri.stackType != "")'>
-<!--			AND com_name IN (select com_email from com_stack where stack_name = #{cri.stackType})-->
-			where com_name IN (select com_email from com_stack where stack = #{cri.stackType})
+<!--	검색로직-->
+		<if test='cri.keyword != null and cri.keyword != ""'>
+        	WHERE com_name LIKE concat('%', #{cri.keyword}, '%')
+    	</if>
+    	<if test="cri.stackType != null and cri.stackType != ''">
+			AND com_name IN (SELECT com_email FROM com_stack WHERE stack = #{cri.stackType})
 		</if>
 <!--		<if test='(cri.locationType != null and cri.locationType != "")'>-->
 <!--			AND com_location = #{cri.locationType}-->
