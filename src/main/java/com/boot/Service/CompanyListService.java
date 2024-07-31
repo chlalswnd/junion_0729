@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Param;
 
 import com.boot.DTO.CompanyListDTO;
+import com.boot.DTO.Criteria;
 import com.boot.DTO.Criteria4;
 
 public interface CompanyListService {
@@ -19,6 +20,7 @@ public interface CompanyListService {
 
 	public ArrayList<String> getLocationList(); // 지역 리스트
 	
-	public int getTotalCount();
+//	public int getTotalCount();
+	public int getTotalCount(Criteria4 cri);
 	
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.boot.DAO.CompanyListDAO;
 import com.boot.DTO.CompanyListDTO;
+import com.boot.DTO.Criteria;
 import com.boot.DTO.Criteria4;
 
 import lombok.extern.slf4j.Slf4j;
@@ -64,9 +65,10 @@ public class CompanyListServiceImpl implements CompanyListService{
 	07/26 11:50 민중
 */
 	@Override
-	public int getTotalCount() {
+//	public int getTotalCount() {
+	public int getTotalCount(Criteria4 cri) {
 		CompanyListDAO dao = sqlSession.getMapper(CompanyListDAO.class);
-		int total = dao.getTotalCount();
+		int total = dao.getTotalCount(cri);
 		return total;
 	}
 }

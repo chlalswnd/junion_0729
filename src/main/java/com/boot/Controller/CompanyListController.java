@@ -64,7 +64,8 @@ public class CompanyListController {
 //    	ArrayList<CompanyListDTO> list = companyListService.comList(orderType, cri);
 //    	model.addAttribute("comList", list);
     	ArrayList<CompanyListDTO> comList = companyListService.comList(orderType, cri);
-    	int total = companyListService.getTotalCount();
+    	int total = companyListService.getTotalCount(cri);
+//    	int total = comList.size();
     	model.addAttribute("comList", comList);
     	model.addAttribute("pageMaker", new CompanyPageDTO(total, cri));
     	

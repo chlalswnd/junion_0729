@@ -45,10 +45,7 @@
 	<select id="getLocationList" resultType="String"> 
 		SELECT location_name FROM location
 	</select>
-	<!-- 민중 끝-->
-    <select id="getTotalCount" resultType="int"> 
-		SELECT count(*) FROM com_tb
-	</select>
+
 	
 	
 <!--		com_star 사용예정-->
@@ -63,6 +60,9 @@
 	<sql id="orderType">
 		<if test='(orderType == "latest")'>
 			ORDER BY update_date DESC
+		</if>
+		<if test='(orderType == "recommendation")'>
+			ORDER BY update_date ASC
 		</if>
 	</sql>
 	<sql id="criteria4">
@@ -113,6 +113,12 @@ FROM (SELECT rownum, com_email, com_name, com_star, com_location, com_year, expe
 		where rownum > (#{cri.pageNum}-1) * #{cri.amount} 
 		]]>
     </select>
+    	
+    <select id="getTotalCount" resultType="int"> 
+		SELECT count(*) FROM com_tb
+		<include refid="criteria4"></include>
+	</select>
+	<!-- 민중 끝-->
 </mapper>
 
 

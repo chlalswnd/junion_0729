@@ -422,43 +422,31 @@
 									<div class="div_page">
 										<ul>
 											<c:if test="${pageMaker.prev}">
-												<!-- <li>Previous</li> -->
 												<li class="paginate_button">
-													<a href="${pageMaker.startpage - 1}">
-														Previous
-													</a>
+													<a href="#" data-page="${pageMaker.startpage - 1}">Previous</a>
 												</li>
 											</c:if>
 											<c:forEach var="num" begin="${pageMaker.startpage}"
 												end="${pageMaker.endpage}">
-												<!-- <li>${num}</li> -->
-												<!-- <li ${pageMaker.cri.pageNum == num ? "style='color:#f00; font-weight: 600';'" : ""}>${num}</li> -->
-												<!-- <li ${pageMaker.cri.pageNum == num ? "style='color:#f00; font-weight: 600';'" : ""}> -->
 												<li class="paginate_button" ${pageMaker.cri.pageNum==num
-													? "style='border:2px solid #FFA500; font-weight: 900';'" : "" }>
-													<a href="${num}">
-														${num}
-													</a>
+													? "style='border:2px solid #FFA500; font-weight: 900;'" : "" }>
+													<a href="#" data-page="${num}">${num}</a>
 												</li>
 											</c:forEach>
 											<c:if test="${pageMaker.next}">
-												<!-- <li>next</li> -->
-												<li class="paginate_button"><input type="hidden" name="">
-													<a href="${pageMaker.endpage + 1}">
-														Next
-													</a>
+												<li class="paginate_button">
+													<a href="#" data-page="${pageMaker.endpage + 1}">Next</a>
 												</li>
 											</c:if>
 										</ul>
 									</div> <!-- div_page-->
 
 									<form id="actionForm" method="get">
-										<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
 										<input type="hidden" name="amount" value="${pageMaker.cri.amount}">
-										<!-- 페이징 검색시 페이지 번호 클릭할 때 필요한 파라미터 -->
 										<input type="hidden" name="stackType" value="${pageMaker.cri.stackType}">
 										<input type="hidden" name="locationType" value="${pageMaker.cri.locationType}">
-										<!-- hidden 값 미스매치로 페이지가 나오지 않는 오류 있었음 -->
+										<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
+										<!-- 여기서 pageNum은 빈 값으로 설정하지 않음 -->
 									</form>
 
 								</div> <!-- devlist 끝 -->
@@ -490,20 +478,23 @@
 						});
 
 						// 페이지 버튼 클릭 이벤트
+						// 페이지 버튼 클릭 이벤트
 						document.querySelectorAll(".paginate_button a").forEach(function (pageLink) {
 							pageLink.addEventListener("click", function (event) {
 								event.preventDefault();
-								var form = document.createElement("form");
-								form.method = "get";
-								//form.action = "companyPageList";
-								form.action = "comList";
+								var form = document.getElementById("actionForm");
+								// 기존 pageNum 입력값을 삭제
+								var existingPageNumInput = form.querySelector('input[name="pageNum"]');
+								if (existingPageNumInput) {
+									existingPageNumInput.remove();
+								}
+								// 새로운 pageNum 입력값 추가
 								var pageNumInput = document.createElement("input");
 								pageNumInput.type = "hidden";
 								pageNumInput.name = "pageNum";
-								pageNumInput.value = this.getAttribute("href");
+								pageNumInput.value = this.getAttribute("data-page"); // data-page에서 페이지 번호 가져오기
 								form.appendChild(pageNumInput);
-								document.body.appendChild(form);
-								form.submit();
+								form.submit(); // 폼 제출
 							});
 						});
 					});

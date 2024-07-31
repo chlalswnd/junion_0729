@@ -25,5 +25,6 @@ public interface CompanyListDAO {
 
 	public ArrayList<String> getLocationList(); // 지역 리스트
 	
-	public int getTotalCount();
+//	public int getTotalCount();
+	public int getTotalCount(@Param("cri") Criteria4 cri);
 }
