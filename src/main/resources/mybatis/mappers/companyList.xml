@@ -62,7 +62,7 @@
 			ORDER BY update_date DESC
 		</if>
 		<if test='(orderType == "recommendation")'>
-			ORDER BY update_date ASC
+			ORDER BY com_star DESC
 		</if>
 	</sql>
 	<sql id="criteria4">
@@ -88,30 +88,32 @@
 
 <!--	    <![CDATA[ : mybatis 에서 특수문자 인식처리 -->
     <select id="comList" resultType="com.boot.DTO.CompanyListDTO">
-<![CDATA[ 
-		   SELECT rownum, com_email, com_name, com_star, com_location, com_year, experienceYears, update_date, stack_names
-FROM (SELECT rownum, com_email, com_name, com_star, com_location, com_year, experienceYears, update_date, stack_names
-    FROM (SELECT row_number() OVER (ORDER BY com_email DESC) AS rownum,
-               c.com_email,
-               c.com_name,
-               c.com_star,
-               c.com_location,
-               TIMESTAMPDIFF(YEAR, c.com_year, CURDATE()) AS experienceYears,
-               DATE_FORMAT(c.com_year, '%Y') AS com_year,
-               c.update_date,
-               (SELECT GROUP_CONCAT(cs.stack)
-                FROM com_stack cs
-                WHERE cs.com_email = c.com_email) AS stack_names
-        FROM com_tb c
+		<![CDATA[ 
+	   		SELECT rownum, com_email, com_name, com_star, com_location, com_year, experienceYears, update_date, stack_names
+				FROM (SELECT rownum, com_email, com_name, com_star, com_location, com_year, experienceYears, update_date, stack_names
+		    	FROM (SELECT row_number() OVER (ORDER BY com_email DESC) AS rownum,
+	               c.com_email,
+	               c.com_name,
+	               (SELECT ROUND(AVG(cst.com_star), 1) 
+	               FROM com_star_tb cst 
+	               WHERE cst.com_email = c.com_email) AS com_star,
+	               c.com_location,
+	               TIMESTAMPDIFF(YEAR, c.com_year, CURDATE()) AS experienceYears,
+	               DATE_FORMAT(c.com_year, '%Y') AS com_year,
+	               c.update_date,
+	               (SELECT GROUP_CONCAT(cs.stack)
+	                FROM com_stack cs
+	                WHERE cs.com_email = c.com_email) AS stack_names
+        		FROM com_tb c
 					]]>
-            <include refid="criteria4"></include>
-            <include refid="orderType"></include>
-		  <![CDATA[
-		  ) a
-			where rownum <= (#{cri.pageNum} * #{cri.amount})
-				)aa
-		where rownum > (#{cri.pageNum}-1) * #{cri.amount} 
-		]]>
+	            <include refid="criteria4"></include>
+	            <include refid="orderType"></include>
+		  	<![CDATA[
+			  ) a
+				where rownum <= (#{cri.pageNum} * #{cri.amount})
+					)aa
+			where rownum > (#{cri.pageNum}-1) * #{cri.amount} 
+			]]>
     </select>
     	
     <select id="getTotalCount" resultType="int"> 
