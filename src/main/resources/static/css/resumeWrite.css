@@ -79,6 +79,7 @@ section
 .resumeCon.left .resumeConTop .name 
 {
   font-size:var(--font-size24);
+  font-weight: 500;
 }
 
 .ageSex 
@@ -160,7 +161,7 @@ section
 .sectionTitle 
 {
   font-size: var(--font-size24);
-  font-weight: 300;
+  font-weight: 500;
   padding:10px 0;
   box-sizing: border-box;
 }

@@ -11,14 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.boot.DTO.Criteria;
-import com.boot.DTO.boardBoardDTO;
 import com.boot.DTO.boardPageDTO;
-import com.boot.DTO.comBoardBoardDTO;
 import com.boot.DTO.noticeBoardBoardDTO;
-import com.boot.Service.boardBoardService;
-import com.boot.Service.boardPageService;
-import com.boot.Service.comBoardBoardService;
-import com.boot.Service.comBoardPageService;
 import com.boot.Service.noticeBoardBoardService;
 import com.boot.Service.noticeBoardPageService;
 
@@ -33,29 +27,31 @@ public class noticeBoardPageController {
 	@Autowired
 	private noticeBoardBoardService boardservice;
 	
-//	@RequestMapping("/boardCommunity")  
-//	public String community(HttpServletRequest httpServletRequest, Model model) {
-//
-//	    HttpSession session = httpServletRequest.getSession(false); // false: 세션이 없으면 새로 생성하지 않음
-//	    if (session == null) {
-//	        // 세션이 없으면 로그인 페이지로 리다이렉트
-//	        return "redirect:/login";
-//	    }
-//
-//	    // 세션에서 "login_usertype" 속성을 가져오고, 타입을 String으로 변환
-//	    Object userTypeObject = session.getAttribute("login_usertype");
-//	    String userType = (userTypeObject != null) ? userTypeObject.toString() : null;
-//
-//	    log.info("@# session userType => " + userType);
-//	    
-//	    if ("1".equals(userType)) {
-//	        return "redirect:/boardList";
-//	    } else if ("2".equals(userType))  	{
-//	        return "redirect:/comBoardList";
-//	    } else {
-//	        return "redirect:/login";
-//	    }
-//	}
+	@RequestMapping("/noticeCommunity")  
+	public String community(HttpServletRequest httpServletRequest, Model model) {
+
+	    HttpSession session = httpServletRequest.getSession(false); // false: 세션이 없으면 새로 생성하지 않음
+	    if (session == null) {
+	        // 세션이 없으면 로그인 페이지로 리다이렉트
+	        return "redirect:/login";
+	    }
+
+	    // 세션에서 "login_usertype" 속성을 가져오고, 타입을 String으로 변환
+	    Object userTypeObject = session.getAttribute("login_usertype");
+	    String userType = (userTypeObject != null) ? userTypeObject.toString() : null;
+
+	    log.info("@# session userType => " + userType);
+	    
+	    if ("1".equals(userType)) {
+	        return "redirect:/noticeBoardList";
+	    } else if ("2".equals(userType))  	{
+	        return "redirect:/noticeBoardList";
+	    } else if ("3".equals(userType))  	{
+	        return "redirect:/noticeBoardList";
+	    } else {
+	        return "redirect:/login";
+	    }
+	}
 	
 	
 	

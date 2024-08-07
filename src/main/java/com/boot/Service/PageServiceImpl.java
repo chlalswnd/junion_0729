@@ -14,6 +14,7 @@ import com.boot.DAO.PageDAO;
 import com.boot.DTO.ComNoticeDTO;
 import com.boot.DTO.CompanyInfoDTO;
 import com.boot.DTO.Criteria2;
+import com.boot.DTO.OfferInfoDTO;
 import com.boot.DTO.ResumeDTO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -139,13 +140,46 @@ public class PageServiceImpl implements PageService{
 
 	@Override
 	public int getRecentNoticeTotalCount(Criteria2 cri2) {
-log.info("@# PageServiceImpl getRecentNoticeTotalCount");
+		log.info("@# PageServiceImpl getRecentNoticeTotalCount");
 		
 		PageDAO dao = sqlSession.getMapper(PageDAO.class);
 		int total = dao.getNoticeTotalCount(cri2);
 		
 		return total;
 	}
+
+	@Override
+	public ArrayList<OfferInfoDTO> offerListWithPaging(Criteria2 cri2) {
+		log.info("@# PageServiceImpl offerListWithPaging");
+		log.info("@# cri==>"+ cri2);
+		PageDAO dao = sqlSession.getMapper(PageDAO.class);
+		ArrayList<OfferInfoDTO> list = dao.offerListWithPaging(cri2);
+		
+		log.info("@# list==>"+ list);
+		
+		return list;
+	}
+
+	@Override
+	public int offerListTotalCount(Criteria2 cri2) {
+		log.info("@# PageServiceImpl offerListTotalCount");
+		
+		PageDAO dao = sqlSession.getMapper(PageDAO.class);
+		int total = dao.offerListTotalCount(cri2);
+		
+		return total;
+	}
+
+	@Override
+//	public void rejectOffer(@Param("user_email") String user_email, @Param("offer_no") int offer_no) {
+	public void rejectOffer(String user_email, int offer_no) {
+		log.info("@# PageServiceImpl rejectOffer");
+		
+		PageDAO dao = sqlSession.getMapper(PageDAO.class);
+		dao.rejectOffer(user_email, offer_no);
+	}
+
+	
 
 	
 	

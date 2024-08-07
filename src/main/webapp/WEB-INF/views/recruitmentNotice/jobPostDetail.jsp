@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>채용공고 상세</title>
     <meta charset="UTF-8">
 <!-- <link rel="stylesheet" href="css/default.css">
 <link rel="stylesheet" href="css/posting_list.css"> -->
@@ -18,7 +19,9 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css"/>
 <!-- import js -->
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-<script src="js/index.js"></script>   
+<script src="js/index.js"></script>
+<!-- 지도 API -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=48ca63ceb0746787c922c8da8f33b705&libraries=services"></script>   
 </head>
 <style>
 	    :root 
@@ -95,6 +98,7 @@
 	{
 		background-color: var(--color-white);
 		border: none;
+		cursor: pointer;
 		/* gap: 50px; */
 	}
 
@@ -122,6 +126,7 @@
 	.wrap .main .sub1 .name
 	{
 	    padding-bottom: 10px;
+		color: var(--color-black);
 	}
 
 	.wrap .main .sub1 .name,
@@ -150,9 +155,36 @@
 
 	.wrap .main .sub2
 	{
-	    max-width: 90px ;
+	  	max-width: 90px ;
+		gap: 15px;/*간격*/
+		display: flex;/*없을 경우, 세로로 div처럼 세로로 출력됨*/
+		/* cursor: pointer; */
+	}
+	
+	.wrap .main .icon,
+	.right .iconn
+	{
+		background-color: var(--color-white);
+		border: none;
+		font-size: var(--font-size20);
 	}
 
+	/* .fa-solid .fa-bookmark .active : css 안먹음*/
+	/* .fa-solid.fa-bookmark.active */
+	.fa-bookmark.active
+	{
+		color: var(--main-color);
+		font-size: 22px;
+		/* border: none; */
+	}
+
+	#heart.active /*조건 만족시 CSS - 크기가 작아 보여 크기를 키움*/
+	{
+		width: 100%;
+		height: 100%;
+    	color : red;
+		font-size: 22px;
+	}
 
 	.wrap .column
 	{
@@ -165,6 +197,7 @@
 
 	{
 	    font-size: var(--font-size20);
+		font-weight: 400;
 	    padding-bottom: 10px;
 	    border-bottom: 1px solid var(--input-gray);
 
@@ -305,6 +338,10 @@
 	    margin-bottom: 13px;
 	}
 	.wrap .right .boxbox
+	{
+	    margin-top: 10px;
+	}
+	.wrap .right .boxbox .ic
 	{
 	    margin-top: 10px;
 	}
@@ -521,21 +558,35 @@
                     </div>
                     <div class="main">
                         <div class="sub1">
-                            <h5 class="name">${company.com_name}</h5>
-                            <h5 class="locationC">${company.notice_area1}${company.notice_area2} · ${company.notice_career}</h5>
+                            <a href="comDetail?com_email=${company.com_email}"><h5 class="name">${company.com_name}</h5></a>
+                            <h5 class="locationC">${company.notice_area1} ${company.notice_area2} · ${company.notice_career}</h5>
                             <h5 class="title">${company.notice_title}</h5>
                         </div>
                         <div class="sub2">
-                            <button class="icon">
-                                <i class="fa-regular fa-bookmark" style = font-size:20px;></i>
-                            </button>
-                            <button class="icon">
-                                <i class="fa-regular fa-heart" style = font-size:20px;></i>
-                            </button>
-                            <button class="icon">
-                                <i class="fa-regular fa-share-from-square" style = font-size:20px;></i>
-                            </button>
-                        </div>
+							<!-- <button class="icon"> -->
+							<span class="icon">
+								<!-- ${company.notice_num} -->
+								<c:choose>
+									<c:when test="${fn:contains(ScrapComList, noticeNumber)}">
+										<i id="bookmark${noticeNumber}" class="fa-solid fa-bookmark active"></i>
+										<!-- <i id="bookmark" class="fa-solid fa-bookmark active"></i> -->
+									</c:when>
+									<c:otherwise>
+										<!-- <i id="bookmark<span class='urlNotice'></span>" class="fa-regular fa-bookmark"></i> -->
+										<i id="bookmark${noticeNumber}" class="fa-regular fa-bookmark"></i>
+									</c:otherwise>
+								</c:choose>
+								<!-- <i id="bookmark" class="fa-regular fa-bookmark"></i> -->
+							<!-- </button> -->
+							</span>
+							<span class="icon">
+								<i class="fa-regular fa-heart" id="heart"></i>
+								<!-- <i class="fa-solid fa-heart" id="heart"></i> -->
+							</span>
+							<span class="icon">
+								<i class="fa-regular fa-share-from-square"></i>
+							</span>
+						</div>
                     </div>
 
 
@@ -552,7 +603,7 @@
                         <div class="columnAA">
                             <!-- <div class="detail"> -->
                                 <p>
-                                급   여 : ${company.notice_pay1} ${company.notice_pay2} 만원<br>
+                                급   여 : ${company.notice_pay1} <span class="case">${company.notice_pay2} 만원</span><br>
                             <!-- </div> -->
                             <!-- <div class="detail"> -->
                                 근무 부서 :${company.notice_department}<br>
@@ -645,7 +696,7 @@
 
                     <div class="col7">
                         <div class="columnA">
-                            <h5 class="title">지도</h5>
+                            <h5 class="title">회사 위치</h5>
                         </div>
                         <div class="columnBB">
                             <!-- <h5 class="detail">/// -->
@@ -661,8 +712,7 @@
                                         var map = new kakao.maps.Map(container, options);
                                     </script>
                                 </div> -->
-                                <!--<h5 class="loc">${com_location}</h5>-->
-                                <!-- <h5 class="loc">${com_location}</h5> -->
+								<div id="map" style="width:100%;height:350px;"></div>
                                 <h5 class="loc">${company.com_location}</h5>
                             <!-- </h5> -->
                         </div>
@@ -674,7 +724,6 @@
                 <div class="right">
                     
                     <div class="box1">
-                        <!-- <h5 class="t">채용중인 다른 포지션</h5> -->
                         <h5 class="t">이 기업에서 진행중인 다른 공고</h5>
                     </div>
 
@@ -684,14 +733,21 @@
 							<a href="/jobPostDetail?notice_num=${dto.notice_num}">
 								<div class="box2">
 									<div class="box">
-										<!-- <div class="t1">개발</div>--><!--여기 들어갈 후보 : 근무 조건, 직책, 부서 -->
 										<div class="t1">${dto.notice_department} ∙ ${dto.notice_contactType}</div><!--여기 들어갈 후보 : 부서, 근무 조건으로 -->
 										<h5 class="t2"> ${dto.notice_title}</h5>
 										<h5 class="t3">${dto.notice_area1} ${dto.notice_area2} ∙ <span class="career">경력</span><span class="noticeCareer">${dto.notice_career}</span> ∙ ${dto.notice_endDate}</h5>
 									</div>
 									<div class="boxbox">
 										<button class="iconn">
-											<i class="fa-regular fa-bookmark" style = font-size:20px;></i>
+											<!-- <i class="fa-regular fa-bookmark" style = font-size:20px;></i> -->
+											<c:choose>
+												<c:when test="${fn:contains(ScrapComList, dto.notice_num)}">
+													<i id="bookmark${dto.notice_num}" class="fa-solid fa-bookmark active" onclick="return false;"></i>
+												</c:when>
+												<c:otherwise>
+													<i id="bookmark${dto.notice_num}" class="fa-regular fa-bookmark" onclick="return false;"></i>
+												</c:otherwise>
+											</c:choose>
 										</button>
 									</div>
 								</div>
@@ -740,56 +796,181 @@
 
 			2024-07-24 임하진 : 스택 출력 문제로 span으로 태그 변경
             */
-    //  const noticeStack = "<c:out value='${company.notice_stack}'/>";
-    //  const noticeStack = "<c:out value='${company.notice_stack}'/>";
      var noticeStack = "${company.notice_stack}";
-	 console.log(noticeStack.length);
+	//  console.log(noticeStack);
+	//  console.log(noticeStack.length);
 	 if(noticeStack.length > 0){
-	 		console.log(noticeStack);
             const stacks = noticeStack.split(','); // 콤마로 나눠서 배열로 저장
-            console.log(stacks);
             let output = "";
             for (let i = 0; i < stacks.length; i++) {
                 // output += "<span class='mm1'>" + stacks[i].trim() + "</span>"; 통일성을 위해 button으로 변경
                 output += "<button class='mm1'>" + stacks[i].trim() + "</button>";
             }
-            console.log("@# output=>" + output);
             $('.col6 .tech').html(output);
 		}			
-			
-	});
+	
+		
+	// 관심 기업 DB 정보가 있을 경우, 해당 이미지 활성화
+	let scrap_email = "${com_email}";//스크랩 DB에서 얻는 com_meail
+	// console.log("scrap_email!!"+scrap_email);
+		if (scrap_email) {
+			// $("#heart").replace(".fa-solid fa-heart").addClass("active");
+			document.getElementById("heart").className ="fa-solid fa-heart";
+			// $(".fa-regular fa-heart").replace(".fa-solid fa-heart");
+			$("#heart").addClass("active");
+		}
 
-// 24.07.29 하진
-// : 기업 회원의 경우 버튼 비활성화
-// : 개인이나 비회원의 경우, 버튼 활성화 및 외부팝업 발생
-var user_type = "${login_usertype}";
-console.log("user_type = "+user_type);
-// if (user_type == null || user_type == 1) {
-if (!user_type || user_type == 1) {
-        // 24-07-09 임하진 : 외부 팝업
-        function resume() {
-            // $(".pos .box3").add(".active");
-            // var com_name = "${company.com_name}";
-            // var notice_title = "${company.notice_title}";
-          // URLSearchParams 객체
+
+		// 24.08.02 하진
+		// 급여 형태가 면접 후 결정일 경우, notice_pay2 값이 나오는 부분을 숨김 처리 로직
+		const notice_pay1 = "${company.notice_pay1}";
+		if(notice_pay1 == "면접 후 결정"){
+			$(".case").css("display","none");
+		}
+
+
+
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+	// 지도를 생성합니다    
+	var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+	// 주소-좌표 변환 객체를 생성합니다
+	var geocoder = new kakao.maps.services.Geocoder();
+
+	// 주소로 좌표를 검색합니다
+
+	var getlocation ="${company.com_location}";
+	console.log("회사 주소는 잘 가져왔나요? "+getlocation);
+	// geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
+	geocoder.addressSearch(getlocation, function(result, status) {
+
+    // 정상적으로 검색이 완료됐으면 
+     if (status === kakao.maps.services.Status.OK) {
+
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        map.setCenter(coords);
+    } 
+});   
+
+	});//end of document ready function
+
+	// 24.07.29 하진
+	// : 기업 회원의 경우 버튼 비활성화
+	// : 개인이나 비회원의 경우, 버튼 활성화 및 외부팝업 발생
+	var user_type = "${login_usertype}";
+	// console.log("user_type = "+user_type);
+	// if (!user_type || user_type == 1) {
+	if (user_type == 1) {
+			// 24-07-09 임하진 : 외부 팝업
+			function resume() {
+				$("#user_resume").addClass("active");
+				const urlParams = new URLSearchParams(location.search);
+				var notice_num = urlParams.get('notice_num');
+				var popupProperties = "width=560, height=440, resizable = no, scrollbars = no";
+				window.open("/profileInfo?notice_num="+notice_num,"profileInfo.jsp", popupProperties);
+		}
+	}else if(!user_type){
+		function resume() {
+		alert("지원하기 위해서 로그인이 필요합니다.");
+		location.href="login";
+		}
+	}else{
+		$("#user_resume").css("display","none");
+	}
+
+// 24.08.03 하진
+	$(".fa-bookmark").click(function() {//관심 공고 추가/삭제 로직
+          if(user_type == 1){
           
-          //   const currentUrl =window.location.href;
-            // // const urlParams = new url.searchParams(window.location.href);
+			var getid = $(this).attr("id");//해당 북마크의 id를 찾음
+			// console.log("찾은 id값은? "+getid);
+			const regex = /[^0-9]/g;// 정규표현식 : 숫자가 아닌 수들을 찾음
+			const result = getid.replace(regex,"");//replace(regex,"") -> regex에 해당하는 패턴을 모두 ""으로 변환 = 숫자가 아닌 문자 제거(형은 string임)
+			const notice_num = parseInt(result);//casting
+			// console.log("찾았나요 공고번호? "+notice_num);
+            const user_email = "${login_email}";
 
-			$("#user_resume").toggleClass("active");// 내부 팝업이었으면 addClass로 설정하고 팝업 종료시 removieClass로 처리하면 되는데...아깝다.
-            const urlParams = new URLSearchParams(location.search);
-            // const urlParams = new URLSearchParams(currentUrl);
-            var notice_num = urlParams.get('notice_num');
-            console.log(notice_num);
-            // var popupProperties = "width=600, height=400, resizable = no, scrollbars = no";
-            var popupProperties = "width=500, height=270, resizable = no, scrollbars = no";
-            window.open("/profileInfo?notice_num="+notice_num,"profileInfo.jsp", popupProperties);
-            // document.location.href="/profileInfo?"+notice_num;
-            
-    }
-}else{
-	$("#user_resume").css("display","none");
-}
+			$.ajax({
+				type : "POST",
+				url : "/scrapNotice",
+				data : {notice_num : notice_num, 
+						user_email : user_email
+					},
+					success : function(result){ 
+						if (result == true) {
+							alert("관심 공고 목록에 추가되었습니다.");
+							$("#bookmark"+notice_num).removeClass('fa-regular fa-bookmark').addClass('fa-solid fa-bookmark active');				
+						}else{
+							alert("관심 공고에서 삭제되었습니다.");
+							$("#bookmark"+notice_num).removeClass('fa-solid fa-bookmark active').addClass('fa-regular fa-bookmark');
+						}
+					}
+				});
+			}else if(!user_type){//user_type이 없으면 login 페이지로 이동
+			location.href="/login";
+			}
+    });//end of fa-bookmark click function
+
+	// 관심 기업 추가 로직
+	const user_email = "${login_email}";
+	const com_email = "${company.com_email}";
+	if (user_type == 1) {
+	$(".fa-heart").on("click", function () {
+		var urlParams = new URLSearchParams(location.search);
+		var notice_num = urlParams.get('notice_num');
+		// console.log("this is notice_num = "+notice_num);
+		$.ajax({
+				type : "POST",
+				url : "/uploadcomScrap",				
+				data : {
+					user_email : user_email,
+					com_email : com_email,
+					notice_num : notice_num
+					},
+				success : function(response){
+						if(response == true){
+							alert("관심 기업으로 등록되었습니다.");
+							document.getElementById("heart").className ="fa-solid fa-heart";
+							$("#heart").addClass("active");
+							}else{
+							alert("관심 기업에서 삭제되었습니다.");
+							document.getElementById("heart").className ="fa-regular fa-heart";
+							$(".fa-heart").removeClass("active");
+						}
+					}
+		});//end of ajax
+	});//end of fa-heart clcik function
+	}
+
+
+
+	// 현제 페이지의 URL 복사 로직
+	$(".fa-share-from-square").click(function(){
+		const url = window.location.href;
+		// 현재 페이지의 url을 가져오는 속성
+		
+		var textarea = document.createElement("textarea");
+			document.body.appendChild(textarea);
+			textarea.value = url;
+			textarea.select();
+			document.execCommand("copy");
+			document.body.removeChild(textarea);
+		
+		alert("URL이 복사되었습니다.")//완료시 alert 발생
+	});//end of fa-share-from-square click function
+
 
 // 24.07.28 side 부분 구현 -> 다른 채용 공고가 없을 경우의 로직
 	var postNum = "${postNum}";
@@ -805,11 +986,10 @@ if (!user_type || user_type == 1) {
 	// 24.07.29 하진
 	// 사이드 채용공고의 값이 신입이나 경력무관이면 .career class의 경력 문구 숨기기
 	var career =  document.querySelectorAll(".noticeCareer");
-	console.log("career.length = "+career.length);
 		for (let i = 0; i < career.length ; i++) {
 			var element = career[i];
 			var careerValue = element.textContent.trim();  // 요소의 텍스트 내용을 가져옴
-			console.log(careerValue);
+			// console.log(careerValue);
 			// if (career[i] == "경력무관" || career[i] == "신입") {
 			if (careerValue == "경력무관" || careerValue == "신입") {
 				$(".career").css("display","none");

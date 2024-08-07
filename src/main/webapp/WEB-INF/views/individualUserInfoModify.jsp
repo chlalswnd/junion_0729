@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>로그인</title>
+<title>개인-회원정보수정</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
 <!-- import font-awesome, line-awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -77,22 +77,55 @@
 
 
 
+	
 
-	/*메인콘텐츠 전체*/
 
-	.sectionInner
+
+	/* 프로필 : 사진 + 이름 */
+	main .mainContainer .memberInfo 
+	{
+	display: flex;
+	align-items: center;
+	margin-bottom: 40px;
+	}
+
+	main .mainContainer .memberInfo img.memberImg 
+	{
+	width:64px;
+	height: 64px;
+	margin-right: 20px;
+	}
+
+	main .mainContainer .memberInfo .memberName 
+	{
+	font-size: var(--font-size32);
+	font-weight: 600;
+	} 
+
+	/* 메인 */
+	main 
 	{
 	display: flex;
 	justify-content: center;
-	min-width: 1200px;
+	padding: 50px 0 120px;  
 	}
+
+	.infoWrap
+	{
+		display: flex;
+		flex-direction: column; 
+		min-width:1200px;
+		gap: 40px 0;
+	}
+
 
 	/*회원정보수정 타이틀*/
 
 	.infoTitle
 	{
 	font-size: var(--font-size32);
-	margin-top: 70px;
+	color: var(--color-black);
+	/* margin-top: 70px; */
 	}
 
 	/*회원사진 + 테이블*/
@@ -100,7 +133,7 @@
 	{
 	display : flex;
 	gap: 50px;
-	margin-top: 80px;
+	/* margin-top: 80px; */
 	
 	
 	}
@@ -121,7 +154,9 @@
 	{
 	border: 1px solid var(--input-gray);
 	border-radius: 10x;
+	box-sizing: border-box;
 	border-collapse: collapse;
+	font-size: var(--font-size16);
 	}
 	.userInfoTable th
 	{
@@ -144,7 +179,7 @@
 	padding:0 10px;
 	}
 
-	.userInfoTable #readonly
+	.userInfoTable .readonly
 	{
 		border: none;
 		color: var(--color-gray);
@@ -157,6 +192,12 @@
 	padding: 0 20px;
 	text-align: start;
 	height: 60px;
+	}
+
+	/*유효성검사*/
+	.check_font
+	{
+		display: none;
 	}
 
 	/*희망직무, 기술스택 버튼들 */
@@ -248,6 +289,7 @@
 	display: flex;
 	justify-content: center;
 	}
+
 	.buttonModify
 	{
 	background-color: #999;
@@ -256,7 +298,7 @@
 	border-radius: 6px;
 	width: 240px;
 	height: 56px;
-	margin: 40px auto;
+	/* margin: 40px auto; */
 	font-size: 16px;
 	color: var(--color-white);
 	cursor: pointer;
@@ -292,8 +334,8 @@
 				</div>
 			</header>  
 
-            <section>
-                <div class="sectionInner">
+            <main>
+                <div class="mainContainer">
 
                     <div class="infoWrap">
                         <h2 class="infoTitle">회원 정보 수정</h2>
@@ -302,7 +344,7 @@
                             <div class="infoConWrap">
                                 <div class="infoCon left">
 									<div class="uploadResult">
-<!--                                    <img src="images/people.svg" alt="#" class="resumeImage">-->
+                                  		 <img src="images/people.svg" alt="#" class="resumeImage">
 									</div>
                                 </div>
                                 <div class="infoCon right">
@@ -311,30 +353,39 @@
 											<form method="post" id="userInfoForm" name="userInfoForm" action="modifyInfo">
 											<tr>
 												<th>이름</th>
-												<td><input class="input" id="readonly" type="text" name="user_name" value="${userInfo.user_name}" readonly="readonly"></td>
+												<td><input class="input readonly"  type="text" name="user_name" value="${userInfo.user_name}" readonly="readonly"></td>
 											</tr>
 											<tr>
 												<th>이메일</th>
-												<td><input class="input" id="readonly" type="text" name="user_email" value="${userInfo.user_email}" readonly="readonly"></td>
+												<td><input class="input readonly" type="text" name="user_email" value="${userInfo.user_email}" readonly="readonly"></td>
 											</tr>
                                             <tr>
                                                 <th>생년월일</th>
-                                                <td><input class="input" type="text" name="user_birthdate" value="${userInfo.user_birthdate}" placeholder="생년월일을 입력하세요" required></td>
+                                                <td>
+													<input class="input" type="text" name="user_birthdate" id="user_birthdate" value="${userInfo.user_birthdate}" placeholder="생년월일을 1900-01-01형식으로 입력하세요" required>
+													<div class="check_font" id="birth_check"></div>
+												</td>
                                             </tr>
                                             <tr>
                                                 <th>성별</th>
-                                                <td><input class="input" type="text" name="user_gender" value="${userInfo.user_gender}" placeholder="성별을 입력하세요" required></td>
+                                                <td>
+													<input class="input" type="text" name="user_gender" id="user_gender" value="${userInfo.user_gender}" placeholder="성별을 입력하세요" required>
+													<div class="check_font" id="gender_check"></div>
+												</td>
                                             </tr>
                                             <tr>
                                                 <th>휴대폰</th>
-                                                <td><input class="input" type="text" name="user_tel" value="${userInfo.user_tel}" placeholder="전화번호를 입력하세요"></td>
+                                                <td>
+													<input class="input" type="text" name="user_tel" id="user_tel" value="${userInfo.user_tel}" placeholder="전화번호를 입력하세요">
+													<div class="check_font" id="tel_check"></div>
+												</td>
                                             </tr>
                                             <tr>
                                                 <th>희망직무</th>
 												<td class="disF wide" >
                                                     <div class="position">
-														<input type="text" id="jobInput" name="user_job" value="${user_job}" placeholder="희망직무를 선택해 주세요" onclick="openChild()" readonly>
-														<!-- <input type="hidden" class="user_stack_value"> -->
+														<input class="readonly" type="text" id="jobInput" name="user_job" value="${user_job}" placeholder="희망직무를 선택해 주세요" onclick="openChild()" readonly>
+														<div class="check_font" id="job_check"></div>
                                                     </div>
                                                 </td>
 											</tr>
@@ -342,8 +393,8 @@
 												<th>기술스택</th>
 												<td class="disF wide">
 													<div class="stack">
-														<input type="text" id="stackInput" name="user_stack" value="${user_stack}" placeholder="주요기술을 선택해 주세요" onclick="openChild2()" readonly>
-														<!-- <input type="hidden" class="user_position_value"> -->
+														<input  class="readonly" type="text" id="stackInput" name="user_stack" value="${user_stack}" placeholder="주요기술을 선택해 주세요" onclick="openChild2()" readonly>
+														<div class="check_font" id="stack_check" ></div>
 													</div>
 												</td>
 											</tr>
@@ -352,8 +403,17 @@
                                                 <td class="disF">
 													<div class="workLocation">
                                                         <div class="search_box">
-                                                            <select onchange="categoryChange(this)" class="region" name="user_location">
-                                                                <option value>시/도 선택</option>
+                                                            <select onchange="categoryChange(this)" class="region" name="user_location" id="user_location">
+																<c:choose>
+																	<c:when test="${userInfo.user_location != null}">
+																		<option value="${userInfo.user_location}" selected>${userInfo.user_location}</option>
+																	</c:when>
+																	<c:otherwise>
+																		<option value>시/도 선택</option>
+																	</c:otherwise>
+																</c:choose>
+																<!-- <option value="<c:out value="${userInfo.user_location}"/>"><c:out value="${userInfo.user_location}"/></option> -->
+																<!-- <option value="<c:out value="${userInfo.user_location}}"/>">${userInfo.user_location}</option> -->
                                                                 <!-- <option class="selected" value="${userInfo.user_location}"></option> -->
                                                                 <option value="강원">강원</option>
                                                                 <option value="경기">경기</option>
@@ -376,12 +436,20 @@
                                                             <!-- <input type="hidden" name="user_location" id="user_location"> -->
                                                         </div>
                                                         <div class="search_box">
-                                                            <select id="state" class="constituency" onchange="updateDistrict(this)"  name="user_location2">
-                                                              <option>군/구 선택</option>
+                                                            <select id="state" class="constituency" onchange="updateDistrict(this)" name="user_location2" id="user_location2">
+																<c:choose>
+																	<c:when test="${userInfo.user_location2 != null}">
+																		<option value="${userInfo.user_location2}" selected>${userInfo.user_location2}</option>
+																	</c:when>
+																	<c:otherwise>
+																		<option>군/구 선택</option>
+																	</c:otherwise>
+																</c:choose>
                                                             </select>
                                                             <!-- <input type="hidden" name="user_location2" value="${userInfo.user_location2}"> -->
                                                             <!-- <input type="hidden" name="user_location2"> -->
                                                         </div> 
+														<div class="check_font" id="location_check" style="display: none;"></div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -390,6 +458,7 @@
                                                 <td>
 													<input class="input" type="password" name="input_pw" placeholder="회원정보 보호를 위해 비밀번호를 입력하세요" required>
 													<input type="hidden" name="session_pw" value="<%= session_pw %>"> 
+													<div class="check_font" id="password_check" style="display: none;"></div>
 												</td>
                                             </tr>
 										</form><!-- userInfoForm 끝 -->
@@ -402,8 +471,8 @@
 					
                         <!-- </form> -->
                     </div> <!--infoWrap끝 : 개인정보  -->
-                </div> <!-- sectionInner 끝 : 전체 1200 영역-->
-            </section>
+                </div> <!-- mainContainer 끝 : 전체 1200 영역-->
+            </main>
         </div><!-- mainContent-->
     </div>    
 	<%@ include file="footer.jsp" %>
@@ -472,6 +541,91 @@
 			e.preventDefault(); // 기본 폼 제출 동작 방지
 			console.log("수정완료click");
 
+			
+
+			//모든 입력폼을 채웠는지 유효성 검사!
+			var inval_Arr = new Array(7).fill(false);//모든 입력폼을 채웠는지 확인할 배열
+
+			//생년월일 확인
+			if(birthJ || ( $('#user_birthdate').val() !== null && $('#user_birthdate').val() !== "")){
+				inval_Arr[0] = true;
+			}else{
+				alert("생년월일 값을 형식에 맞춰 입력해주세요.");
+				$('#user_birthdate').focus();
+				return; // 함수 종료
+			}
+
+			// 성별 확인
+			// if(genderJ || ( $('#user_gender').val() === "남" && $('#user_gender').val() === "여")) {
+			if(genderJ || ( $('#user_gender').val() !== null && $('#user_gender').val() !== "")) {
+				inval_Arr[1] = true;	
+			} else {
+				alert("남/여 둘 중 하나를  입력해주세요.");
+				$('#user_gender').focus();
+				return; // 함수 종료
+			}
+
+			// 전화번호(휴대폰)확인
+			if(phoneJ || ( $('#user_tel').val() !== null && $('#user_gender').val() !== "")){
+				inval_Arr[2] = true;
+			} else {
+				alert("전화번호를 입력해주세요.");	
+				$('#user_tel').focus();
+				return; // 함수 종료
+			}
+
+			// 희망직무 확인
+			if ($('#jobInput').val() !== null && $('#jobInput').val() !== "") {
+				console.log($('#jobInput').val());
+				inval_Arr[3] = true;	
+			} else {
+				alert("희망직무를 입력해주세요.");
+				$('#jobInput').focus();
+				return; // 함수 종료
+			}
+
+			// 기술스택 확인
+			if ($('#stackInput').val() !== null && $('#stackInput').val() !== "") {
+				inval_Arr[4] = true;	
+			} else {
+				alert("기술스택을 입력해주세요.");
+				$('#stackInput').focus();
+				return; // 함수 종료
+			}
+
+			// 희망근무지역1 확인
+			if ($('#user_location').val() !== null && $('#user_location').val() !== "") {
+				inval_Arr[5] = true;	
+			} else {
+				alert("희망근무지역을 입력해주세요.");
+				$('#user_location').focus();
+				return; // 함수 종료
+			}
+			// 희망근무지역2 확인
+			if ($('#user_location2').val() !== null && $('#user_location2').val() !== "") {
+				inval_Arr[6] = true;	
+			} else {
+				alert("희망근무지역을 입력해주세요.");
+				$('#user_location2').focus();
+				return; // 함수 종료
+			}
+
+			
+			var validAll = true;
+			for(var i = 0; i < inval_Arr.length; i++){
+				
+				if(inval_Arr[i] == false){
+					validAll = false;
+				}
+			}
+			
+			if(validAll){ // 유효성 모두 통과
+				alert('모든 정보를 정확히 입력하셨습니다.');
+			} else{
+				alert('모든 정보가 입력되어야 합니다.')
+				return; // 함수 종료
+			}
+
 			let formData = new FormData();
 			let inputs = $("input");  //document의 input element 전부
 			let selects = $("select"); //document의 select element 전부
@@ -516,6 +670,129 @@
 		});;//수정하기 버튼 클릭 function 끝
 
 	
+
+
+		//생년월일 유효성 검사(yyyy-mm-dd 형식) : 0805 연주 추가
+		var birthJ = false;
+
+		// 생년월일	birthJ 유효성 검사
+		// $('#user_birthdate').focus(function(){//input 창에 들어왔을 때
+		// $('#user_birthdate').blur(function(){//input 창을 벗어났을 때
+		$('#user_birthdate').on('input', function() {//입력필드에 입력할 때 마다
+			var dateStr = $(this).val();
+
+			// 정규식을 이용하여 YYYY-MM-DD 형식과 두 자리 월/일 검사
+			var dateFormat = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+			
+			// 날짜가 올바른 형식인지 확인
+			if (dateFormat.test(dateStr)) {
+				var year = Number(dateStr.substr(0, 4)); // 입력한 값의 0~4자리까지 (연)
+				var month = Number(dateStr.substr(5, 2)); // 입력한 값의 5번째 자리부터 2자리 숫자 (월)
+				var day = Number(dateStr.substr(8, 2)); // 입력한 값 9번째 자리부터 2자리 숫자 (일)
+				var today = new Date(); // 날짜 변수 선언
+				var yearNow = today.getFullYear(); // 올해 연도 가져옴
+
+				// 연도의 경우 1900보다 작거나 yearNow보다 크다면 false를 반환합니다.
+				if (1900 > year || year > yearNow) {
+					$('#birth_check').text('생년월일을 1900-01-01형식으로 입력하세요');
+					$('#birth_check').css({ "display": "flex", "color": "red" });
+				} else if (month < 1 || month > 12) {
+					$('#birth_check').text('생년월일을 1900-01-01형식으로 입력하세요');
+					$('#birth_check').css({ "display": "flex", "color": "red" });
+				} else if (day < 1 || day > 31) {
+					$('#birth_check').text('생년월일을 1900-01-01형식으로 입력하세요');
+					$('#birth_check').css({ "display": "flex", "color": "red" });
+					$('#user_birthdate').focus;
+				} else if ((month == 4 || month == 6 || month == 9 || month == 11) && day == 31) {
+					$('#birth_check').text('생년월일을 1900-01-01형식으로 입력하세요');
+					$('#birth_check').css({ "display": "flex", "color": "red" });
+				} else if (month == 2) { // 윤달 확인
+					var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+					if (day > 29 || (day == 29 && !isleap)) {
+						$('#birth_check').text('생년월일을 1900-01-01형식으로 입력하세요');
+						$('#birth_check').css({ "display": "flex", "color": "red" });
+					} else {
+						// $('#birth_check').text('');
+						birthJ = true;
+						$('#birth_check').css('display', 'none');
+					}
+				} else {
+					// $('#birth_check').text('');
+					birthJ = true;
+					$('#birth_check').css('display', 'none');
+				}
+			} else {
+				// 형식이 맞지 않거나 두 자리 수가 아닐 때
+				$('#birth_check').text('생년월일을 1900-01-01형식으로 입력하세요');
+				$('#birth_check').css({ "display": "flex", "color": "red" });
+			}
+
+		}); //생년월일 유효성 검사 끝	
+
+			
+		// 휴대전화 유효성 검사
+		var phoneJ = false;
+
+		$('#user_tel').on('input', function() {	// 입력 필드에 입력할 때마다
+			var dateStr = $(this).val();
+			console.log(dateStr);
+
+			// 정규식을 이용하여 YYYY-MM-DD 형식과 두 자리 월/일 검사
+			var dateFormat = /^01([0|1|6|7|8|9]?)-([0-9]{3,4})-([0-9]{4})$/;
+			
+			if (dateFormat.test(dateStr)) {   //올바른 형식인지 확인
+				phoneJ = true;
+				$('#tel_check').css('display', 'none'); // 유효하면 메시지를 숨김
+			} else {
+				$('#tel_check').text('휴대폰번호를 010-1111-2222 형식으로 입력해주세요.');
+				$('#tel_check').css({ "display": "flex", "color": "red" });
+			}
+		});// 휴대전화 유효성 검사 끝
+
+
+		
+		// 성별 유효성 검사
+		var genderJ = false;
+
+		$('#user_gender').on('input', function() {	// 입력 필드에 입력할 때마다
+	
+			const gender = $(this).val();
+			if (gender === "남" || gender === "여") {
+				// 입력이 "남" 또는 "여"인 경우
+				console.log("유효한 성별 입력:", gender); // 콘솔 로그에 유효한 입력 출력
+				genderJ = true; 
+				$('#gender_check').css('display', 'none'); // 유효하면 메시지를 숨김
+			} else {
+				// 입력이 유효하지 않은 경우
+				$('#gender_check').text('남/여 둘 중 하나를 입력해주세요.');
+				$('#gender_check').css({ "display": "flex", "color": "red" });
+			}
+		});// 성별 유효성 검사 끝
+
+
+
+		// 희망직무 유효성 검사
+		
+		$('#jobInput').on('input', function() {	// 입력 필드에 입력할 때마다
+	
+			const user_job = $(this).val();
+			if (user_job === null || user_job === "") {// 입력이 null 또는 ""인 경우
+				
+				console.log("유효한 성별 입력:", gender); // 콘솔 로그에 유효한 입력 출력
+				genderJ = true; 
+				$('#gender_check').css('display', 'none'); // 유효하면 메시지를 숨김
+			} else {
+				// 입력이 유효하지 않은 경우
+				$('#gender_check').text('남/여 둘 중 하나를 입력해주세요.');
+				$('#gender_check').css({ "display": "flex", "color": "red" });
+			}
+		});// 희망직무 유효성 검사 끝
+
+
+
+
+		
+		
 		
 	});//end of document ready
 	
@@ -523,30 +800,45 @@
 	
 	
 	
-	//추가하기 버튼 클릭시 희망직무/기술스택 팝업 오픈
-	const value = openWin.document.getElementById("cInput").value;
-	const value2 = openWin.document.getElementById("cInput2").value;
-	let openWin;
-	function openChild() 
-	{
-		// window.name = "부모창 이름"; 
-		window.name = "parentForm";
+// 추가하기 버튼 클릭 시 희망 직무/기술 스택 팝업 오픈
+//( 0805 연주 수정:자식 창이 로드된 후에 접근할 수 있도록 onload 이벤트 리스너를 사용)
+let openWin;
+
+function openChild() {
+    // 부모창 이름 설정
+    window.name = "parentForm";
+    
+    // 자식 창 열기
+    openWin = window.open("userInfoModifyPop", "childForm", "width=548, height=620, resizable=no, scrollbars=no");
+
+    // 창이 열렸는지 확인하고 값 가져오기
+    openWin.onload = function() {
+        // cInput 요소가 존재할 때 값 가져오기
+        const value = openWin.document.getElementById("cInput") ? openWin.document.getElementById("cInput").value : '';
+        console.log("cInput value:", value);
+    };
+	
+}
+function openChild2() {
+    // 부모창 이름 설정
+    window.name = "parentForm";
+    
+    // 자식 창 열기
+    openWin = window.open("userInfoModifyPop2", "childForm", "width=548, height=620, resizable=no, scrollbars=no");
+
+    // 창이 열렸는지 확인하고 값 가져오기
+    openWin.onload = function() {
+        // cInput2 요소가 존재할 때 값 가져오기
+        const value2 = openWin.document.getElementById("cInput2") ? openWin.document.getElementById("cInput2").value : '';
+        console.log("cInput2 value:", value2);
+    };
+	
+}
+
+
+
+	
 		
-		// window.open("open할 window", "자식창 이름", "팝업창 옵션");
-		openWin = window.open("userInfoModifyPop", "childForm", "width=548, height=620, resizable = no, scrollbars = no");    
-	}
-
-	function openChild2() 
-	{
-		// window.name = "부모창 이름"; 
-		window.name = "parentForm";
-		
-		// window.open("open할 window", "자식창 이름", "팝업창 옵션");
-		openWin = window.open("userInfoModifyPop2", "childForm", "width=548, height=620, resizable = no, scrollbars = no");    
-	}
-
-
-
 
 
 		

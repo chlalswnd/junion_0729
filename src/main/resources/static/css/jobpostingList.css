@@ -26,10 +26,8 @@
 {
     position:relative;
     width: 260px;
-    height: 100vh;
     background: #fff;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     transition: 0.5s;
     padding: 1rem 0;
 }
@@ -180,10 +178,13 @@ main .containe
 
 
 /* 헤더밑 타이틀*/
-main .toptitle
+
+
+main .toptitle .toptitlehh
 {
   font-size: var(--font-size32);
   text-align: left;
+  font-weight: 600;
   width: 100%;
   margin-bottom: 40px;
 } 
@@ -214,7 +215,7 @@ main .tabWrap
 {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
 }
 
 main .tabWrap .tabCon 
@@ -226,7 +227,7 @@ main .tabWrap .tabCon
 
 main .tabWrap .tabTitle a
 {
-  font-size: var(--font-size24);
+  font-size: var(--font-size20);
   font-weight: 600;
   color: var(--color-black);
   margin-right: 12px;
@@ -239,6 +240,18 @@ main .tabWrap .tabNum a
   color: var(--main-color);
 }
 
+
+.datesbox
+{
+	display: grid; 
+	grid-template-columns: 190px 100px;
+	margin-top: 12px
+}
+
+.datesbox .dates
+{
+	margin-right: 16px;
+}
 
 /*박스*/
 
@@ -269,17 +282,19 @@ main .tabWrap .tabNum a
   font-size: var(--font-size12);
 }
 
-.box .job-title 
+
+.box .job-title .titlebb
 {
-  font-weight: bold;
-  font-size: var(--font-size24);
+	font-weight: 600;
+	font-size: var(--font-size24);
+	color: #111;
 }
 
 .box .dates 
 {
   color: #888;
   font-size: var(--font-size14);
-  margin-top: 4px;
+
 }
 
 .box .progress 
@@ -293,7 +308,7 @@ main .tabWrap .tabNum a
 {
   color: #888;
   font-size: var(--font-size14);
-  margin-top: 4px;
+
 }
 
 .box .right 
@@ -313,14 +328,58 @@ main .tabWrap .tabNum a
   font-size: var(--font-size12);
 }
 
-.box .applicant-count {
+.box .applicant-count,
+.left .jobjob
+{
   border: 1px solid #e5e5ec;
   background-color: #F7F7F7;
   border-radius: 4px;
-  padding: 4px 8px;
+
   
-  margin-left: 8px;
   font-size: var(--font-size12);
+  width: 80px;
+  height: 32px;
+}
+
+.left .job
+{
+	margin-right: 20px;	
+	display: flex;
+	text-align: center;
+
+}
+
+.right .applicant-count
+{
+
+	display: flex;
+	text-align: center;
+
+}
+
+.left .jobjob .carh5,
+.right .jobjob .carh6,
+.right .jobjob .carh5
+{
+	font-size: var(--font-size14);
+	font-weight: 300;
+	color: #888;
+}
+
+.right .jobjob .carh6
+{
+	margin-left: 17px;
+}
+
+.right .jobjob .carh5
+{
+	margin-right: 20px;
+}
+
+.left .jobjob,
+.right .jobjob
+{
+	align-content: center;
 }
 
 

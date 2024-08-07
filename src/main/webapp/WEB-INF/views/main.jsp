@@ -7,39 +7,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MainPage</title>
-<!--    <link rel="stylesheet" href="css/default.css">-->
-<!--    <link rel="stylesheet" href="css/style.css">-->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
-    <!-- import font-awesome, line-awesome -->
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    
+	<!-- import font-awesome, line-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
-    <!-- import pretendard font -->
+    
+	<!-- import pretendard font -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css"/>
-    <!-- import js -->
+	
+	<!-- AOS 라이브러리 불러오기-->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"> 
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> 
+	
+	<!-- import js -->
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <script src="js/index.js"></script>
  
 </head>
 <body>
-    <%@ include file="header.jsp" %>
-
+    <%@ include file="header.jsp" %>	
+	<%@ include file="quickMenu.jsp" %>
     <main>
         <div class="banner">
             <div class="mainBanner">
                 <div class="content">
                     <h5 class="comTitle">JUNION</h5>
-                    <h5 class="mainTitle">주니온에서 지원하는</h5>
+                    <h5 class="mainTitle" style="margin-bottom:0;">주니온에서 지원하는</h5>
                     <h5 class="mainTitle">신입개발자 취업성공패키지</h5>
                     <div class="descText">면접에서부터 실무에서 필요한 스킬력까지 책임집니다.</div>
-                    <div class="descText">면접에서부터 실무에서 필요한 스킬력까지 책임집니다.</div>
+                    <div class="descText">주니온에서 부터 한걸음 자바/스프링 백앤드 개발교육!</div>
                 </div>
-                <div class="bannerImage"></div>
+				<div class="cubeWrap one">
+					<div class="cube">
+				        <div class="top">
+				            <i class="fa-brands fa-java"></i>
+				        </div>
+				        <div class="box">
+				            <span style="--i:0;"></span>
+				            <span style="--i:1;"></span>
+				            <span style="--i:2;"></span>
+				            <span style="--i:3;"></span>
+				        </div>
+				    </div>
+				</div>
+				
+				<div class="cubeWrap two">
+					<div class="cube">
+				        <div class="top">
+				            <i class="fa-brands fa-css3-alt"></i>
+				        </div>
+				        <div class="box">
+				            <span style="--i:0;"></span>
+				            <span style="--i:1;"></span>
+				            <span style="--i:2;"></span>
+				            <span style="--i:3;"></span>
+				        </div>
+				    </div>
+				</div>
+                <!--<div class="bannerImage"></div>-->
             </div>
         </div><!--banner 끝-->
             <div class="innerCon">
-                <section>
-                    <div class="sectionA">
+                <section>					
+                    <div class="sectionA" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
                         <div class="sectionName">
                             <div class="subtitle">신입 개발자 채용</div>
                                 <a href="cardPageList" class="more">더보기
@@ -71,7 +103,7 @@
                         </div><!-- cardPost 끝 -->
                         
                     </div><!--sectionA 끝-->
-                    <div class="sectionB">
+                    <div class="sectionB" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
                         <div class="sectionName">
                             <div class="subtitle">기업 공고</div>
                             <a href="cardPageList" class="more">더보기
@@ -156,14 +188,14 @@
                 </section>
             </div><!--innerCon 끝-->
             
-            <div class="subBanner">
+            <div class="subBanner" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
                 <a href="#" class="content">
                     <div class="bannerTitle">주니온에서 지원하는 신입개발자 취업성공패키지</div>
                     <div class="bannerSubTitle">면접에서 부터 실무에서 필요한 스킬력까지 책임집니다.</div>
                 </a><!--content 끝-->
             </div><!--subBanner 끝-->
             
-            <div class="innerCon">
+            <div class="innerCon" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
                 <div class="sectionC">
                     <div class="sectionName">
                         <div class="subtitle">추천 기업</div>
@@ -195,7 +227,7 @@
 
 
 
-        <footer>
+        <footer data-aos="fade-up" data-aos-anchor-placement="top-bottom">
             <div class="footerInner">
                 <div class="left_conWrap f_conWrap">
                     <h5 class="logo">
@@ -220,8 +252,13 @@
             </div>
         </footer><!--footer 끝-->
     </div>
+	<!-- AOS 스크립트 시작 -->
+	<script> 
+	    AOS.init(); // 자바스크립트로 init()을 해야 동작한다.
+	</script>
 </body>
 </html>
+
 <script>
 
  $(document).ready(function () {

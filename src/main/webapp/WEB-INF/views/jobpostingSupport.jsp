@@ -16,7 +16,7 @@
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <style>
     /* 드롭다운 메뉴 */
-	.dorpdowmMain {
+    .dorpdowmMain {
         display: flex;
     }
     .dropdown {
@@ -50,6 +50,15 @@
     }
     .filterBox label {
         margin-right: 5px;
+    }
+    /* 데이터 없음 스타일 */
+    .notfound {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .notfoundhh {
+        font-size: 16px;
+        color: #888;
     }
 </style>
 <script>
@@ -176,87 +185,113 @@
         <main>
             <div class="containe">
                 <div class="toptitle">
-                    <h3>Java, 백앤드 포지션 경력무관 채용공고</h3>
+                    <!-- 쿼리 파라미터로 받은 notice_title 표시하기 -->
+					<c:if test="${not empty jobpostingSupport}">
+					    <c:set var="first" value="${jobpostingSupport[0]}"/>
+					    <h3 class="toptitlehh">${first.notice_title} 지원자 목록</h3>
+					</c:if>
                     <!-- 반복문 시작 -->
-					<c:forEach items="${jobpostingSupport}" var="sup">
-					    <div class="box" data-birth="${sup.calculated_age}">
-					        <div class="left">
-					            <img class="profile" src="images/people.svg">
-	<div id="pfname_${sup.resume_num}" class="pfname" onclick="handleClick(${sup.resume_num}, ${sup.notice_num})">${sup.user_name}</div>
-					            <div class="pfage">${sup.user_gender} ${sup.calculated_age}세</div>
-					            <div class="pfEntry">${sup.career_month}</div>
-					            <c:if test="${not empty sup.stack_names}">
-					                <c:forEach var="stackName" items="${sup.stack_names}">
-					                    <button class="leftbtn">${stackName}</button>
-					                </c:forEach>
-					            </c:if>
-					        </div>
-							<!-- 필터 박스 추가 -->
-							<div class="filterBox">
-								<label for="statusFilter_${sup.resume_num}">상태:</label>
-								<select id="statusFilter_${sup.resume_num}" name="statusFilter" onchange="updateStatus(${sup.resume_num}, ${sup.notice_num})">
-								    <option value="합격" <c:if test="${sup.submitStatus == '합격'}">selected</c:if>>합격</option>
-								    <option value="불합격" <c:if test="${sup.submitStatus == '불합격'}">selected</c:if>>불합격</option>
-								    <option value="보류" <c:if test="${sup.submitStatus == '보류'}">selected</c:if>>보류</option>
-								</select>
-							</div>
-					        <div class=pname>
-								${sup.submit_check}
-							</div>
-					        <!-- pop -->
-					        <div class="popUp disN">
-					            <form id="frm" method="post" action="jobpostingOffer">
-					                <input type="hidden" name="resume_num" value="${sup.resume_num}">
-					                <div class="popBg">
-					                    <div class="popCon disF flexD">
-					                        <div class="popH mlauto">
-					                            <span class="icon cancel fs24">
-					                                <i class="fa-solid fa-xmark"></i>
-					                            </span>
-					                        </div>
-					                        <div class="popM">
-					                            <div class="title">포지션 제안</div>
-					                            <hr class="pophr">
-					                            <div class="job">
-					                                <input type="text" name="offer_title" placeholder="제목을 입력하시오">
-					                            </div>
-					                            <div class="comname">
-					                                <input type="text" name="offer_name" placeholder="기업명을 입력하시오">
-					                            </div>
-					                            <hr class="pophr">
-					                            <textarea class="comtext" name="offer_content" placeholder="내용을 입력하시오"></textarea>
-					                            <hr class="pophr" >
-					                            <div class="posita">채용포지션</div>
-					                            <div class="posit">
-					                                <div class="positinfo">
-					                                    <div class="positinfo1"></div>
-					                                    <div class="positinfo1">
-					                                        <input type="text" name="offer_job" placeholder="직무를 입력하시오">
-					                                    </div>
-					                                </div>
-					                                <div class="positinfo">
-					                                    <div class="positinfo1"></div>
-					                                    <div class="positinfo1">
-					                                        <input type="text" name="offer_career" placeholder="경력을 입력하시오">
-					                                    </div>
-					                                </div>
-					                                <div class="positinfo">
-					                                    <div class="positinfo1"></div>
-					                                    <div class="positinfo1">
-					                                        <input type="text" name="offer_pay" placeholder="연봉을 입력하시오">
-					                                    </div>
-					                                </div>
-					                            </div>
-					                            <div class="popB">
-					                                <button class="submit tabBtn" type="submit">제안하기</button>
-					                            </div>    
-					                        </div>
-					                    </div>
-					                </div> 
-					            </form> <!-- 폼 끝 -->
-					        </div><!-- popUp끝 -->
-					    </div>
-					</c:forEach>
+                    <c:choose>
+                        <c:when test="${not empty jobpostingSupport}">
+                            <c:forEach items="${jobpostingSupport}" var="sup">
+                                <div class="box" data-birth="${sup.calculated_age}" data-resume-num="${sup.resume_num}">
+                                    <div class="left">
+										<div class="le">
+
+											<div class="uploadResult">
+	                                            <ul>
+
+	                                            </ul>
+	                                        </div>
+	                                        <div id="pfname_${sup.resume_num}" class="pfname" onclick="handleClick(${sup.resume_num}, ${sup.notice_num})">${sup.user_name}</div>
+	                                        <div class="pfage">${sup.user_gender}</div>
+	                                        <div class="pfage">${sup.calculated_age}세</div>
+	                                        <div class="ppfage">${sup.notice_career}</div>
+										</div>
+                                        <div class="pfEntry">${sup.career_month}</div>
+                                        <c:if test="${not empty sup.stack_names}">
+                                            <c:forEach var="stackName" items="${sup.stack_names}">
+                                                <button class="leftbtn"><h5 class = lele>${stackName}</h5></button>
+                                            </c:forEach>
+                                        </c:if>
+                                    </div>
+									<!-- 필터 박스 추가 -->
+									<div class="filterBox">
+									    <label for="statusFilter_${sup.resume_num}"></label>
+									    <select id="statusFilter_${sup.resume_num}" name="statusFilter" onchange="updateStatus(${sup.resume_num}, ${sup.notice_num})">
+									        <!-- 기본값 '합격여부' -->
+									        <option value="" <c:if test="${empty sup.submit_status}">selected</c:if>>합격여부</option>
+									        <option value="합격" <c:if test="${sup.submit_status == '합격'}">selected</c:if>>합격</option>
+									        <option value="불합격" <c:if test="${sup.submit_status == '불합격'}">selected</c:if>>불합격</option>
+									        <option value="보류" <c:if test="${sup.submit_status == '보류'}">selected</c:if>>보류</option>
+									    </select>
+									</div>
+                                    <div class=pname>
+                                        ${sup.submit_check}
+                                    </div>
+                                    <!-- pop -->
+                                    <div class="popUp disN">
+                                        <form id="frm" method="post" action="jobpostingOffer">
+                                            <input type="hidden" name="resume_num" value="${sup.resume_num}">
+                                            <div class="popBg">
+                                                <div class="popCon disF flexD">
+                                                    <div class="popH mlauto">
+                                                        <span class="icon cancel fs24">
+                                                            <i class="fa-solid fa-xmark"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="popM">
+                                                        <div class="title">포지션 제안</div>
+                                                        <hr class="pophr">
+                                                        <div class="job">
+                                                            <input type="text" name="offer_title" placeholder="제목을 입력하시오">
+                                                        </div>
+                                                        <div class="comname">
+                                                            <input type="text" name="offer_name" placeholder="기업명을 입력하시오">
+                                                        </div>
+                                                        <hr class="pophr">
+                                                        <textarea class="comtext" name="offer_content" placeholder="내용을 입력하시오"></textarea>
+                                                        <hr class="pophr" >
+                                                        <div class="posita">채용포지션</div>
+                                                        <div class="posit">
+                                                            <div class="positinfo">
+                                                                <div class="positinfo1"></div>
+                                                                <div class="positinfo1">
+                                                                    <input type="text" name="offer_job" placeholder="직무를 입력하시오">
+                                                                </div>
+                                                            </div>
+                                                            <div class="positinfo">
+                                                                <div class="positinfo1"></div>
+                                                                <div class="positinfo1">
+                                                                    <input type="text" name="offer_career" placeholder="경력을 입력하시오">
+                                                                </div>
+                                                            </div>
+                                                            <div class="positinfo">
+                                                                <div class="positinfo1"></div>
+                                                                <div class="positinfo1">
+                                                                    <input type="text" name="offer_pay" placeholder="연봉을 입력하시오">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="popB">
+                                                            <button class="submit tabBtn" type="submit">제안하기</button>
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </form> <!-- 폼 끝 -->
+                                    </div><!-- popUp끝 -->
+                                </div>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="notfound">
+                                <h5 class="notfoundhh">
+                                    지원자가 아직 없습니다.
+                                </h5>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                     <!-- 반복문 끝 -->
                 </div> <!-- contain끝 -->
             </div>
@@ -292,66 +327,52 @@
 </html>
 
 
-
-
 <!-- ------------------------------------------- 스크립트 시작 ------------------------------->
 <script>
 	
 	
 	function handleClick(resumeNum, noticeNum) {
-	      const pfnameDiv = document.getElementById('pfname_' + resumeNum);
+	    const pfnameDiv = document.getElementById('pfname_' + resumeNum);
 
-	      // 이미 클릭된 경우 페이지 이동만 수행
-	      if (pfnameDiv.classList.contains('clicked')) {
-	          location.href = 'resumeInfo?resume_num=' + resumeNum;
-	          return;
-	      }
-
-	      // 상태를 현재 시각으로 업데이트
-	      const currentTime = new Date().toISOString();
-
-	      fetch('/updateSubmitCheck', {
-	          method: 'POST',
-	          headers: {
-	              'Content-Type': 'application/x-www-form-urlencoded'
-	          },
-	          body: new URLSearchParams({
-	              resume_num: resumeNum,
-	              notice_num: noticeNum,
-	              status: currentTime // 현재 시각을 ISO 포맷으로 전달
-	          })
-	      })
-	      .then(response => response.text())
-	      .then(data => {
-	          if (data === '상태 업데이트 성공') {
-	              pfnameDiv.classList.add('clicked'); // 클릭 상태 기록
-	              location.href = 'resumeInfo?resume_num=' + resumeNum; // 페이지 이동
-	          } else {
-	              console.error('상태 업데이트 실패');
-	          }
-	      })
-	      .catch(error => {
-	          console.error('Error:', error);
-	      });
-	  }
-
-	
-	
-	function updateStatus(resumeNum, noticeNum) {
-	    var status = $('#statusFilter_' + resumeNum).val();
-
+	    // 상태를 '열람'으로 업데이트
 	    $.ajax({
 	        type: 'POST',
-	        url: '${pageContext.request.contextPath}/updateSubmitCheck',
+	        url: '${pageContext.request.contextPath}/updateSubmitCheck', // 서버에서 상태를 업데이트할 URL
 	        data: {
 	            resume_num: resumeNum,
 	            notice_num: noticeNum,
-	            status: status
+	            status: '열람'
 	        },
 	        success: function(response) {
-	            console.log('상태 업데이트 완료');
+	            if (response === '상태 업데이트 성공') {
+	                pfnameDiv.classList.add('clicked'); // 클릭 상태 기록
+	                location.href = 'resumeInfo2?resumeNum=' + resumeNum; // 페이지 이동
+	            } else {
+	                console.error('상태 업데이트 실패');
+	            }
 	        },
 	        error: function(xhr, status, error) {
+	            console.error('상태 업데이트 오류:', error);
+	        }
+	    });
+	}
+	
+	
+	function updateStatus(resumeNum, noticeNum) {
+	    var updateStatus = $('#statusFilter_' + resumeNum).val();
+
+	    $.ajax({
+	        type: 'POST',
+	        url: '${pageContext.request.contextPath}/updateStatus',
+	        data: {
+	            resume_num: resumeNum,
+	            notice_num: noticeNum,
+	            updateStatus: updateStatus
+	        },
+	        success: function(response) {
+	            alert('변경되었습니다'); // 변경 메시지 팝업
+	        },
+	        error: function(xhr, updateStatus, error) {
 	            console.error('상태 업데이트 오류:', error);
 	        }
 	    });
@@ -424,9 +445,52 @@
 	    }); 
 
 
+		//파일 가져오기
+		// box클래스 반복하면서 데이터 가져옴
+		    $('.box').each(function () {
+		        // con클래스 data-notice-num 속성에서 값을 가져옴
+		        var resumeNum = $(this).data('resume-num');
+		        
+		        // 현재 con클래스 .uploadResult 요소를 선택
+		        var uploadResultContainer = $(this).find('.uploadResult ul');
+
+		        if (resumeNum) {
+		            $.ajax({
+		                url: '/resumeGetFileList',
+		                type: 'GET',
+		                data: { resume_num: resumeNum },
+		                dataType: 'json',
+		                success: function(data) {
+		                    showUploadResult(data, uploadResultContainer);
+		                },
+		                error: function(xhr, status, error) {
+		                    console.error('Error fetching file list for notice_num ' + noticeNum + ':', error);
+		                }
+		            });
+		        } 
+		    });
 	});
 	    
-	    
+	function showUploadResult(uploadResultArr, uploadResultContainer){
+	    if (!uploadResultArr || uploadResultArr.length == 0) {
+	        return;
+	    }
+
+	    var str = "";
+
+	    $(uploadResultArr).each(function (i, obj) {
+	        var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+
+	        str += "<li data-path='" + obj.uploadPath + "'";
+	        str += " data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'>";
+	        str += "<div>";
+	        str += "<span style='display:none;'>" + obj.fileName + "</span>";
+	        str += "<img src='/resumeDisplay?fileName=" + fileCallPath + "' alt='" + obj.fileName + "'>"; 
+	        str += "</div></li>";
+	    });
+
+	    uploadResultContainer.empty().append(str);
+	}    
 	    
 
 

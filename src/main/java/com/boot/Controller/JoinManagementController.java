@@ -94,6 +94,7 @@ public class JoinManagementController {
 //	public String resumeDelete(@RequestParam("deleteResume")String[]deleteResume, HashMap<String, String> param) 
 	{
 		log.info("@# cancelJoin");		
+		log.info("@# cancelJoin");		
 		
 		
 		String[] ajaxMsg = request.getParameterValues("valueArr");		

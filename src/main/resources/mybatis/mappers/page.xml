@@ -24,7 +24,7 @@
 			                order by resume_num desc) a
 			where rownum <= (#{pageNum} * #{amount})
 			) aa
-			where rownum > (#{pageNum}-1)*#{amount};    
+			where rownum > (#{pageNum}-1)*#{amount}  
 	    ]]>
     </select>    
     <select id="getTotalCount" resultType="int">
@@ -71,7 +71,7 @@
 
 
     <!--  연주 개인마이페이지 스크랩공고 리스트  -->
-	<!--  <![CDATA[]]> : mybatis에서 특수문자 인식 처리  -->
+
 	<sql id="criteria2">
 	<!--  검색 로직: 키워드가 회사명이나 회사설명에 있는 리스트검색  -->
 		and (com_name like concat ('%', IFNULL(#{keyword}, ''), '%') or notice_title like concat ('%', IFNULL(#{keyword}, ''), '%'))
@@ -118,7 +118,7 @@
 							, st.resume_num as resume_num, st.joincompany_date as joincompany_date
 						FROM notice_scrap ns 
 						left outer join notice_tb nt ON ns.notice_num = nt.notice_num
-						left outer join submit_tb st ON ns.user_email = st.user_email 
+						left outer join submit_tb st ON ns.user_email = st.user_email and ns.notice_num = st.notice_num
 						WHERE ns.user_email=#{user_email}  
 						]]>
 						<include refid="criteria2"/>
@@ -144,7 +144,7 @@
 	
 	
 	<!--  연주 개인마이페이지 최근 본공고 리스트  -->
-	<!--  <![CDATA[]]> : mybatis에서 특수문자 인식 처리  -->
+	
 		
 	
 	
@@ -161,7 +161,7 @@
 							, st.resume_num as resume_num, st.joincompany_date as joincompany_date
 						FROM recent_notice rn 
 						left outer join notice_tb nt ON rn.notice_num = nt.notice_num
-						left outer join submit_tb st ON rn.user_email = st.user_email 
+						left outer join submit_tb st ON rn.user_email = st.user_email and rn.notice_num = st.notice_num
 						WHERE rn.user_email=#{user_email}  
 						]]>
 						<include refid="criteria2"/>
@@ -178,12 +178,72 @@
 		SELECT COUNT(*)
 		FROM recent_notice rn  
 		left outer join notice_tb nt ON rn.notice_num = nt.notice_num
-		left outer join submit_tb st ON rn.user_email = st.user_email  AND ns.notice_num = st.notice_num
+		left outer join submit_tb st ON rn.user_email = st.user_email  AND rn.notice_num = st.notice_num
 		WHERE rn.user_email=#{user_email}
 		<include refid="criteria2"/>
 		<include refid="orderBy"/>
 	</select>
 	
+	
+	
+	<!--  연주 개인 마이페이지 받은제안 리스트  -->
+	<!--  <![CDATA[]]> : mybatis에서 특수문자 인식 처리  -->
+		
+	
+	<!--  정렬 로직: 최신순, 마감임박순 리스트검색  -->
+	<sql id="orderByDate">
+      <if test="(orderByDate == 'desc')">
+        order by ot.offer_num desc
+      </if>
+      <if test="(orderByDate == 'urgent')"> 
+      	<![CDATA[
+         	AND nt.notice_endDate > CURDATE() order by nt.notice_endDate asc
+		]]>
+      </if>
+   </sql>
+	
+	
+	
+	
+	<select id="offerListWithPaging" resultType="com.boot.DTO.OfferInfoDTO">
+	<![CDATA[ 
+		Select notice_num, notice_job, notice_title, notice_career, notice_endDate, offer_no, offer_content, offer_date, 
+			offer_agree, resume_submitDate, com_tel, com_location, com_person, com_name, com_email
+		from( Select rownum, notice_num, notice_job, notice_title, notice_career, notice_endDate, offer_no, offer_content, offer_date, 
+					offer_agree, resume_submitDate, com_tel, com_location, com_person, com_name, com_email
+				from( SELECT row_number() over(order by nt.update_date desc) as rownum, 
+							nt.notice_num as notice_num, nt.notice_job as notice_job, nt.notice_title as notice_title , 
+							nt.notice_career as notice_career, nt.notice_endDate as notice_endDate,
+							ot.offer_no as offer_no, ot.offer_content as offer_content, DATE_FORMAT(ot.offer_date, '%Y-%m-%d %H:%i') as offer_date, ot.offer_agree as offer_agree,
+							ot.resume_submitDate as resume_submitDate,
+							ct.com_tel as com_tel, ct.com_location as com_location, ct.com_person as com_person, ct.com_name as com_name, ct.com_email as com_email
+						FROM offer ot 
+						left outer join notice_tb nt ON ot.notice_num = nt.notice_num
+						left outer join com_tb ct ON ct.com_email = ot.com_email 
+						WHERE ot.user_email=#{user_email}  
+						]]>
+						<include refid="orderByDate"/>
+						<![CDATA[ 
+						) a 
+				where rownum <= (#{pageNum} * #{amount}) 
+				) aa 
+		where rownum > (#{pageNum}-1)*#{amount}; 
+	]]>
+	</select>
+	
+	<select id="offerListTotalCount" resultType="int"> 
+		SELECT COUNT(*)
+		FROM offer ot 
+		left outer join notice_tb nt ON ot.notice_num = nt.notice_num
+		left outer join com_tb ct ON ct.com_email = ot.com_email 
+		WHERE ot.user_email=#{user_email}  
+		<include refid="orderBy"/>
+	</select>
+	
+	<!-- 제안거절하기 update-->
+    <update id="rejectOffer">
+		update offer set offer_agree ='제안거절' where offer_no = #{offer_no} and user_email=#{user_email}
+	</update>
 	
     
 </mapper>

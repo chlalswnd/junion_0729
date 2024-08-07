@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>비밀번호 변경</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
@@ -66,7 +66,7 @@
 {
     display: flex;
     justify-content: center;
-    font-size: var(--font-size24);
+    font-size: var(--font-size32);
 }
 
 .popH .icon
@@ -123,11 +123,12 @@
     border-radius: 6px;
     padding: 10px 30px;
     border: none;
+    cursor: pointer;
 }
 
 .pwValue
 {
-    height: 30px;
+    height: 40px;
     width: 250px;
     border-radius: 6px;
     border: 1px solid var(--border-color-gray);

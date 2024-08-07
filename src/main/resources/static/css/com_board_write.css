@@ -58,7 +58,7 @@ header
 {
     font-size: var(--font-size14);
     color: var(--color-black);
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .rightMenu 
@@ -154,14 +154,14 @@ section
 .board .head
 {
     font-size: var(--font-size32);
-    font-weight: 300;
+    font-weight: 400;
     /* line-height: 2; */
 }
 .board .title,
 .board .content
 {
     font-size: var(--font-size16);
-    font-weight: 300;
+    font-weight: 400;
     /* line-height: 2; */
 }
 .btn-upload,
@@ -170,7 +170,7 @@ section
 .selectbox .select
 {
     font-size: var(--font-size14);
-    font-weight: 200;
+    font-weight: 400;
     /* line-height: 2; */
 }
 .btn-upload,
@@ -184,6 +184,7 @@ section
     {
         background: var(--main-color);
         color: #fff;
+		border: 1px solid var(--main-color);
     }
 }
 
@@ -201,6 +202,7 @@ justify-content: center;
     {
         background: var(--main-color);
         color: #fff;
+		border: 1px solid var(--main-color);
     }
 }
   
@@ -284,7 +286,7 @@ footer
 .footerInner .right_conWrap h3
 {
     font-size:var(--font-size24);
-    font-weight: 500;
+    font-weight: 400;
     color: #222;
     margin-bottom: 20px;
 }

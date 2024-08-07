@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company_InfoUpdate</title>
+    <title>기업 마이페이지 - 인사담당자 사항 수정</title>
 <!--    <link rel="stylesheet" href="css/default.css">-->
 <!--    <link rel="stylesheet" href="css/style.css">-->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
@@ -89,7 +89,7 @@
                 
                 
                 <div class="toptitle">
-                    <h3 class="toptitle1" style="font-size: var(--font-size32);" >기업 기본 수정</h3>
+                    <h3 class="toptitle1" >기업 기본 수정</h3>
                     
                 </div>
                      
@@ -105,7 +105,7 @@
                             <tr>
                                 <th>사업자등록번호 </th>
                                 <!-- <td><input type="textarea" class="modifytext" name="com_serial_number" placeholder="사업자등록번호를 입력해주세요"></td> -->
-                                <td  class="modifytext">${companyInfo.com_serial_number}</td>
+                                <td  class="modifytext" id="social_number"></td>
                             </tr>
                             <tr>
                                 <th>인사담당자명</th>
@@ -138,6 +138,15 @@
 </body>
 </html>
 <script>
+
+     // 24.08.06 하진 : 사업자 번호 출력 형식 수정 
+  let serialNumber = "${companyInfo.com_serial_number}";
+  let getFormat = serialNumber.substring(0,3) + "-" + serialNumber.substring(3,5)+"-"+serialNumber.substring(5);
+  console.log(getFormat);
+  let socialNumberElement = document.getElementById('social_number');
+  socialNumberElement.textContent = getFormat;
+
+
     // 드롭다운 메뉴 (하지수)
 
     function dropdown() {

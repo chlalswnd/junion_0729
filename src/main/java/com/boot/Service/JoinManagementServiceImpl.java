@@ -21,6 +21,7 @@ public class JoinManagementServiceImpl implements JoinManagementService{
 	
 	@Override
 //	public ResumeDTO resumeList(String login_email) {
+//	public ResumeDTO resumeList(String login_email) {
 	public ArrayList<NoticeDTO> joinManagementList(String login_email) {
 		log.info("@# joinManagementList");
 			

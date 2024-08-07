@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.boot.DTO.ComNoticeDTO;
 import com.boot.DTO.CompanyInfoDTO;
 import com.boot.DTO.Criteria2;
+import com.boot.DTO.OfferInfoDTO;
 import com.boot.DTO.ResumeDTO;
 
 
@@ -35,5 +36,12 @@ public interface PageService {
 	public ArrayList<ComNoticeDTO> recentnoticelistWithPaging(Criteria2 cri2);
 	//연주 최근본 공고 총 갯수
 	public int getRecentNoticeTotalCount(Criteria2 cri2);
+	
+	//연주 받은제안 리스트 withPage
+	public ArrayList<OfferInfoDTO> offerListWithPaging(Criteria2 cri2);
+	//연주  받은제안 총 갯수
+	public int offerListTotalCount(Criteria2 cri2);
+	//연주  받은제안 거절하기
+	public void rejectOffer(@Param("user_email") String user_email, @Param("offer_no") int offer_no);
 		
 }

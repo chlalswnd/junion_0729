@@ -90,10 +90,7 @@
     <!-- 이력서 목록에서 셀렉트 박스 선택시 공유 여부 업데이트 되는 쿼리-->
     <delete id="cancelJoin">
         delete from submit_tb where notice_num= #{notice_num}
-    </delete>
-    <!--<update id="cancelJoin">
-		update submit_tb set user_email=null, resume_num=null where notice_num= #{notice_num}
-    </update>-->
+    </delete>    
     
 </mapper>
 

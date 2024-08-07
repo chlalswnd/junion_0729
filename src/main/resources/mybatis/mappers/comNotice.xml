@@ -3,71 +3,170 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.boot.DAO.ComNoticeDAO">
+
 <!-- 하진 -->
 <!--  	대메뉴 : 채용, 이동. 정보 뿌리기   -->
 <!--  24.07.24(수) 하진 : 테이블 정규화로 인해 쿼리 수정  -> join  -->
-<select id="JobPostCard" resultType="com.boot.DTO.ComNoticeDTO"> select notice_num, notice_title, c.com_name, notice_area1, notice_area2, notice_career from notice_tb n join com_tb c on n.com_email = c.com_email </select>
+<!--	<select id="JobPostCard" resultType="com.boot.DTO.ComNoticeDTO">-->
+<!--		select notice_num, notice_title, c.com_name, notice_area1, notice_area2, -->
+<!--				notice_career from notice_tb n join com_tb c on n.com_email = c.com_email-->
+<!--			where notice_endDate >= now()-->
+<!--	</select>-->
+	
+<!--	stack table에서 stack_name 가져오기-->
+<!--	<select id="getStackList" resultType="String"> -->
+<!--    	SELECT stack_name FROM stack -->
+<!--    </select>-->
+	
+<!--	location table에서 location_name 가져오기-->
+<!--	<select id="getLocationList" resultType="String"> -->
+<!--		SELECT location_name FROM location-->
+<!--	</select>-->
+	
+	
 <!-- 	채용공고 클릭, 상세페이지 이동시 조회수 증가 -->
-<!-- 24.07.28 하진 : 조회수가 1에서 더이상 증가하지 않아 쿼리 확인, 쿼리 수정함 -->
-<update id="hitUP"> update notice_tb set notice_hit = notice_hit+1 where notice_num=#{notice_num} </update>
+	<update id="hitUP">
+		update notice_tb set notice_hit = notice_hit+1
+			where notice_num=#{notice_num}
+	</update>
+	
 <!--  채용공고 클릭시 상세정보 페이지 이동, 정보 뿌리기 -->
 <!--  2024-07-24 하진 : 테이블 정규화로 인해 쿼리 수정 -> join  -->
 <!--  2024-07-24 하진 : 재수정...join 오류 -->
-<select id="JobPost" resultType="com.boot.DTO.ComNoticeDTO"> SELECT n.notice_title, n.com_email, c.com_name, n.notice_jobInfo, c.com_location, n.notice_condition, n.notice_prefer, n.notice_benefit, nt.notice_stack, n.notice_startDate, n.notice_endDate, n.notice_area1, n.notice_area2, n.notice_career, n.notice_department, n.notice_position, n.notice_recruitNum, n.notice_pay1, n.notice_pay2 FROM notice_tb n JOIN (SELECT com_email, GROUP_CONCAT(stack SEPARATOR ', ') AS notice_stack FROM notice_stack WHERE notice_num = #{notice_num} GROUP BY com_email) nt ON n.com_email = nt.com_email JOIN com_tb c ON n.com_email = c.com_email WHERE n.notice_num = #{notice_num}; </select>
+	<select id="JobPost" resultType="com.boot.DTO.ComNoticeDTO">
+		SELECT n.notice_title, n.com_email, c.com_name, n.notice_jobInfo, n.notice_job, c.com_location, 
+				n.notice_condition, n.notice_prefer, n.notice_benefit, nt.notice_stack, 
+				n.notice_startDate, n.notice_endDate, n.notice_area1, n.notice_area2, 
+				n.notice_career, n.notice_contactType, n.notice_department, n.notice_position, n.notice_recruitNum, 
+				n.notice_pay1, n.notice_pay2 
+			FROM notice_tb n JOIN (SELECT com_email, GROUP_CONCAT(stack SEPARATOR ', ') AS notice_stack 
+			FROM notice_stack WHERE notice_num = #{notice_num} GROUP BY com_email) nt ON n.com_email = nt.com_email 
+			JOIN com_tb c ON n.com_email = c.com_email WHERE n.notice_num = #{notice_num}
+	</select>
+
 <!-- 	채용공고 상세정보 페이지로 이동시 사이드에 해당 기업의 다른 공고를 출력하는 쿼리 -->
-<select id="otherJobPost" resultType="com.boot.DTO.ComNoticeDTO"> select notice_num, notice_title, notice_area1, notice_area2, notice_career, notice_endDate, notice_department, notice_contactType from notice_tb where notice_endDate > now() and com_email=(select com_email from notice_tb where notice_num=#{notice_num}) and notice_num != #{notice_num} order by notice_hit desc; </select>
+	<select id="otherJobPost" resultType="com.boot.DTO.ComNoticeDTO">
+		select notice_num, notice_title, notice_area1, notice_area2, notice_career, notice_endDate, 
+				notice_department, notice_contactType 
+			from notice_tb where notice_endDate > now() 
+			and com_email=(select com_email from notice_tb where notice_num=#{notice_num}) 
+			and notice_num != #{notice_num} order by notice_hit desc
+	</select>
+
 <!-- 	지원하기 클릭, 외부 팝업에 공고 정보 가져오기  -->
-<select id="getNoticeInfo" resultType="com.boot.DTO.ComNoticeDTO"> select notice_title, c.com_name, n.com_email from notice_tb n join com_tb c on n.com_email = c.com_email where notice_num=#{notice_num} </select>
+	<select id="getNoticeInfo" resultType="com.boot.DTO.ComNoticeDTO">
+		select notice_title, c.com_name, n.com_email 
+		from notice_tb n join com_tb c on n.com_email = c.com_email where notice_num=#{notice_num} 
+	</select>
+	
+
 <!-- 	지원하기 클릭, 외부 팝업에 이력서 정보 가져오기  -->
-<select id="getProfileList" resultType="com.boot.DTO.ResumeDTO">
-<!-- 		select resume_title, resume_num, user_email from resume_tb where user_email=#{user_email} -->
-select resume_title, resume_num from resume_tb where user_email=#{user_email}
-</select>
+	<select id="getProfileList" resultType="com.boot.DTO.ResumeDTO">
+<!-- 		select resume_title, resume_num, user_email from resume_tb
+			where user_email=#{user_email} -->
+		select resume_title, resume_num from resume_tb where user_email=#{user_email}
+	</select>
+
 <!-- 	지원 버튼 클릭시, 지원 테이블에서 개인 회원 이메일 정보 가져오기(비교 목적)  -->
-<select id="getResumeNum" resultType="com.boot.DTO.SubmitDTO"> select user_email from submit_tb where notice_num=#{notice_num} </select>
-<!-- 	버튼 클릭, 이력서 번호 비교를 위한 쿼리 -->
-<!-- 	<select id="getCompareList" resultType="com.boot.DTO.SubmitDTO"> -->
-<!-- 	 	update notice_tb set resume_num=#{resume_num} where notice_num=#{notice_num} -->
-<!-- 	</select> -->
+	<select id="getResumeNum" resultType="com.boot.DTO.SubmitDTO">
+		select user_email from submit_tb where notice_num=#{notice_num}
+	</select>
+	
+	
+<!-- 	지원 버튼 클릭시, offer 테이블에서 notice_num과 user_email확인(연주0804)  -->
+	<select id="getOfferNum" resultType="int">
+		SELECT COUNT(*) from offer where notice_num=#{notice_num} and user_email=#{user_email}
+	</select>
+	
+<!-- 	지원 버튼 클릭시, offer 테이블에서 notice_num과 user_email으로 해당Data 찾아서 offer_agree=지원완료, resume_submitDate=현재날짜 저장(연주0804)  -->
+	<update id="updateOfferStatus">
+		update offer set offer_agree='지원완료',resume_submitDate=now() where notice_num=#{notice_num} and user_email=#{user_email}
+    </update>
+	
+	
+	
+
+<!-- 	지원 버튼 클릭시, 포지션 제안을 받은 회원인지 확인하는 쿼리 -->
+ 	<select id="findOfferUser" resultType="boolean"> 
+ 	 	select notice_num from offer where notice_num=#{notice_num} and user_email=#{user_email}
+ 	</select> 
+
 <!-- 	이력서 제출시  submit테이블에 정보 추가 -->
 <!-- 	24.07.25  하진 : result type 변경 -->
-<!-- 	<insert id="updateSubmitData" parameterType="com.boot.DTO.SubmitDTO"> -->
-<insert id="updateSubmitData"> insert into submit_tb(notice_num, resume_num, user_email, com_email) values(#{notice_num}, #{resume_num}, #{user_email}, #{com_email}) </insert>
+	<insert id="updateSubmitData">
+		insert into submit_tb(notice_num, resume_num, user_email, com_email) 
+			values(#{notice_num}, #{resume_num}, #{user_email}, #{com_email})
+	</insert>
+	
+
 
 <!--지수-->
 
 	<!--공고등록 쿼리-->
-	<insert id="registerNotice" parameterType="com.boot.DTO.ComNoticeDTO">
-        <selectKey keyProperty="notice_num" order="BEFORE" resultType="int">
-           select ifnull(max(notice_num), 0)+1 from notice_tb
-        </selectKey>
-        insert into notice_tb (
-            notice_num, notice_title, notice_job, com_name, notice_recruitNum,
-            notice_area1, notice_area2, notice_career, notice_pay1, notice_pay2,
-            notice_startDate, notice_endDate, notice_contactType, notice_department, notice_position,
-            notice_stack, notice_jobInfo, notice_condition, notice_prefer, notice_benefit, com_email, com_tel
-        ) values (
-            #{notice_num}, #{notice_title}, #{notice_job}, (select com_name from com_tb where com_email=#{com_email}), #{notice_recruitNum},
-            #{notice_area1}, #{notice_area2}, #{notice_career}, #{notice_pay1}, #{notice_pay2},
-            #{notice_startDate}, #{notice_endDate}, #{notice_contactType}, #{notice_department}, #{notice_position},
-            #{notice_stack}, #{notice_jobInfo}, #{notice_condition}, #{notice_prefer}, #{notice_benefit}, #{com_email} ,(select com_tel from com_tb where com_email=#{com_email})
-        )
-    </insert>
-    
-	<!-- com_email로 notice_num을 가져오는 쿼리 -->
-    <select id="getNoticeNums" resultType="int" parameterType="String">
-        SELECT notice_num
-        FROM notice_tb
-        WHERE com_email = #{com_email}
-    </select>
+	<insert id="registerNotice" parameterType="com.boot.DTO.ComNoticeDTO" useGeneratedKeys="true" keyProperty="notice_num">
+<!--        <selectKey keyProperty="notice_num" order="BEFORE" resultType="int">-->
+<!--           select ifnull(max(notice_num), 0)+1 from notice_tb-->
+<!--        </selectKey>-->
 
-    <!-- com_tb 테이블에 notice_num 배열을 업데이트하는 쿼리 -->
-    <update id="updateNoticeNums" parameterType="map">
-        UPDATE com_tb
-        SET notice_num = #{noticeNums}
-        WHERE com_email = #{com_email}
+		insert into notice_tb (
+	            notice_title, notice_job, notice_recruitNum,
+	            notice_area1, notice_area2, notice_career, notice_pay1, notice_pay2,
+	            notice_startDate, notice_endDate, notice_contactType, notice_department, notice_position,
+	            notice_jobInfo, notice_condition, notice_prefer, notice_benefit, com_email, com_name
+	        ) values (
+	            #{notice_title}, #{notice_job}, #{notice_recruitNum},
+	            #{notice_area1}, #{notice_area2}, #{notice_career}, #{notice_pay1}, #{notice_pay2},
+	            #{notice_startDate}, #{notice_endDate}, #{notice_contactType}, #{notice_department}, #{notice_position},
+	            #{notice_jobInfo}, #{notice_condition}, #{notice_prefer}, #{notice_benefit}, #{com_email}, (select com_name from com_tb where com_email=#{com_email})
+	        )
+    </insert>
+    <insert id="noticeInsertStack" parameterType="com.boot.DTO.ComNoticeDTO">
+<!--    	insert into notice_stack (notice_num, stack, com_email) values (#{notice_num}, #{stack}, #{com_email})-->
+    	insert into notice_stack (notice_num, stack, com_email) values (#{notice_num}, #{stackValue}, #{com_email})
+<!--    	insert into notice_stack (notice_num, stack, com_email) -->
+<!--   			values ((select #{notice_num} from notice_tb where com_email=#{com_email} order by notice_num desc limit 1), #{stackValue}, #{com_email});-->
+    </insert>
+    <update id="noticeStauts">
+		<![CDATA[
+		    update notice_tb set notice_status = case when notice_endDate < now() then '공고마감' else '공고중' end where notice_num = #{notice_num}
+	  ]]>
     </update>
+    
+<!--공고수정-->
+    <select id="getNoticeStack" parameterType="com.boot.DTO.ComNoticeDTO" resultType="String">
+	    select stack from notice_stack 
+	    where notice_num = #{notice_num} and com_email = #{com_email}
+	</select>
+	<update id="updateRegisterNotice">
+		UPDATE notice_tb
+			SET 
+			    notice_title = #{notice_title},
+			    notice_job = #{notice_job},
+			    notice_recruitNum = #{notice_recruitNum},
+			    notice_area1 = #{notice_area1},
+			    notice_area2 = #{notice_area2},
+			    notice_career = #{notice_career},
+			    notice_pay1 = #{notice_pay1},
+			    notice_pay2 = #{notice_pay2},
+			    notice_startDate = #{notice_startDate},
+			    notice_endDate = #{notice_endDate},
+			    notice_contactType = #{notice_contactType},
+			    notice_department = #{notice_department},
+			    notice_position = #{notice_position},
+			    notice_jobInfo = #{notice_jobInfo},
+			    notice_condition = #{notice_condition},
+			    notice_prefer = #{notice_prefer},
+			    notice_benefit = #{notice_benefit},
+			    com_email = #{com_email},
+			    com_name = (SELECT com_name FROM com_tb WHERE com_email = #{com_email})
+			WHERE 
+			    notice_num = #{notice_num};
+	</update>
 	
+	<delete id="noticeDeleteStack">
+		delete from notice_stack where notice_num=#{notice_num};
+	</delete>
+    
     
 	<!--이미지 업로드-->
     <insert id="registInsertFile"  parameterType="com.boot.DTO.ComNoticeAttachDTO">

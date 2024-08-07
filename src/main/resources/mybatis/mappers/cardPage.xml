@@ -3,11 +3,55 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.boot.DAO.CardPageDAO">
-
+	
 	<select id="cardPageList" resultType="com.boot.DTO.ComNoticeDTO">
 <!-- 	페이징을 위한 쿼리 -->
-<![CDATA[ select row_noticeNum, notice_num, notice_title, aa.com_name, notice_area1, notice_area2, notice_career FROM(select row_noticeNum, notice_num, notice_title, a.com_name, notice_area1, notice_area2, notice_career FROM(select row_number() over(order by notice_num desc) as row_noticeNum , notice_num, notice_title, c.com_name, notice_area1 , notice_area2, notice_career FROM notice_tb n join com_tb c on n.com_email = c.com_email order by notice_num desc) a where row_noticeNum<= (#{pageNum} * #{amount}) )aa where row_noticeNum > (#{pageNum}-1)* #{amount} ]]>
-</select>
+	   <![CDATA[ 
+	   select row_noticeNum, notice_num, notice_title, aa.com_name, notice_area1, notice_area2, notice_career 
+	      FROM(select row_noticeNum, notice_num, notice_title, a.com_name, notice_area1, notice_area2, notice_career 
+	         FROM(select row_number() over(order by notice_num desc) as row_noticeNum , notice_num, notice_title, 
+	               c.com_name, notice_area1 , notice_area2, notice_career 
+	            FROM notice_tb n join com_tb c on n.com_email = c.com_email 
+	            where notice_endDate >= now()
+	            order by notice_num desc
+	            ) a 
+	         where row_noticeNum<= (#{pageNum} * #{amount}) 
+	         )aa 
+	         where row_noticeNum > (#{pageNum}-1)* #{amount}
+	   ]]>
+	</select>
+	
+	
+<!--	총 진행중인 공고 수를 가져오는 쿼리-->
+	<select id="getTotalCount" resultType="int"> 
+		select count(*) from notice_tb n join com_tb c 
+			on n.com_email = c.com_email where notice_endDate >= now()
+<!--		<include refid="std"></include>-->
+	</select>
+
+
+
+
+<!--career 조회 : 필터링 기능을 위함 -->
+    <select id="getCareerList" resultType="String"> 
+    	select career_name from career
+    </select>
+
+<!--stack 조회 : 필터링 기능을 위함 -->
+    <select id="getStackList" resultType="String"> 
+    	select stack_name from stack 
+    </select>
+	
+<!--	지역 이름 조회 : 필터링을 위함 -->
+	<select id="getLocationList" resultType="String">
+		select location_name from location
+	</select>
+		
+<!--2024-08-01 지수 (공고 목록 사진 불러오기)-->
+	<select id="cardPageFileList" resultType="com.boot.DTO.ComNoticeAttachDTO">
+		select uuid, uploadPath, fileName, image, notice_num
+			from notice_attach where notice_num=#{notice_num}
+    </select>
 
 
 </mapper>

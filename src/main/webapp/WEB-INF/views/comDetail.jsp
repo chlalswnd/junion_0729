@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>기업상세정보</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jobpostingIndividualSupport.css">
+<!-- <link rel="stylesheet" href="${pageContext.request.contextPath}/css/jobpostingIndividualSupport.css"> -->
 <!-- import font-awesome, line-awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
@@ -47,7 +47,7 @@ section
 {
     display: flex;
     justify-content: center;
-
+	padding-top: 90px;
 }
 
 .wrap
@@ -659,7 +659,7 @@ font-weight: 200; */
 						</div>
 						<div class="comname2">
 							<h5 class="name">
-								10년 (${company.com_year}년 설립)
+								${company.experience_years}년 (${company.com_year}년 설립)
 							</h5>
 						</div>
 						<div class="comname1">

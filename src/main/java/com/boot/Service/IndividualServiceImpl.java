@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.boot.DAO.IndividualDAO;
 import com.boot.DTO.ComScrapDTO;
 import com.boot.DTO.NoticeScrapDTO;
+import com.boot.DTO.OfferInfoDTO;
 import com.boot.DTO.RecentNoticeDTO;
 import com.boot.DTO.UserDTO;
 import com.boot.DTO.UserJobDTO;
@@ -154,6 +155,22 @@ public class IndividualServiceImpl implements IndividualService{
 		IndividualDAO dao = sqlSession.getMapper(IndividualDAO.class);
 		try {
 		    dao.recentNoticeDelete(dto);
+		} catch (Exception e) {
+		    log.error("Error executing SQL: ", e);
+		}
+		
+	}
+
+
+
+
+
+	@Override
+	public void offerDelete(int offer_no) {
+		log.info("@# IndividualServiceImpl offerDelete");
+		IndividualDAO dao = sqlSession.getMapper(IndividualDAO.class);
+		try {
+			dao.offerDelete(offer_no);
 		} catch (Exception e) {
 		    log.error("Error executing SQL: ", e);
 		}

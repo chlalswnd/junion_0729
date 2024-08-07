@@ -3,30 +3,92 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.boot.DAO.DailyCSDAO">
-
+	<sql id="searchTabs">
+		<if test='cs_type =="전체"'>
+			
+		</if>
+		
+		<if test='cs_type == "Java"'>
+			where cs_type = 'Java'
+		</if>
+		
+		<if test='cs_type == "Spring"'>
+			where cs_type = 'Spring'
+		</if>
+		
+		<if test='cs_type == "Javascript"'>
+			where cs_type = 'Javascript'
+		</if>
+		
+		<if test='cs_type == "HTML/CSS"'>
+			where cs_type = 'HTML/CSS'
+		</if>			
+	</sql>
 	<!-- 리스트 부분-->
-    <select id="questionList" resultType="com.boot.DTO.DailyCSDTO">
-         select 
-				cs.cs_num, cs.cs_type, csq.cs_question_title, csu.cs_user_check
-				from  cs_tb cs 
-				left join cs_question_tb csq ON cs.cs_num = csq.cs_num 
-				left join cs_user csu ON cs.cs_num = csu.cs_num
-    </select>
+	
 
 	<!-- 팝업 부분-->	
     <select id="question" resultType="com.boot.DTO.DailyCSDTO">
+<!--    <select id="question" resultType="com.boot.DTO.DailyCSDTO">-->
          select 
          cs.cs_num, csq.cs_question_title, cs.cs_type, csq.cs_question_option, 
          csq.cs_question_explanation, cs.cs_answer_num 
          from cs_question_tb csq
          left join cs_tb cs ON cs.cs_num = csq.cs_num 
          where csq.cs_num=#{cs_num}
-    </select>
+    </select>   
     
     <!-- 문제 참여 여부 update-->
     <update id="modifyCheck">
-		update cs_user set cs_user_check ='참여',user_email=#{user_email} where cs_num = #{cs_num}
+		UPDATE cs_user 
+		SET cs_user_check = '참여', user_email = #{user_email}
+		WHERE cs_num = #{cs_num}
 	</update>
+	
+	
+	<!-- 검색 탭 버튼-->	
+    
+    
+<select id="questionList" resultType="com.boot.DTO.DailyCSDTO">
+		<![CDATA[
+         select 	rownum, cs_num, cs_type, cs_question_title, cs_user_check, user_email
+				from( select 	rownum, cs_num, cs_type, cs_question_title, cs_user_check, user_email  
+				from (select row_number() over(order by cs_num desc) as rownum,
+							cs.cs_num, cs.cs_type, csq.cs_question_title, csu.cs_user_check, csu.user_email 
+			                from  cs_tb cs 
+							left join cs_question_tb csq ON cs.cs_num = csq.cs_num 
+							left join cs_user csu ON cs.cs_num = csu.cs_num					
+			                order by cs_num desc) a
+			where rownum <= (#{pageNum} * #{amount})
+			) aa
+			where rownum > (#{pageNum}-1)*#{amount}
+		]]>		
+    </select>    
+  
+ <select id="searchTab" resultType="com.boot.DTO.DailyCSDTO">
+ 		<![CDATA[
+         select 	rownum, cs_num, cs_type, cs_question_title, cs_user_check
+				from( select 	rownum, cs_num, cs_type, cs_question_title, cs_user_check  
+				from (select row_number() over(order by cs_num desc) as rownum,
+							cs.cs_num, cs.cs_type, csq.cs_question_title, csu.cs_user_check 
+			                from  cs_tb cs 
+							left join cs_question_tb csq ON cs.cs_num = csq.cs_num 
+							left join cs_user csu ON cs.cs_num = csu.cs_num							
+		]]>			
+				<include refid="searchTabs"></include>
+		<![CDATA[		
+		order by cs_num desc) a
+			where rownum <= (#{pageNum} * #{amount})
+			) aa
+			where rownum > (#{pageNum}-1)*#{amount}
+		]]>				
+  </select> 
+  
+  <select id="dailyCSGetTotalCount" resultType="int">
+	    select count(*) as total from cs_tb
+    </select>
+    
+    
 
 </mapper>
 

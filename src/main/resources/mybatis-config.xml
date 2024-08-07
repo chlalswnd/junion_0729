@@ -5,38 +5,42 @@
 <configuration>
 	<mappers>
 <!--		<mapper resource="mybatis/mappers/company_info.xml" />-->
-		<mapper resource="mybatis/mappers/login.xml"/>
 		<mapper resource="mybatis/mappers/board.xml"/>
-		<mapper resource="mybatis/mappers/join.xml"/>
-		<mapper resource="mybatis/mappers/joinManagement.xml"/>
-		<mapper resource="mybatis/mappers/joinManagementPage.xml"/>
-		<mapper resource="mybatis/mappers/withdraw.xml"/>
-		<mapper resource="mybatis/mappers/individual.xml"/>
-		<mapper resource="mybatis/mappers/resume.xml"/>
-		<mapper resource="mybatis/mappers/resumeUpload.xml"/>
-		<mapper resource="mybatis/mappers/page.xml"/>
-		<mapper resource="mybatis/mappers/comNotice.xml"/>
 		<mapper resource="mybatis/mappers/boardBoard.xml"/>
 		<mapper resource="mybatis/mappers/boardComment.xml"/>
 		<mapper resource="mybatis/mappers/boardPage.xml"/>
 		<mapper resource="mybatis/mappers/boardUpload.xml"/>
-		<mapper resource="mybatis/mappers/jobposting.xml"/>
-		<mapper resource="mybatis/mappers/recentNotice.xml"/>
-		<mapper resource="mybatis/mappers/scrapNotice.xml"/>
-		<mapper resource="mybatis/mappers/comInfoUpload.xml"/>
 		<mapper resource="mybatis/mappers/cardPage.xml"/>
+		<mapper resource="mybatis/mappers/comInfoUpload.xml"/>
 		<mapper resource="mybatis/mappers/companyInfo.xml"/>
 		<mapper resource="mybatis/mappers/comBoardBoard.xml"/>
 		<mapper resource="mybatis/mappers/comBoardComment.xml"/>
 		<mapper resource="mybatis/mappers/comBoardPage.xml"/>
 		<mapper resource="mybatis/mappers/comBoardUpload.xml"/>
+		<mapper resource="mybatis/mappers/comNotice.xml"/>
+		<mapper resource="mybatis/mappers/companyInfo.xml"/>
+		<mapper resource="mybatis/mappers/companyList.xml"/>
+		<mapper resource="mybatis/mappers/dailyCS.xml"/>		
+		<mapper resource="mybatis/mappers/individual.xml"/>
+		<mapper resource="mybatis/mappers/jobposting.xml"/>
+		<mapper resource="mybatis/mappers/jobpostingIndividual.xml"/>
+		<mapper resource="mybatis/mappers/join.xml"/>
+		<mapper resource="mybatis/mappers/joinManagement.xml"/>
+		<mapper resource="mybatis/mappers/joinManagementPage.xml"/>
+		<mapper resource="mybatis/mappers/login.xml"/>
 		<mapper resource="mybatis/mappers/main.xml"/>
 		<mapper resource="mybatis/mappers/noticeBoardBoard.xml"/>
 		<mapper resource="mybatis/mappers/noticeBoardComment.xml"/>
 		<mapper resource="mybatis/mappers/noticeBoardPage.xml"/>
 		<mapper resource="mybatis/mappers/noticeBoardUpload.xml"/>
-		<mapper resource="mybatis/mappers/companyList.xml"/>
-		<mapper resource="mybatis/mappers/jobpostingIndividual.xml"/>
+		<mapper resource="mybatis/mappers/page.xml"/>
+		<mapper resource="mybatis/mappers/recentNotice.xml"/>
+		<mapper resource="mybatis/mappers/resume.xml"/>
+		<mapper resource="mybatis/mappers/resumeUpload.xml"/>
+		<mapper resource="mybatis/mappers/scrap.xml"/>
+<!--		<mapper resource="mybatis/mappers/scrapNotice.xml"/>-->
+		<mapper resource="mybatis/mappers/withdraw.xml"/>
+<!--		<mapper resource="mybatis/mappers/dailyCS.xml"/>		-->
 	</mappers>
 </configuration>
 

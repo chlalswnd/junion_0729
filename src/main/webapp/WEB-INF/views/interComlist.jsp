@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>개인-관심기업</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/individualMain.css">
+<!-- <link rel="stylesheet" href="${pageContext.request.contextPath}/css/individualMain.css"> -->
 <!--<link rel="stylesheet" href="src/main/resources/static/css/style.css">-->
 <!-- import font-awesome, line-awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -37,12 +37,7 @@
 	  --font-size12: 12px;
 	}
 
-	/* 네비게이션 옆 컨텐츠 영역 */
-	.mainContent 
-	{
-	  width: calc( 100% - 260px);
-	  min-height: 100vh;
-	}
+	
 	
 	/* 드롭다운 메뉴 */
 	.dorpdowmMain
@@ -83,36 +78,100 @@
 	font-size: var(--color-black);
 	}
 
+	/* 네비게이션 옆 컨텐츠 영역 */
+	.mainContent 
+	{
+	width: calc( 100% - 260px);
+	min-height: 100vh;
+	}
 
-	/*메인콘텐츠 전체*/
-	main
+	/* 헤더 */
+	.mainContent header 
+	{
+	width: 100%;
+	height: 90px;
+	border-bottom: 1px solid var(--input-gray);
+	padding: 0 40px;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	}
+
+	/* 헤더 아이디 영역 */
+	.mainContent header .userWrapper
+	{
+	display: flex;
+	white-space: nowrap;
+	margin-left: auto;
+	align-items: center;
+	}
+
+	.mainContent header .userWrapper img
+	{
+	margin-right: 12px;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;   
+	}
+
+	.mainContent header .userWrapper h4.name 
+	{
+	font-size: var(--font-size14);
+	margin-right: 12px;
+	}
+
+	/* 메인 */
+	main 
 	{
 	display: flex;
 	justify-content: center;
+	padding: 50px 0 120px;  
 	}
+
 	main .mainContainer
 	{
-	display: flex;
-	flex-direction: column; 
-	min-width: 1200px;
-	gap: 40px 0;
+		display: flex;
+		flex-direction: column; 
+		min-width:1200px;
+		gap: 40px 0;
 	}
 
-	/*메인타이틀*/
-	.mainContainer .mainTitle
+
+	/* 프로필 : 사진 + 이름 */
+	main .mainContainer .memberInfo 
+	{
+	display: flex;
+	align-items: center;
+	margin-bottom: 40px;
+	}
+
+	main .mainContainer .memberInfo img.memberImg 
+	{
+	width:64px;
+	height: 64px;
+	margin-right: 20px;
+	}
+
+	main .mainContainer .memberInfo .memberName 
 	{
 	font-size: var(--font-size32);
-	margin-top: 70px;
-	color: var(--color-black);
-	gap : 0 20px;
-	}
+	font-weight: 600;
+	} 
 
-	/*서브 타이틀 + 숫자*/
+
+
+
+	
+
+	/* 타이틀 + 숫자*/
 	.mainContainer .subtitle
 	{
-	display: flex;
-	gap: 0 20px;
-	font-size: var(--font-size24);
+		display: flex;
+		font-size: var(--font-size32);
+		color: var(--color-black);
+		/* margin-top: 70px; */
+		gap : 0 20px;
+  
 	}
 
 	.mainContainer .subtitle .listNum
@@ -148,20 +207,22 @@
 	}
 
 	/*삭제버튼*/
-	.mainContainer .searchWrap .optionSortLeft button
-	{
-	width: 65px;
-	height: 36px;
-	background-color: initial;
-	border:1px solid var(--border-color-gray);
-	color: var(--color-gray);
-	font-size: var(--font-size16);
-	border-radius: 6px;
-	align-items:center;
-	justify-content:center;
-	cursor: pointer;
+	.selectDel {
+		padding: 8px 20px;
+		border: 1px solid var(--input-gray);
+		font-size: var(--font-size14);
+		border-radius: 6px;
+		background-color: var(--color-white);
+		cursor: pointer;
+		color: #777;
 	}
 
+	.selectDel:hover
+	{
+		border: 1px solid var(--main-color);
+		background-color: var(--main-color);
+		color: var(--color-white);
+	}
 
 
 	/*sort tab 오른쪽 검색하기*/
@@ -175,31 +236,47 @@
 	gap : 10px;
 	}
 
-	/* 검색창*/
-	.mainContainer .searchWrap .optionSorRight input
-	{
-	width: 240px;
-	height: 36px;
-	border:1px solid var(--input-gray);
-	font-size: var(--font-size16);
-	border-radius: 6px;
-	padding-left: 15px;
-	box-sizing: border-box;
-	}
+	/*sort tab 오른쪽 검색하기*/
+.mainContainer .searchWrap .optionSorRight
+{
+  margin-left: auto ;
+  display: flex;
+  gap : 10px;
+}
 
-	/*검색하기 버튼*/
-	.mainContainer .searchWrap .optionSorRight button
-	{
-	width: 78px;
-	height: 36px;
-	border: none;
-	background-color: var(--main-color);
-	color: var(--color-white);
-	font-size: var(--font-size16);
-	border-radius: 6px;
-	cursor: pointer;
-	box-sizing: border-box;
-	}
+
+/* 검색창*/
+.mainContainer .searchWrap .optionSorRight input
+{
+  width: 240px;
+  border:1px solid var(--input-gray);
+  font-size: var(--font-size14);
+  border-radius: 6px;
+  color: #777;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+/*검색하기 버튼*/
+.searchBtn
+{
+  /* width: 78px; */
+  background-color: var(--color-white);
+  border: 1px solid var(--input-gray);
+  color: #777;
+  font-size: var(--font-size14);
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.searchBtn:hover
+{
+    border: 1px solid var(--main-color);
+    background-color: var(--main-color);
+    color: var(--color-white);
+}
+
 
 
 
@@ -256,7 +333,7 @@
 	.postBox .boxMiddle .com_name
 	{
 	font-size: var(--font-size16);
-	color: var(--color-black);
+	color: #222;
 	cursor: pointer;
 	}
 
@@ -287,28 +364,28 @@
 	gap: 20px;
 	}
 
-	/*자세히보기 버튼*/
-	.boxRight .detailTab
-	{
-	display: flex;
-	width: 135px;
-	height: 32px;
-	/* box-sizing: ; */
-	cursor: pointer;
-
-	}
+	
 	/*자세히보기 버튼*/
 	.boxRight button
 	{
-	width: inherit;
-	background-color: var(--button-gray);
-	border:1px solid var(--border-color-gray);
-	color: var(--color-gray);
-	font-size: var(--font-size16);
+	/* width: inherit; */
+	background-color: #f7f7f7;
+	border: 1px solid var(--input-gray);
+	color: #777;
+	font-size: var(--font-size14);
 	border-radius: 6px;
 	align-items:center;
 	justify-content:center; 
+	cursor: pointer;
+	min-width: 135px;
+	padding: 8px 20px;
 	}
+
+
+
+
+
+
 
 
 	/*휴지통아이콘*/ 
@@ -379,9 +456,9 @@
 			</header>    
             <main>
                 <div class="mainContainer">
-                    <div class="mainTitle">
-                        <h3>관심기업</h3>
-                    </div><!-- mainTitle 끝 -->
+                    <!-- <div class="mainTitle"> -->
+                        <!-- <h3 class="mainTitle">관심기업</h3> -->
+                    <!-- </div>mainTitle 끝 -->
                     <div class="subtitle">
                         <h4 class="title">관심기업</h4>
                         <!-- <h4 class="listNum">${comList.size()}</h4> -->
@@ -394,7 +471,7 @@
                                 <button class="selectDel">삭제</button>
                             </div><!-- optionSortLeft 끝 -->
                             <div class="optionSorRight">
-                                <form method="get" id="searchForm">
+								<form method="get" id="searchForm">
                                     <div class="search_Form">
                                         <input type="text" id="keyword" name="keyword" placeholder="기업명, 기업소개"  value="${pageMaker.cri.keyword}" >
                                         <!-- <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}"> -->
@@ -417,7 +494,7 @@
 											<h4 class="com_name">${dto.com_name}</h4>
 										</a>
 										<div class="comInfo">
-											<p>${dto.com_content}</p>
+											<p class="comContent">${dto.com_content}</p>
 										</div><!-- comInfo 끝-->
 										<div class="jobPostNum">
 											<p class="title">현재 ${dto.notice_count}건 채용중</p>
@@ -488,7 +565,23 @@
 </html>
 <script>
 	$(document).ready(function() {
-	
+		/*
+	        2024-06-25 이재원 : 글자수 제한 + 넘는건 ...처리
+			2024-06-25 서연주 : class 선택자만 수정해서 사용
+	    */
+	    $('.comInfo > .comContent').each(function()
+	    {
+	        var length = 80; //표시할 글자 수 정하기
+	    
+	        $(this).each(function()
+	        {
+
+	            if($(this).text().length >= length)
+	            {
+	                $(this).text($(this).text().substr(0, length) + '...');	//지정한 글자수 이후 표시할 텍스트 '...'
+	            }
+	        });
+	    });
 		
 		/*
 		2024-07-02 서연주 
@@ -499,6 +592,7 @@
 			var keyword = document.getElementById('keyword');
 			console.log(keyword);
 			var searchForm = $("#searchForm");
+			// alert(searchForm);
 			// var keyword1 =searchForm.find(keyword).val();
 			if( keyword.value.length == 0){
 				alert("키워드를 입력하세요.");

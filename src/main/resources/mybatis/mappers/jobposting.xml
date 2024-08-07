@@ -59,14 +59,15 @@
 	<!--================================================= jobposting 끝 =================================================-->
 	
     <select id="jobpostingSupport" resultType="com.boot.DTO.jobpostingDTO"> 
-	    SELECT 
-		    r.resume_num,r.resume_writeDate,r.resume_title,r.user_email AS resume_user_email,r.user_address,
-		    r.resume_pay,r.career_month, r.career_start,r.career_end,r.resume_status,r.resume_comName,r.resume_comPart,
-		    r.resume_comPosition,r.careerNum,r.resume_eduStart,r.resume_eduEnd,r.resume_eduStatus,r.resume_eduName,
-		    r.resume_eduMajor, r.resume_eduDegree, r.eduNum, r.resume_exStart, r.resume_exEnd, r.resume_exName, r.resume_exContent,
-		    r.exNum, r.resume_licenseDate, r.resume_licenseContent, r.licenseNum, r.resume_portfolio_name, r.resume_portfolio_url,
-		    r.portfolioNum, r.resume_intro, r.resume_offer,TIMESTAMPDIFF(YEAR, STR_TO_DATE(u.user_birthdate, '%Y-%m-%d'), CURDATE()) AS calculated_age, u.user_email, u.user_name, u.user_questionNum, u.user_questionAnswer,
-		    u.user_tel, u.user_type, u.user_location, u.user_location2, u.user_birthdate, u.user_gender, s.notice_num, s.com_email, s.joincompany_date
+		SELECT 
+		    r.resume_num, r.resume_writeDate, r.resume_title, r.user_email AS resume_user_email, r.user_address, r.resume_pay, r.career_month,  r.career_start,
+		    r.career_end, r.resume_status, r.resume_comName, r.resume_comPart, r.resume_comPosition, r.careerNum, r.resume_eduStart, r.resume_eduEnd,
+		    r.resume_eduStatus, r.resume_eduName, r.resume_eduMajor,  r.resume_eduDegree,  r.eduNum,  r.resume_exStart,  r.resume_exEnd,  r.resume_exName, 
+		    r.resume_exContent, r.exNum,  r.resume_licenseDate,  r.resume_licenseContent,  r.licenseNum,  r.resume_portfolio_name, r.resume_portfolio_url, r.portfolioNum, 
+		    r.resume_intro,  r.resume_offer,
+		    TIMESTAMPDIFF(YEAR, STR_TO_DATE(u.user_birthdate, '%Y-%m-%d'), CURDATE()) AS calculated_age, 
+		    u.user_email, u.user_name, u.user_questionNum, u.user_questionAnswer,u.user_tel, u.user_type, u.user_location, u.user_location2, 
+		    u.user_birthdate, u.user_gender, s.notice_num, s.com_email, s.joincompany_date, s.submit_status 
 		FROM 
 		    RESUME_TB r
 		JOIN 
@@ -92,43 +93,60 @@
 	
 	
 	<!-- 지원자 목록 필터링 쿼리 -->
-<select id="jobpostingSupportFiltered" parameterType="map" resultType="com.boot.DTO.jobpostingDTO">
-    SELECT 
-        r.resume_num, r.resume_writeDate, r.resume_title, r.user_email AS resume_user_email, r.user_address,
-        r.resume_pay, r.career_month, r.career_start, r.career_end, r.resume_status, r.resume_comName, r.resume_comPart,
-        r.resume_comPosition, r.careerNum, r.resume_eduStart, r.resume_eduEnd, r.resume_eduStatus, r.resume_eduName,
-        r.resume_eduMajor, r.resume_eduDegree, r.eduNum, r.resume_exStart, r.resume_exEnd, r.resume_exName, r.resume_exContent,
-        r.exNum, r.resume_licenseDate, r.resume_licenseContent, r.licenseNum, r.resume_portfolio_name, r.resume_portfolio_url,
-        r.portfolioNum, r.resume_intro, r.resume_offer,
-        TIMESTAMPDIFF(YEAR, STR_TO_DATE(u.user_birthdate, '%Y-%m-%d'), CURDATE()) AS calculated_age, u.user_email, u.user_name, u.user_questionNum, u.user_questionAnswer,
-        u.user_tel, u.user_type, u.user_location, u.user_location2, u.user_birthdate, u.user_gender, s.notice_num, s.com_email, s.joincompany_date,
-        s.submit_check
-    FROM 
-        RESUME_TB r
-    JOIN 
-        USER_TB u ON r.user_email = u.user_email
-    JOIN 
-        submit_tb s ON r.resume_num = s.resume_num
-    WHERE 
-        s.notice_num = #{notice_num}
-        <if test="submitStatus != null and submitStatus != ''">
-            AND r.resume_status = #{submitStatus}
-        </if>
-        <if test="submitCheck != null and submitCheck != ''">
-            AND s.submit_check = #{submitCheck}
-        </if>
-</select>
+	<select id="jobpostingSupportFiltered" parameterType="map" resultType="com.boot.DTO.jobpostingDTO">
+		SELECT 
+		    r.resume_num, r.resume_writeDate, r.resume_title, r.user_email AS resume_user_email, r.user_address,
+		    r.resume_pay, r.career_month, r.career_start, r.career_end, r.resume_status, r.resume_comName, r.resume_comPart,
+		    r.resume_comPosition, r.careerNum, r.resume_eduStart, r.resume_eduEnd, r.resume_eduStatus, r.resume_eduName,
+		    r.resume_eduMajor, r.resume_eduDegree, r.eduNum, r.resume_exStart, r.resume_exEnd, r.resume_exName, r.resume_exContent,
+		    r.exNum, r.resume_licenseDate, r.resume_licenseContent, r.licenseNum, r.resume_portfolio_name, r.resume_portfolio_url,
+		    r.portfolioNum, r.resume_intro, r.resume_offer,
+		    TIMESTAMPDIFF(YEAR, STR_TO_DATE(u.user_birthdate, '%Y-%m-%d'), CURDATE()) AS calculated_age, 
+		    u.user_email, u.user_name, u.user_questionNum, u.user_questionAnswer,
+		    u.user_tel, u.user_type, u.user_location, u.user_location2, u.user_birthdate, u.user_gender, 
+		    s.notice_num, s.com_email, s.joincompany_date,
+		    s.submit_check, s.submit_status,n.notice_career,
+		    n.notice_title 
+		FROM 
+		    RESUME_TB r
+		JOIN 
+		    USER_TB u ON r.user_email = u.user_email
+		JOIN 
+		    submit_tb s ON r.resume_num = s.resume_num
+		JOIN 
+		    notice_tb n ON s.notice_num = n.notice_num  
+		WHERE 
+		    s.notice_num = #{notice_num}
+		        <if test="submitStatus != null and submitStatus != ''">
+		            AND r.resume_status = #{submitStatus}
+		        </if>
+		        <if test="submitCheck != null and submitCheck != ''">
+		            AND s.submit_check = #{submitCheck}
+		        </if>
+	</select>
 
 
-    <!-- 상태 업데이트 쿼리 추가 -->
-	<update id="updateSubmitStatus">
-	    UPDATE submit_tb
-	    SET submit_status = #{status}
-	    WHERE resume_num = #{resume_num}
-	    AND notice_num = #{notice_num}
-	</update>
+    <!-- 이력서 누를 시 열람, 미열람 -->
+    <update id="updateSubmitCheck">
+        UPDATE submit_tb
+        SET submit_check = #{status}
+        WHERE notice_num = #{noticeNum}
+          AND resume_num = #{resumeNum}
+    </update>
     
     
+    <!-- 공고목록 > 지원자목록 : 합격,불합격,보류 여부 -->
+    <update id="updateStatus">
+        UPDATE submit_tb
+        SET submit_status = #{updateStatus}
+        WHERE notice_num = #{noticeNum}
+          AND resume_num = #{resumeNum}
+    </update>
+    
+   <select id="resumeGetFileList" resultType="com.boot.DTO.ResumeUploadDTO">
+		select uuid ,uploadPath ,fileName, image, resume_num
+		from resume_attach where resume_num=#{resume_num}
+    </select>
     
 <!--================================================= jobposting List 끝 =================================================-->
 	

@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,8 +93,9 @@ public class ComNoticeServiceImpl implements ComNoticeService{
 		String user_email = param.get("user_email");
 		log.info("값을 잘 들고왔나요??"+user_email);
 		boolean result = false;
+		boolean offer = false;
 		
-		if ( list.size()>0) {
+		if ( list.size()>0) {//해당 공고의 이력서 지원정보가 있으면 비교 로직 수행
 			for (int i = 0; i < list.size(); i++) {
 				if (user_email.equals(list.get(i).getUser_email())) {
 					
@@ -105,16 +105,39 @@ public class ComNoticeServiceImpl implements ComNoticeService{
 				}
 			}
 			if (result == false) {
-				log.info("경로 확인용 false = "+user_email);
-				dao.updateSubmitData(param);			
+//				log.info("경로 확인용 false = "+user_email);
+				dao.updateSubmitData(param);
+				offer = dao.findOfferUser(param);
+				log.info("포지션 제안을 받았나요? "+offer);
+				if(offer) {
+					
+				}
 			}
 		}else {
 			log.info("경로 확인용 size=0 -> "+user_email);
 			dao.updateSubmitData(param);
+			log.info("포지션 제안을 받았나요? "+offer);
 		}
 		
 		return result;
 	}
+	
+	@Override
+	public int getOfferNum(int notice_num, String user_email) {//지원하기 누르면 offer한 적 있는지 확인
+		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
+		int offer_exist = dao.getOfferNum(notice_num, user_email);//제안한 공고면 1, 아니면 0
+		
+		return offer_exist;
+	}
+	
+	@Override
+	public void updateOfferStatus(int notice_num, String user_email) {
+		log.info("@# ComNoticeServiceImpl updateOfferStatus");
+		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
+		dao.updateOfferStatus(notice_num,user_email);//offer_agree=지원완료, resume_submitDate=현재날짜 offer테이블에 저장하기 0804 연주
+		
+	}
+
 	
 	
 	
@@ -160,6 +183,18 @@ public class ComNoticeServiceImpl implements ComNoticeService{
 	public void noticeStauts(ComNoticeDTO comNoticeDTO) {
 		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
 		dao.noticeStauts(comNoticeDTO);
+	}
+
+	@Override
+	 public List<String> getNoticeStack(ComNoticeDTO comNoticeDTO) {
+        ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
+        return dao.getNoticeStack(comNoticeDTO);
+    }
+	
+	@Override
+	public void updateRegisterNotice(ComNoticeDTO comNoticeDTO) {
+		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
+		dao.updateRegisterNotice(comNoticeDTO);
 	}
 
 	
@@ -208,6 +243,15 @@ public class ComNoticeServiceImpl implements ComNoticeService{
 			dao.updateRecentNotice(dto);//최근본공고테이블에 저장
 		}
 	}
+
+	@Override
+	public void noticeDeleteStack(int notice_num) {
+		ComNoticeDAO dao = sqlSession.getMapper(ComNoticeDAO.class);
+		dao.noticeDeleteStack(notice_num);
+	}
+
+
+	
 	
 
 

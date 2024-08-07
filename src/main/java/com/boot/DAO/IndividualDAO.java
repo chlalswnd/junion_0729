@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.boot.DTO.ComScrapDTO;
 import com.boot.DTO.NoticeScrapDTO;
+import com.boot.DTO.OfferInfoDTO;
 import com.boot.DTO.RecentNoticeDTO;
 import com.boot.DTO.UserDTO;
 import com.boot.DTO.UserJobDTO;
@@ -35,6 +36,7 @@ public interface IndividualDAO {
 	public void comScrapDelete(ComScrapDTO dto);
 	public void noticeScrapDelete(NoticeScrapDTO dto);
 	public void recentNoticeDelete(RecentNoticeDTO dto);
+	public void offerDelete(int offer_no);
 
 	
 }

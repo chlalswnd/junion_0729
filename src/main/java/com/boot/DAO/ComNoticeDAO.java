@@ -14,19 +14,22 @@ import com.boot.DTO.SubmitDTO;
 
 public interface ComNoticeDAO {
 	public ArrayList<ComNoticeDTO> JobPostCard();//채용공고(카드형) 목록 가져오기
+	
+	// 상세공고로 이동
 	public void hitUP(int notice_num);//채용공고 선택시 조회수 증가
 	public ComNoticeDTO JobPost(int notice_num);//상세 채용공고 정보 가져오기
 	public ArrayList<ComNoticeDTO> otherJobPost(int notice_num);//상세 채용공고, 해당 기업의 다른 공고 정보 가져오기
-//	public String comLocation(String com_email);//상세 채용공고-회사 위치 가져오기
 	
 	
 	// 지원하기 팝업 발생
 	public ComNoticeDTO getNoticeInfo(int notice_num);//지원하기 클릭, 팝업창에 공고 정보 가져오기
 	public ArrayList<ResumeDTO> getProfileList(String user_email);//지원하기 클릭, 팝업창에 이력서 정보 가져오기
+	public int getOfferNum(@Param("notice_num") int notice_num, @Param("user_email") String user_email);//지원하기 클릭, 제안한 내용이 있는지 확인 0804연주
+	public void updateOfferStatus(@Param("notice_num") int notice_num, @Param("user_email") String user_email);//offer_agree=지원완료, resume_submitDate=현재날짜 offer테이블에 저장하기 0804 연주
 	
 	//공고 지원 처리
 	public ArrayList<SubmitDTO> getResumeNum(int notice_num);//이력서 선택, 지원 완료시 submit 테이블에 이력서 배열값 가져오기
-//	public void insertResumNum(HashMap<String, String> param);//이력서 선택, 지원 완료시 공고 테이블에 이력서 번호 추가
+	public boolean findOfferUser(HashMap<String, String> param);//지원 버튼 클릭시, 포지션 제안을 받은 회원인지 확인
 	
 
 	public void updateSubmitData(HashMap<String, String> param);//이력서지원정보 저장
@@ -37,6 +40,10 @@ public interface ComNoticeDAO {
 	public void registerNotice(ComNoticeDTO comNoticeDTO); //공고등록
 	public void noticeInsertStack(ComNoticeDTO comNoticeDTO); //공고등록-스택 테이블 insert
 	public void noticeStauts(ComNoticeDTO comNoticeDTO); //공고 상태 업데이트
+	
+	public List<String> getNoticeStack(ComNoticeDTO comNoticeDTO); //공고수정-스택 테이블 select
+	public void updateRegisterNotice(ComNoticeDTO comNoticeDTO); //공고 수정
+	public void noticeDeleteStack(int notice_num); //공고수정- 스택 삭제
 	
 //	파일업로드는 파라미터를 DTO 사용
 	public void registInsertFile(ComNoticeAttachDTO vo);  // 파라미터가 ComNoticeAttachDTO / 파일추가

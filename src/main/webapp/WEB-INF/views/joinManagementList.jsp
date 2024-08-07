@@ -164,8 +164,17 @@
 											<button class="noticeStatus" <c:if test="${dto.notice_status == '공고중'}">style='background-color: #FFA500; color:white; border:0;'</c:if>>
 												${dto.notice_status}
 											</button>
-											<button class="noticeCheck">${dto.noticeCheck}</button>
-											<button class="noticeEstimate">평가하기</button>
+											<button class="noticeCheck">${dto.noticeCheck}</button>											
+											<button class="noticeEstimate" <c:if test="${dto.hasRated > 0}">disabled</c:if>>
+											    <c:choose>
+											        <c:when test="${dto.hasRated > 0}">
+											            평가완료
+											        </c:when>
+											        <c:otherwise>
+											            평가하기
+											        </c:otherwise>
+											    </c:choose>
+											</button>
 										</div>
 										<span class="icon delete">
 											<i class="fa-regular fa-trash-can" ></i>
@@ -205,16 +214,34 @@
 															<div class ="star_rating">
 																<input type="hidden" name="com_email" value="${dto.com_email}">
 																<input type="hidden" name="notice_num" value="${dto.notice_num}">
-																<input type="radio" id="com_star1" class="com_star" name="com_star" value="1">
-																<label class="star" for="com_star1"></label>																											
-																<input type="radio" id="com_star2" class="com_star" name="com_star" value="2">
+																<div>
+																	<input type="radio" id="com_star1" class="com_star" name="com_star" value="1">
+																	<label class="star"></label>
+																</div>
+																<div>
+																	<input type="radio" id="com_star2" class="com_star" name="com_star" value="2">
+																	<label class="star"></label>
+																</div>																																											
+																<div>
+																	<input type="radio" id="com_star3" class="com_star" name="com_star" value="3">
+																	<label class="star"></label>
+																</div>																																											
+																<div>
+																	<input type="radio" id="com_star4" class="com_star" name="com_star" value="4">
+																	<label class="star"></label>
+																</div>																																											
+																<div>
+																	<input type="radio" id="com_star5" class="com_star" name="com_star" value="5">
+																	<label class="star"></label>
+																</div>																																											
+																<!--<input type="radio" id="com_star2" class="com_star" name="com_star" value="2">
 																<label class="star" for="com_star2" value="2"></label>
 																<input type="radio" id="com_star3" class="com_star" name="com_star" value="3">
 																<label class="star" for="com_star3" value="3"></label>
 																<input type="radio" id="com_star4" class="com_star" name="com_star" value="4">
 																<label class="star" for="com_star4" value="4"></label>
 																<input type="radio"  id="com_star5"class="com_star" name="com_star" value="5">
-																<label class="star" for="com_star5" value="5"></label>
+																<label class="star" for="com_star5" value="5"></label>-->
 															</div>
 														</div>                               
 														<div class="popB">
@@ -286,11 +313,15 @@ $(document).ready(function()
         $(this).parents(".deletePop").hide();
     });
 
-    /* 평점 */
-    $('.star_rating > .star').click(function() {
-        $(this).parent().children('span').removeClass('on');
-        $(this).addClass('on').prevAll('label').addClass('on');
-        $(this).addClass('on').nextAll('label').removeClass('on');
+	$('.star').on('click', function() {
+        var index = $(this).parent().index(); // 클릭한 별의 부모 div의 인덱스 가져오기
+        
+        // 모든 라디오 버튼 체크 해제 및 별의 활성화 상태 초기화
+        $('input[name="com_star"]').prop('checked', false);
+        $('.star').removeClass('on');
+		$(this).addClass('on');
+		$(this).parent('div').prevAll().find('.star').addClass('on');
+		$(this).siblings('.com_star').prop('checked', true);        
     });
 
     $(".noticeEstimate").on("click",function(){
@@ -398,7 +429,7 @@ function deleteValue()
 		// actionForm.submit();
 
 		// ★ 뒤로가기했다가 다른번호 누르면 페이징 기능 고장나는거 수정 form action="list"를 빼고 이렇게 속성
-		actionForm.attr("action","joinManagementList").submit(); 
+		actionForm.attr("action","dailyCS").submit(); 
 	}); // paginate_button 클릭 끝
 	
 </script>

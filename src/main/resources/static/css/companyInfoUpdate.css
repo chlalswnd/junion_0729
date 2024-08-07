@@ -30,7 +30,7 @@
     height: 100vh;
     background: #fff;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    /* box-shadow: 0 5px 15px rgba(0,0,0,0.2); */
     transition: 0.5s;
     padding: 1rem 0;
 }
@@ -194,13 +194,14 @@ main .toptitle .toptitle1
 {
   margin-right: 40px;
   cursor: pointer;
+  font-size: var(--font-size32);
 }
 
-main .toptitle .toptitle2
+/* main .toptitle .toptitle2
 {
   margin-right: 40px;
   cursor: pointer;
-}
+} */
 
 .disF 
 {
@@ -273,7 +274,9 @@ td .modifytext
   box-sizing: border-box; */
   
 }
-td input[type=text]
+td input[type=text],
+/* 추가 CSS 적용 */
+input[type=password]
 {
   height: 70px;
   width: calc(1200px - 360px);

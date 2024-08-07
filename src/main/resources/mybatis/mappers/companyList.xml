@@ -45,8 +45,6 @@
 	<select id="getLocationList" resultType="String"> 
 		SELECT location_name FROM location
 	</select>
-
-	
 	
 <!--		com_star 사용예정-->
 <!--		<if test='(orderType == "recommendation" and cri.login_usertype == "1")'> 큰 따옴표 때문에 char타입이 적용이 안됐음 -->
@@ -115,12 +113,21 @@
 			where rownum > (#{cri.pageNum}-1) * #{cri.amount} 
 			]]>
     </select>
-    	
+    
+<!--    <select id="getTotalCount" resultType="int"> -->
+<!--		SELECT count(*) FROM com_tb-->
+<!--	</select>-->
     <select id="getTotalCount" resultType="int"> 
 		SELECT count(*) FROM com_tb
 		<include refid="criteria4"></include>
 	</select>
-	<!-- 민중 끝-->
+	
+	<!--기업 사진 불러오기-->
+    <select id="comFileList" resultType="com.boot.DTO.CompanyAttachDTO">
+		select uuid, uploadPath, fileName, image, com_email
+			from com_attach where com_email=#{com_email}
+    </select>
+	
 </mapper>
 
 

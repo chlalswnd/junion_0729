@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company_InfoManagement</title>
+    <title>기업 마이페이지 - 기업정보관리</title>
 <!--    <link rel="stylesheet" href="css/default.css">-->
 <!--    <link rel="stylesheet" href="css/style.css">-->
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
@@ -20,6 +20,8 @@
     <!-- import js -->
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <script src="js/index.js"></script>
+    <!--kakao map -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=48ca63ceb0746787c922c8da8f33b705&libraries=services"></script>
 <style>
     /* 드롭다운 메뉴 */
     .dorpdowmMain
@@ -92,8 +94,8 @@
                 
                 
                 <div class="toptitle">
-                    <h3 class="toptitle1" >기업 기본 정보</h3>
-                    <h3 class="toptitle2" >기업 상세 정보</h3>
+                    <h3 class="toptitle1" style="font-size: 32px;" >기업 기본 정보</h3>
+                    <h3 class="toptitle2" style="font-size: 32px;" >기업 상세 정보</h3>
                 </div>
                 
                     <div class="tabCon common">
@@ -156,7 +158,9 @@
                                             <h5 class="title">회사 위치</h5>
                                         </div>
                                         <div class="columnBB">
-                                            <h5 class="comloc">${companyInfo.com_location}</h5>
+                                            <!--지도가 들어갈 위치-->
+                                            <div id="map" style="width:100%;height:350px;"></div>
+                                            <h5 class="comloc" id="comAddress">${companyInfo.com_location}</h5>
                                         </div>
                                     </div>
                 
@@ -262,7 +266,8 @@
                             </tr>
                             <tr>
                                 <th>사업자등록번호 </th>
-                                <td>${companyInfo.com_serial_number}</td>
+                                <!-- <td class="social_number">${companyInfo.com_serial_number}</td> -->
+                                <td class="social_number"></td>
                             </tr>
                             <tr>
                                 <th>이름</th>
@@ -297,20 +302,14 @@
 </html>
 <script>
     $(document).ready(function () {
-        // var comStack = "${companyInfo.com_stack}";
+
+        // 기업의 스택값을 받아 버튼으로 출력
         var comStack = "${companyInfo.com_stack}";
 
         if(comStack){
             // comStack.forEach(function(stack) {
-    //   alert('${comInfo.com_stack}');
-       // const comStack = "<c:out value='${comInfo.com_stack}'/>";
-    //    const comStack = "<c:out value='${companyInfo.com_stack}'/>";
         console.log(comStack);
                 const stacks = comStack.split(",");//배열로 만듦
-                // console.log("@@###=>1"+stacks[0]);
-                // console.log("@@###=>2"+stacks[1]);
-                // console.log("@@###=>3"+stacks[2]);
-                // console.log("@@###=>4"+stacks[3]);
                 let str = "";
                 for( let i=0; i < stacks.length; i++) 
                 // for( let i=0; i < comStack.length; i++) 
@@ -323,11 +322,54 @@
                 $("#stack").html(str);
         
         }
+    
+    //현재 년도를 구함.
+    var years = new Date();
+    var nowYear = years.getFullYear();
+    console.log(nowYear);
+    $('.nowYear').text(nowYear);
 
-        var years = new Date();
-        var nowYear = years.getFullYear();
-        console.log(nowYear);
-        $('.nowYear').text(nowYear);
+
+ // 24.08.06 하진 : 사업자 번호 출력 형식 수정 
+  let serialNumber = "${companyInfo.com_serial_number}";
+  let getFormat = serialNumber.substring(0,3) + "-" + serialNumber.substring(3,5)+"-"+serialNumber.substring(5);
+  console.log(getFormat);
+  let socialNumberElement = document.querySelector('.social_number');
+  socialNumberElement.textContent = getFormat;
+
+
+    // 24.08.03 ~ 08.04 : 하진 - 지도 API 적용
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표(상세정보 수정시와 다른 좌표를 써야 함)
+            level: 4 // 지도의 확대 레벨(높을수록 확대가 많이 됨)
+            };  
+
+    //지도를 미리 생성
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+    //주소-좌표 변환 객체를 생성
+    var geocoder = new kakao.maps.services.Geocoder();
+   
+    var getlocation = "${companyInfo.com_location}";//화면에 출력된 값을 변수로 받아 사용
+    
+    // 주소로 좌표를 검색합니다
+    geocoder.addressSearch(getlocation, function(result, status) {
+
+    // 정상적으로 검색이 완료됐으면 
+    if (status === kakao.maps.services.Status.OK) {
+
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+    } 
+    });    
 
     });//end of ready
      // 24-07-09 하진
@@ -335,10 +377,7 @@
             // window.name = "부모창 이름"; 
         
             var popupURL = "/companyPW";
-            // window.name = "company_InfoManagement";
-            // var popupProperties = "width=600, height=400, resizable = no, scrollbars = no";
             var popupProperties = "width=500, height=300, resizable = no, scrollbars = no";
-            // window.open("open할 window", "자식창 이름", "팝업창 옵션");
             window.open(popupURL, "companyPW.jsp", popupProperties);    
         }
 

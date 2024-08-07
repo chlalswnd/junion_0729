@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>채용 공고 목록</title>
 <!-- <link rel="stylesheet" href="css/default.css">
 <link rel="stylesheet" href="css/posting_list.css"> -->
 <link rel="stylesheet" href="css/default.css">
@@ -211,7 +212,10 @@ display:inline-block;
 .menutitle .scrap .fa-bookmark
 {
     font-size: 20px;
-    color: var(--input-gray);
+    /* color: var(--input-gray); */
+    color: var(--color-gray);
+    cursor: pointer;
+
 }
 
 .menutitle .scrap .fa-bookmark.active
@@ -262,7 +266,7 @@ display:inline-block;
 {
     width: 270px;
     height: 180px;
-    background-image: url(../images/company.svg);
+    /* background-image: url(../images/company.svg); */
     background-position: center;
     background-size: cover;
     border-radius: 10px;
@@ -280,6 +284,13 @@ display:inline-block;
     border:1px solid var(--main-color);
     background-color: var(--main-color);
     color: var(--main-color);
+}
+
+.menubox .uploadResult img
+{
+    width: 270px;
+    height: 180px;
+    border-radius: 10px;
 }
 
 
@@ -356,145 +367,155 @@ display:inline-block;
     <section> 
         <div class="wrap">     
             <div class="devlist">
-
-                <div class="selectbox">
-                    <div class="select">
-                        <input class="title" type="text" placeholder="검색어를 입력해 주세요">
-                    </div> <!-- 콘텐트박스 끝-->
-                    <div class="icon">
-                        <div class="i1">
-                            <a href="#" class="fa-solid fa-magnifying-glass" style="color: #ffa500;"></a>
+                <form method="get" id="searchForm">
+                    <div class="selectbox">
+                        <div class="select">
+                            <input class="title" type="text" name="keyword" value="${paging.std.keyword}" placeholder="검색어를 입력해 주세요">
+                        </div> <!-- 콘텐트박스 끝-->
+                        <div class="icon">
+                            <div class="i1">
+                                <a href="#" class="fa-solid fa-magnifying-glass" style="color: #ffa500;"></a>
+                            </div>
                         </div>
-                    </div>
-                </div> <!-- selectbox 끝-->
+                    </div> <!-- selectbox 끝-->
 
 
 
 
-                <div class="filterbox">
-                    <div class="left">
-						
-                        <div class="sbox">
-                            <form>
-                                <select class="select1" id="select" name="select">
-                                  <option value="">직군 · 직무</option>
-                                    <option value="s1">공지사항</option>
-                                    <option value="s1">이벤트</option>
-                                </select>
-                              </form>
-                        </div> <!-- selectbox 끝 -->
-                        <div class="sbox">
-                            <form>
-                                <select class="select1" id="select" name="select">
-                                  <option value="">경력</option>
-                                    <option value="s1">공지사항</option>
-                                    <option value="s1">이벤트</option>
-                                </select>
-                              </form>
-                        </div> <!-- selectbox 끝 -->
-                        <div class="sbox">
-                            <form>
-                                <select class="select1" id="select" name="select">
-                                  <option value="">기술스택</option>
-                                    <option value="s1">공지사항</option>
-                                    <option value="s1">이벤트</option>
-                                </select>
-                              </form>
-                        </div> <!-- selectbox 끝 -->
-                        <div class="sbox">
-                            <form>
-                                <select class="select1" id="select" name="select">
-                                  <option value="">지역</option>
-                                    <option value="s1">공지사항</option>
-                                    <option value="s1">이벤트</option>
-                                </select>
-                              </form>
-                        </div> <!-- selectbox 끝 -->
+                    <div class="filterbox">
+                        <div class="left">
+                            <div class="sbox">
+                                <!-- <form> -->
+                                    <select class="select1" id="select" name="select">
+                                        <option value="">경력</option>
+                                        <c:forEach var="dto" items="${careerList}">
+                                            <option value="${dto}">${dto}</option>
+                                        </c:forEach>
+                                    </select>
+                                <!-- </form> -->
+                            </div> <!-- selectbox 끝 -->
+                            <div class="sbox">
+                                <!-- <form> -->
+                                    <select class="select1" id="select" name="select">
+                                        <option value="" selected>기술스택</option>
+                                        <c:forEach var="dto" items="${stackList}">
+                                            <option value="${dto}">${dto}</option>
+                                        </c:forEach>
+                                    </select>
+                                <!-- </form> -->
+                            </div> <!-- selectbox 끝 -->
+                            <div class="sbox">
+                                <!-- <form> -->
+                                    <select class="select1" id="select2" name="select">
+                                    <option value="">지역</option>
+                                    <c:forEach var="dto" items="${locationList}">
+                                            <option value="${dto}">${dto}</option>
+                                        </c:forEach>
+                                    </select>
+                                <!-- </form> -->
+                            </div> <!-- selectbox 끝 -->
 
 
-                        <button class="fil2">
-                            <div class="f1">
-                                <h5 class="but1">
-                                    마감임박
-                                </h5>
-                            </div>
-                        </button> <!-- 마감임박 버튼 끝-->
+                            <button class="fil2" onclick="sortList()">
+                                <div class="f1">
+                                    <h5 class="but1">
+                                        마감임박
+                                    </h5>
+                                </div>
+                            </button> <!-- 마감임박 버튼 끝-->
 
-                    </div> <!-- 레프트 끝-->
+                        </div> <!-- 레프트 끝-->
 
-                    <div class="right">
-                        <button class="fil2" id="firstButton">
-                            <div class="f1">
-                                <h5 class="but1">
-                                    추천순
-                                </h5>
-                            </div>
-                        </button>
-                        <button class="fil2" id="secondButton">
-                            <div class="f1">
-                                <h5 class="but1">
-                                    최신순
-                                </h5>
-                            </div>
-                        </button>
-                        <button class="fil2" id="thirdButton">
-                            <div class="f1">
-                                <h5 class="but1">
-                                    조회순
-                                </h5>
-                            </div>
-                        </button>
-                    </div>  <!-- 라이트 끝-->
-
-                </div> <!-- filterbox 끝 -->
-
+                        <div class="right">
+                            <button class="fil2" id="firstButton">
+                                <div class="f1">
+                                    <h5 class="but1">
+                                        추천순
+                                    </h5>
+                                </div>
+                            </button>
+                            <button class="fil2" id="secondButton">
+                                <div class="f1">
+                                    <h5 class="but1">
+                                        최신순
+                                    </h5>
+                                </div>
+                            </button>
+                            <button class="fil2" id="thirdButton">
+                                <div class="f1">
+                                    <h5 class="but1">
+                                        조회순
+                                    </h5>
+                                </div>
+                            </button>
+                        </div>  <!-- 라이트 끝-->
+                        <input type="hidden" name="pageNum" value="1">
+                        <input type="hidden" name="amount" value="${paging.std.amount}">
+                    </div> <!-- filterbox 끝 -->
+                </form>
 
                 <div class="mtlist"> <!--  mtlist 시작-->
 
 					<c:forEach var="dto" items="${jobPost}">
-                    <div class="menutitle"> 
-                        <div class="menubox">
-                            <a href="/jobPostDetail?notice_num=${dto.notice_num}" class="tag">
-                            <!-- <a href="/jobPostDetail" class="tag"> -->
-                                <div class="img" ></div>
-                            </a>
-                            <div class="scrap">
-                                <div class="s1">
-                                    <!-- <a href="jobPostDetail?notice_num=${dto.notice_num}"  class="fa-solid fa-bookmark" style= "font-size: 20px; color: #e5e5ec;"></a> -->
-                                    <i class="fa-solid fa-bookmark"></i>
-                                </div>
-                            </div>
-                        </div> 
+                        <div class="menutitle"> 
+                            <div class="menubox">
+                                <!-- ${dto.notice_num} --><!--공고 번호를 출력해 봄-->
+                                <a href="/jobPostDetail?notice_num=${dto.notice_num}" class="tag" data-notice-num="${dto.notice_num}">
+                                <!-- <a href="/jobPostDetail" class="tag"> -->
+                                    <div class="img" >
+                                        <div class="uploadResult">
+                                            <ul>
 
-                        <div class="titlebox">
-                            <a href="/jobPostDetail?notice_num=${dto.notice_num}">
-                                <div class="title">
-                                    <h5 class="t1">
-                                        ${dto.notice_title}
-                                    </h5>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="scrap">
+                                    <div class="s1">
+                                        <!-- noticeList : ${noticeList} --><!--해당 유저의 관심 공고 목록을 출력해 봄-->
+                                        <c:choose>
+                                            <c:when test="${fn:contains(noticeList, dto.notice_num)}">
+                                                <i id="bookmark${dto.notice_num}" class="fa-solid fa-bookmark active"></i>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i id="bookmark${dto.notice_num}" class="fa-solid fa-bookmark"></i>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
                                 </div>
-<!--                            </a>-->
-<!--                            <a href="연동 채용상세/index.html">-->
-                                <div class="company">
-                                    <h5 class="c1">                                
-                                        ${dto.com_name}
-                                    </h5>
-                                </div>
-                                <div class="location">
-                                    <h5 class="l1">
-                                         ${dto.notice_area1} · ${dto.notice_career}
-                                    </h5>
-                                </div>
-                            </a>
-                        </div> 
-                    </div>  
+                            </div> 
+
+                            <div class="titlebox">
+                                <a href="/jobPostDetail?notice_num=${dto.notice_num}">
+                                    <div class="title">
+                                        <h5 class="t1">
+                                            ${dto.notice_title}
+                                        </h5>
+                                    </div>
+    <!--                            </a>-->
+    <!--                            <a href="연동 채용상세/index.html">-->
+                                    <div class="company">
+                                        <h5 class="c1">                                
+                                            ${dto.com_name}
+                                        </h5>
+                                    </div>
+                                    <div class="location">
+                                        <h5 class="l1">
+                                            ${dto.notice_area1} · ${dto.notice_career}
+                                        </h5>
+                                    </div>
+                                </a>
+                            </div> 
+                        </div>  
 					</c:forEach>
                     
 
                    
                 </div> <!-- milist 끝-->
                 <div class="pagingbox">
-                    <!-- <h3>${paging}</h3> -->
+                    <!-- <h3>${paging}</h3>
+                    ${paging.startpage}
+                    ${paging.endpage} -->
                     <div class="paging">
                         <ul>
                             <c:if test="${paging.prev}">
@@ -536,43 +557,127 @@ display:inline-block;
     
     <%@ include file="../footer.jsp" %>
 </div>
-        <form id="actionForm" method="get" action="cardPageList">
+        <!-- <form id="actionForm" method="get" action="cardPageList"> -->
+        <form id="actionForm" method="get" action="jobPostList">
             <input type="hidden" name="pageNum" value="${paging.std.pageNum}">
             <input type="hidden" name="amount" value="${paging.std.amount}">
         </form>
 </body>
 </html>
 <script>
+
 $(document).ready(function() {
-    //버튼 클릭시 활성화
-    $(".scrap .fa-bookmark").click(function() {
-        
-        var noticeNum = $this.data('notice_num');
+  //버튼 클릭시 활성화
+  
+  var user_type = "${login_usertype}";
+//   console.log("user_type = "+user_type);
+  //공고 스크랩 관련 로직
+  $(".scrap .fa-bookmark").click(function() {
+          if(user_type == 1){
+          
+            const user_email = "${login_email}";
+            const href = $(this).parents().siblings().closest("a").prop("href");
+            const url = new URL(href);
+            const searchParams = new URLSearchParams(url.search);
+            const noticeNum = searchParams.get('notice_num');
+
         $.ajax({
             type : "POST",
             url : "/scrapNotice",
-            data : {notice_num : noticeNum},
-                // success : function(response){ 
-                success : function(){ 
-                    // if (response.success) {
-                    $this.toggleClass('active');
+            data : {notice_num : noticeNum, 
+                    user_email : user_email
+                },
+                success : function(result){ 
+                    if (result == true) {
+                        alert("관심 공고 목록에 추가되었습니다.");
+                        $("#bookmark"+noticeNum).addClass('active');
+                    }else{
+                        alert("관심 공고에서 삭제되었습니다.");
+                        $("#bookmark"+noticeNum).removeClass('active');
+                    }
                 }
-                //  else {
-                //     alert('이미 스크랩한 공고입니다.');
-                // }
-            // }
-        });
-    });
+            });
+        }else if(!user_type){//user_type이 없으면 login 페이지로 이동
+        location.href="/login";
+        }
+    });//end of fa-bookmark click function
 });//document).ready(function()
 
+
+
+// 페이징 관련 로직
     var actionForm = $("#actionForm");
     $(".paginate_button a").on("click", function(e){
         e.preventDefault();//기본 동작을 막음 : 페이지 링크를 통해서 이동
 
         actionForm.find("input[name='pageNum']").val($(this).attr("href"));
-        actionForm.attr("action","cardPageList").submit();
+        // actionForm.attr("action","cardPageList").submit();
+        actionForm.attr("action","jobPostList").submit();
         
     });
 
 
+
 </script>
+
+<script>
+// 2024-08-01 지수 (공고 목록 사진 들고오기)
+
+    $(document).ready(function () {
+       // tag 반복하면서 데이터 가져옴
+       $('.tag').each(function () {
+           // tag data-notice-num 속성에서 값을 가져옴
+           var noticeNum = $(this).data('notice-num');
+           
+           // 현재 tag .uploadResult 요소를 선택
+           var uploadResultContainer = $(this).find('.uploadResult ul');
+   
+           if (noticeNum) {
+               $.ajax({
+                   url: '/cardPageFileList',
+                   type: 'GET',
+                   data: { notice_num: noticeNum },
+                   dataType: 'json',
+                   success: function(data) {
+                       showUploadResult(data, uploadResultContainer);
+                   },
+                   error: function(xhr, status, error) {
+                       console.error('Error fetching file list for notice_num ' + noticeNum + ':', error);
+                   }
+               });
+           } 
+       });
+       
+   });//end of document ready
+
+
+   var searchForm = $("#searchForm");
+
+   $(".fa-magnifying-glass").on("click",function () {
+        $("#searchForm").submit();
+   })
+
+   
+   function showUploadResult(uploadResultArr, uploadResultContainer){
+       if (!uploadResultArr || uploadResultArr.length == 0) {
+           return;
+       }
+   
+       var str = "";
+   
+       $(uploadResultArr).each(function (i, obj) {
+           var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+   
+           str += "<li data-path='" + obj.uploadPath + "'";
+           str += " data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'>";
+           str += "<div>";
+           str += "<span style='display:none;'>" + obj.fileName + "</span>";
+           str += "<img src='/cardPageDisplay?fileName=" + fileCallPath + "' alt='" + obj.fileName + "'>"; 
+           str += "</div></li>";
+       });
+   
+       uploadResultContainer.empty().append(str);
+   }
+   
+   // 공고 목록 사진 들고오기 끝 - 지수 
+   </script>

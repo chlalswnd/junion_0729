@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>지원하기</title>
 <link rel="stylesheet" href="css/default.css">
 <!-- import font-awesome, line-awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -43,6 +43,7 @@ section
     justify-content: center;
     align-items: center;
 }
+
 
 /* section */
 /* .sectionInner */
@@ -192,7 +193,6 @@ section
 $(document).ready(function() {
     function check() {
         var selectedResume = $(".profileList").val();
-        console.log(selectedResume);
     }
 
     function getQueryStringValue(key) {//현재 페이지 URL에서 쿼리스트링으로 넣은 notice_num 값을 가져오는 함수
@@ -211,40 +211,64 @@ $(document).ready(function() {
  
 });
 
-$(".rewirte").on("click", function () {
-    window.close();
-    location.href="resumeList";
+// 24.08.01 하진
+// 수정하기 버튼 클릭시 해당 이력서 수정 페이지로 이동
+$(".rewirte").click(function () {
+    console.log("수정하기 클릭!!")
+    var resume_num = document.getElementById("resume_num").value;
+    console.log("이력서 번호는 "+resume_num);
+    if(resume_num){
+        window.opener.location.href="resumeInfo?resume_num="+resume_num;
+        window.close();
+    }else{
+        window.opener.location.href="resumeList";
+        window.close;
+    }
 })
+
+
 // 2024-07-13 하진
 // 2024-07-25 하진
 // 2024-07-28 하진
+// 이력서 제출 기능
 function resumeOK(){
     var notice_num = document.getElementById("notice_num").value;
-    // var notice_num = document.getElementById("#notice_num").value;
-    console.log("submit!! notice_num->"+notice_num);
+    // console.log("submit!! notice_num->"+notice_num);
     var resume_num = document.getElementById("resume_num").value;
-    // var resume_num = document.getElementById('#resume_num').val();
-    console.log("submit!! resume_num ->"+resume_num);
-    // var com_email = document.getElementById("#com_email").value;
+    // console.log("submit!! resume_num ->"+resume_num);
     var com_email = "${notice.com_email}";
-    console.log("submit com_email!!"+com_email);
+    // console.log("submit com_email!!"+com_email);
 
     // var user_email = "${user_email}";//controller에서 user_email이란 이름으로 model에 보낸 값을 받는 변수
     var user_email = "${login_email}";// session 값을 직접 가져오도록 로직 수정
     console.log("submit user_email!!"+user_email);
 
+
+    //24.08.01(하진) : 이력서 수정 페이지로 이동
+    $(".rewirte").click(function(){
+        
+    });//end of rewirte click function
+
+
     if(resume_num){
         $.ajax({
                 type : "POST",
                 url : "/resumeUser",
-                data : {notice_num : notice_num, resume_num : resume_num, com_email : com_email, user_email : user_email},
+                data : {
+                    notice_num : notice_num, 
+                    resume_num : resume_num, 
+                    com_email : com_email, 
+                    user_email : user_email
+                },
                 success : function(result){
                     if(result == false){
                     alert("지원이 완료되었습니다!");
+                    window.opener.$("#user_resume").removeClass("active");
                     window.close();
                 }
                 else{
                     alert("이미 지원한 공고입니다.");
+                    window.opener.$("#user_resume").removeClass("active");
                     window.close();
                 }
             }    

@@ -26,10 +26,8 @@
 {
     position:relative;
     width: 260px;
-    height: 100vh;
     background: #fff;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     transition: 0.5s;
     padding: 1rem 0;
 }
@@ -205,6 +203,29 @@ main .checkboxwrap .check .checkbox1
 
 }
 
+
+main .toptitle .toptitlehh
+{
+  font-size: var(--font-size32);
+  text-align: left;
+  font-weight: 600;
+  width: 100%;
+  margin-bottom: 40px;
+} 
+
+
+.notfound
+{
+	display: flex;
+	text-align: center;
+	justify-items: center;
+}
+.notfound .notfoundhh
+{
+	font-size: 24px;
+	font-weight: 600;
+}
+
 /*박스*/
 
 .box 
@@ -216,7 +237,7 @@ main .checkboxwrap .check .checkbox1
   justify-content: space-between;
   align-items: center;
   
-  
+  background-color: white;
   margin-bottom: 20px;
   
 }
@@ -228,9 +249,43 @@ main .checkboxwrap .check .checkbox1
   width: 80%;
 }
 
-.box .profile
+.box .left .le
 {
-  margin-right: 10px;
+	/*margin-right: 100px;*/
+	display: flex;
+	width: 280px;
+}
+
+.box .left .le .pfname
+{
+	display: flex;
+	text-align: center;
+	margin: auto 12px;
+}
+.box .left .le .pfage
+{
+	display: flex;
+	text-align: center;
+	margin: auto 2px;
+}
+.box .left .le .ppfage
+{
+	display: flex;
+	text-align: center;
+	margin: auto 12px;
+}
+
+.box .uploadResult
+{
+	display: flex;
+  	margin-right: 10px;
+}
+.box .uploadResult img
+{
+
+	width: 64px;
+	height: 64px;
+ 	border-radius: 100px;
 }
 
 
@@ -252,11 +307,7 @@ main .checkboxwrap .check .checkbox1
 }
 
 
-.box .profile
-{
-  width: 64px;
-  height: 64px;
-}
+
 
 .box .job-title 
 {
@@ -267,19 +318,32 @@ main .checkboxwrap .check .checkbox1
 .box .left .leftbtn
 {
   border: 1px solid #E5E5EC;
-  background-color: white;
-  font-size: var(--font-size12);
   padding: 10px 20px;
   border-radius: 6px;
   margin-right: 10px;
+  background-color: #f7f7f7;
   
 }
+.box .left .leftbtn .lele
+{
+	color: #767676; 
+	font-size: var(--font-size12);
+	font-weight: 400;
+}
 
-.box .dates 
+.box .dates
 {
   color: #888;
   font-size: var(--font-size14);
   margin-top: 4px;
+ 
+}
+.pname
+{
+  color: #555555;
+  margin-top: 4px;
+  width: 50px;
+  
  
 }
 
@@ -318,6 +382,7 @@ main .checkboxwrap .check .checkbox1
   background-color: #FFA500;
   color: white;
 }
+
 
 
 /*팝업*/
@@ -363,10 +428,10 @@ main .checkboxwrap .check .checkbox1
 .box 
 {
     border: 1px solid #dadada;
-    background-color: #f7f7f7;
+	background-color: white;
     font-size: 16px;
     color: #111;
-    padding: 20px;
+    padding: 16px;
 }
 
 .tabBtn 
@@ -491,6 +556,37 @@ button.submit
 {
     font-size: 24px;
 }
+
+
+
+/* 필터 박스 스타일 */
+.filterBox {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+
+}
+
+.filterBox label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.filterBox select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+	font-size: 12px;
+
+
+}
+
+/* 지원자 정보 스타일 */
+.resumeInfo {
+    margin-top: 10px;
+}
+
+
 
 
 /* Footer */

@@ -17,6 +17,7 @@ public interface JoinManagementService {
 	
 	// 입사지원 목록
 	public ArrayList<NoticeDTO> joinManagementList(String login_email);
+//	public ArrayList<NoticeDTO> joinManagementList(String login_email);
 
 	public ArrayList<NoticeDTO> notice_status(String noticeCheck, String notice_status, String user_email);
 	

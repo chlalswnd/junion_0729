@@ -322,6 +322,62 @@
 			e.preventDefault();
 			console.log("submit clicked");
 
+			/*
+				2024-07-24 하지수 
+				유효성 검사
+			*/
+            var requiredFields = [
+                {name: "resume_title", message: "이력서명을 입력해주세요."},
+                {name: "resume_pay", message: "희망연봉을 입력해주세요."},
+                {name: "career_start", message: "경력 시작일을 입력해주세요."},
+                {name: "career_end", message: "경력 마감일을 입력해주세요."},
+                {name: "resume_comName", message: "경력 회사명을 입력해주세요."},
+                {name: "resume_comPart", message: "경력 부서명을 입력해주세요."},
+                {name: "resume_comPosition", message: "경력 직책을 입력해주세요."},
+                {name: "resume_status", message: "경력 재직여부를 입력해주세요."},
+                {name: "resume_eduStart", message: "학력 시작일을 입력해주세요."},
+				{name: "resume_eduEnd", message: "학력 마감일을 입력해주세요."},				
+				{name: "resume_eduName", message: "학교명을 입력해주세요."},
+				{name: "resume_eduMajor", message: "전공을 입력해주세요."},
+				{name: "resume_eduStatus", message: "졸업여부를 입력해주세요."},				
+				{name: "resume_exStart", message: "경험or활동or교육 시작일을 입력해주세요."},
+				{name: "resume_exEnd", message: "경험or활동or교육 마감일을 입력해주세요."},
+				{name: "resume_exName", message: "경험or활동or교육명을 입력해주세요."},
+				{name: "resume_exContent", message: "경험or활동or교육내용을 입력해주세요."},
+				
+				{name: "resume_licenseDate", message: "자격증 날짜를 입력해주세요."},
+				{name: "resume_licenseContent", message: "자격증 내용을 입력해주세요."},
+				{name: "resume_portfolio_name", message: "포트폴리오명을 입력해주세요."},
+				{name: "resume_portfolio_url", message: "포트폴리오 URL을 입력해주세요."},
+				{name: "stack_name", message: "스택을 선택해주세요.",
+						validate: function() {
+							return $(".tech.active").length > 0;
+						}
+					},
+                {name: "resume_intro", message: "자기소개를 입력해주세요."}
+            ];
+
+			// 유효성 반복 + 포커스 이동
+            for (var i = 0; i < requiredFields.length; i++) {
+                var field = requiredFields[i];
+
+                // 일반 필드와 특별한 기술 스택 필드를 구분
+                if (field.name === "stack_name") {
+                    if (!field.validate()) {
+                        alert(field.message);
+                        $(".tech").first().focus(); // 'tech' 버튼 중 첫 번째에 포커스를 이동
+                        return;
+                    }
+                } else {
+                    var fieldValue = $("[name='" + field.name + "']").val().trim();
+                    if (fieldValue === "") {
+                        alert(field.message);
+                        $("[name='" + field.name + "']").focus();
+                        return;
+                    }
+                }
+            } //유효성 검사 끝 --
+			
 			var str="";
 
 			$(".uploadResult ul li").each(function (i, obj){

@@ -78,7 +78,7 @@
 		                                <div>
 		                                    <h5 class="r2">
 												<span >
-													<a href="#" onclick="clip(); return false;">
+													<a href="#" onclick="clip(); return false;" class="r1">
 														URL복사
 													</a>
 												</span>
@@ -106,7 +106,8 @@
 								        <h5 class="but2">목록</h5>
 								    </button>
 								</div>
-							    <div id="commentBox" class="combox"></div>
+								
+				<!--			    <div id="commentBox" class="combox"></div>-->
 							</form>   <!--폼 끝-->
 						<div id="comment-list">
 							<div class="divcom">
@@ -137,264 +138,209 @@
 </body>
 
 <script>
+    // 댓글 작성 함수
+    const commentWrite = () => {
+        const email = document.getElementById("login_email").value;
+        const content = document.getElementById("commentContent").value.trim();
+        const no = "${boardDetailView.board_no}";
 
-	
-	// 댓글 작성 함수
-	const commentWrite = () => {
-	    const email = document.getElementById("login_email").value;
-	    const content = document.getElementById("commentContent").value.trim();
-	    const no = "${boardDetailView.board_no}";
-
-	    // 내용이 비어 있거나 공백만 있을 때
-	    if (!content) {
-	        alert("내용이 없습니다.");
-	        return; // 함수 종료
-	    }
-
-	    $.ajax({
-	        type: "POST",
-	        data: {
-	            login_email: email,
-	            commentContent: content,
-	            board_no: no
-	        },
-	        url: "/noticeBoardComment/noticeBoardSave",
-	        success: function() {
-	            console.log("작성 성공");
-	            location.reload(); // 페이지 새로고침
-	        },
-	        error: function() {
-	            console.log("실패");
-	        }
-	    });
-	};
-
-	
-	
-	
-$(document).ready(function () {  
-    // 즉시 실행 함수
-    (function() {
-        console.log("@# document ready");
-        var board_no = "<c:out value='${boardDetailView.board_no}'/>";
-        console.log("@# board_no=>" + board_no);
-
-        $.getJSON("/noticeGetFileList", {board_no: board_no}, function (arr) {
-            console.log("@# arr=>" + arr);
-
-            var str = "";
-            var hasFiles = false; // 파일이 있는지 여부를 체크하는 변수
-
-            $(arr).each(function (i, attach) {
-                // image type
-                if (attach.image) {
-                    var fileCallPath = encodeURIComponent(attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName);
-                    str += "<li data-path='" + attach.uploadPath + "'";
-                    str += " data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.image + "'"
-                    str += " ><div>";
-                    str += "<span>" + attach.fileName + "</span>";
-                    // str += "<img src='/display?fileName=" + fileCallPath + "'>"; // 이미지 출력 처리(컨트롤러단)
-                    // str += "<span data-file=\'" + fileCallPath + "\'data-type='image'> x </span>";
-                    str += "</div></li>";
-                    hasFiles = true; // 파일이 있음을 표시
-                } else {
-                    // var fileCallPath = encodeURIComponent(attach.uploadPath +"/"+ attach.uuid + "_" + attach.fileName);
-                    str += "<li data-path='" + attach.uploadPath + "'";
-                    str += " data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.image + "'"
-                    str += " ><div>";
-                    str += "<span>" + attach.fileName + "</span>";
-                    // str += "<img src='./resources/img/attach.png'>"; // 이미지 출력 처리(컨트롤러단)
-                    // str += "<span data-file=\'" + fileCallPath + "\'data-type='file'> x </span>";
-                    str += "</div></li>";
-                    hasFiles = true; // 파일이 있음을 표시
-                }
-            }); // end of arr each
-
-			
-            if (hasFiles) {
-                $(".uploadResult ul").html(str);
-            } else {   // 파일이 없을 때 uploadSection 숨기기
-                $("#uploadSection").hide(); 
-            }
-
-
-        }); // end of getJSON
-
-        $(".uploadResult").on("click", "li", function (e) {
-            console.log("@# uploadResult click");
-
-            var liObj = $(this);
-            console.log("@# path 01=>", liObj.data("path"));
-            console.log("@# uuid=>", liObj.data("uuid"));
-            console.log("@# filename=>", liObj.data("filename"));
-            console.log("@# type=>", liObj.data("type"));
-
-            var path = encodeURIComponent(liObj.data("path") + "/" + liObj.data("uuid") + "_" + liObj.data("filename"));
-            console.log("@# path 02=>", path);
-
-            if (liObj.data("type")) { // 다운로드 할지 이미지 보여줄지 선택
-                console.log("@# 01");
-                console.log("@# view");
-                self.location = "/download?fileName=" + path;
-                // showImage(path);
-            } else {
-                console.log("@# 02");
-                console.log("@# download");
-                // 컨트롤러의 download 호출
-                self.location = "/download?fileName=" + path;
-            }
-        }); // end of uploadResult click
-
-        // 사진 눌렀을 때 큰 사진 보여주기 
-        function showImage(fileCallPath) {
-            // alert(fileCallPath);
-
-            $(".bigPicture").css("display", "flex").show();
-            $(".bigPic")
-                .html("<img src='/display?fileName=" + fileCallPath + "'>")
-                .animate({width: "100%", height: "100%"}, 1000);
+        // 내용이 비어 있거나 공백만 있을 때
+        if (!content) {
+            alert("내용이 없습니다.");
+            return; // 함수 종료
         }
 
-        $(".bigPicture").on("click", function (e) {
-            $(".bigPic")
-                .animate({width: "0%", height: "0%"}, 1000);
-            setTimeout(function () {
-                $(".bigPicture").hide();
-            }, 1000); // end of setTimeout
-        }); // end of bigPicture click
-    })(); // 즉시 실행 함수
-}); // document ready
-	
-	
-	
-function validateAndSubmit(action) {
-    const login_email = document.getElementById("login_email").value;
-    const authorEmail = "${boardDetailView.login_email}";
-    const loginUserType = "${login_usertype}";
-    const form = document.getElementById("boardForm");
+        $.ajax({
+            type: "POST",
+            data: {
+                login_email: email,
+                commentContent: content,
+                board_no: no
+            },
+            url: "/noticeBoardComment/noticeBoardSave",
+            success: function() {
+                console.log("작성 성공");
+                location.reload(); // 페이지 새로고침
+            },
+            error: function() {
+                console.log("실패");
+            }
+        });
+    };
 
-    if (login_email !== authorEmail && loginUserType !== '3') {
-        alert("작성자만 수정 및 삭제할 수 있습니다.");
-        return;
-    }
+    $(document).ready(function () {  
+        console.log("@# document ready");
 
-    if (action === 'noticeBoardDelete') {
-        if (confirm("정말로 삭제하시겠습니까?")) {
-            // 확인 후 삭제 처리
+        // 즉시 실행 함수
+        (function() {
+            var board_no = "<c:out value='${boardDetailView.board_no}'/>";
+            console.log("@# board_no=>" + board_no);
+
+            $.getJSON("/noticeGetFileList", { board_no: board_no }, function (arr) {
+                console.log("@# arr=>" + arr);
+
+                var str = "";
+                var hasFiles = false; // 파일이 있는지 여부를 체크하는 변수
+
+                $(arr).each(function (i, attach) {
+                    var fileCallPath = encodeURIComponent(attach.uploadPath + "/" + attach.uuid + "_" + attach.fileName);
+                    str += "<li data-path='" + attach.uploadPath + "'";
+                    str += " data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.image + "'";
+                    str += " ><div>";
+                    str += "<span>" + attach.fileName + "</span>";
+                    str += "</div></li>";
+                    hasFiles = true; // 파일이 있음을 표시
+                });
+
+                if (hasFiles) {
+                    $(".uploadResult ul").html(str);
+                } else {
+                    $("#uploadSection").hide(); 
+                }
+            });
+
+            $(".uploadResult").on("click", "li", function (e) {
+                var liObj = $(this);
+                var path = encodeURIComponent(liObj.data("path") + "/" + liObj.data("uuid") + "_" + liObj.data("filename"));
+                if (liObj.data("type")) {
+                    self.location = "/download?fileName=" + path;
+                } else {
+                    self.location = "/download?fileName=" + path;
+                }
+            });
+
+            function showImage(fileCallPath) {
+                $(".bigPicture").css("display", "flex").show();
+                $(".bigPic")
+                    .html("<img src='/display?fileName=" + fileCallPath + "'>")
+                    .animate({ width: "100%", height: "100%" }, 1000);
+            }
+
+            $(".bigPicture").on("click", function (e) {
+                $(".bigPic")
+                    .animate({ width: "0%", height: "0%" }, 1000);
+                setTimeout(function () {
+                    $(".bigPicture").hide();
+                }, 1000);
+            });
+        })();
+
+        // 댓글 작성 관련
+		const loginUserType = "${login_usertype}";
+		const login_email = "${login_email}";
+		const authorEmail = "${boardDetailView.login_email}";
+		
+		
+		// 관리자인 경우 또는 작성자와 로그인한 사용자의 이메일이 같은 경우
+		if (loginUserType === "3" || login_email === authorEmail) {
+		    // 수정 버튼 추가
+		    if ($('#buttonbox').find('button:contains("수정")').length === 0) {
+		        $('#buttonbox').prepend(`
+		            <button type="button" class="button" onclick="validateAndSubmit('noticeBoardModifyView')">
+		                <h5 class="but1">수정</h5>
+		            </button>
+		        `);
+		    }
+		    // 삭제 버튼 추가
+		    if ($('#buttonbox').find('button:contains("삭제")').length === 0) {
+		        $('#buttonbox').prepend(`
+		            <button type="button" class="button" onclick="validateAndSubmit('noticeBoardDelete')">
+		                <h5 class="but2">삭제</h5>
+		            </button>
+		        `);
+		    }
+		}
+		
+		const commentCount = ${commentList.size()};
+
+		    
+		    if (loginUserType === "3" || login_email === authorEmail) {
+		        const commentBoxHtml = `
+				<div id="commentBox" class="combox">
+				    <input type="text" id="commentContent" class="commentbox" placeholder="내용을 입력해주세요">
+				    <div class="buttonbox2">
+				        <button type="button" onclick="commentWrite()" class="button">
+				            <h5 class="but2">등록</h5>
+				        </button>
+				    </div>
+				</div>
+		        `;
+
+		        $('#buttonbox').after(commentBoxHtml);
+		    }else if (commentCount > 0){
+				const commentBoxHtml = `
+		            <div id="commentBox" class="comboxbox">
+		            </div>
+		        `;
+
+		        $('#buttonbox').after(commentBoxHtml);
+			}
+		
+
+        // 좋아요 버튼 클릭 시
+        $('#likeButton').on('click', function (e) {
+            e.preventDefault(); // 기본 동작 방지
+
+            const board_no = "${boardDetailView.board_no}";
+            const login_email = "${login_email}"; // 현재 로그인한 사용자의 이메일
+
+            $.ajax({
+                type: "POST",
+                url: "${pageContext.request.contextPath}/noticeBoardLike",
+                data: {
+                    board_no: board_no,
+                    login_email: login_email
+                },
+                success: function(response) {
+                    alert(response);
+                    let likeCountElement = $('.heartbox h5.heart');
+                    let currentLikeCount = parseInt(likeCountElement.text().replace('추천수 ', ''));
+                    likeCountElement.text('추천수 ' + (currentLikeCount + 1));
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 409) {
+                        alert(xhr.responseText);
+                    } else {
+                        alert('추천수 처리에 실패했습니다.');
+                    }
+                }
+            });
+        });
+    });
+
+    function validateAndSubmit(action) {
+        const login_email = document.getElementById("login_email").value;
+        const authorEmail = "${boardDetailView.login_email}";
+        const loginUserType = "${login_usertype}";
+        const form = document.getElementById("boardForm");
+
+        if (login_email !== authorEmail && loginUserType !== '3') {
+            alert("작성자만 수정 및 삭제할 수 있습니다.");
+            return;
+        }
+
+        if (action === 'noticeBoardDelete') {
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                form.action = action;
+                form.submit();
+            }
+        } else {
             form.action = action;
             form.submit();
         }
-    } else {
-        // 수정 처리
-        form.action = action;
-        form.submit();
     }
-}
-	
-	
-	  // URL복사
-	function clip()
-	{
 
-		var url = '';
-		var textarea = document.createElement("textarea");
-		document.body.appendChild(textarea);
-		url = window.document.location.href;
-		textarea.value = url;
-		textarea.select();
-		document.execCommand("copy");
-		document.body.removeChild(textarea);
-		alert("URL이 복사되었습니다.")
-	}
-
-
-	$(document).ready(function () {
-    $('#likeButton').on('click', function (e) {
-        e.preventDefault(); // 기본 동작 방지
-
-        const board_no = "${boardDetailView.board_no}";
-        const login_email = "${login_email}"; // 현재 로그인한 사용자의 이메일
-
-        // AJAX 요청
-        $.ajax({
-            type: "POST",
-            url: "${pageContext.request.contextPath}/noticeBoardLike",
-            data: {
-                board_no: board_no,
-                login_email: login_email
-            },
-            success: function(response) {
-                // 성공적으로 좋아요가 추가된 경우
-                alert(response);
-                // 좋아요 수를 업데이트
-                let likeCountElement = $('.heartbox h5.heart');
-                let currentLikeCount = parseInt(likeCountElement.text().replace('추천수 ', ''));
-                likeCountElement.text('추천수 ' + (currentLikeCount + 1));
-            },
-            error: function(xhr, status, error) {
-                // 이미 좋아요를 누른 경우
-                if (xhr.status === 409) {
-                    alert(xhr.responseText);
-                } else {
-                    alert('추천수 처리에 실패했습니다.');
-                }
-            }
-        });
-    });
-});
-
-
-
-$(document).ready(function() {
-	const loginUserType = "${login_usertype}";
-	 const login_email = "${login_email}";
-	 const authorEmail = "${boardDetailView.login_email}";
-
-	 // 관리자인 경우 또는 작성자와 로그인한 사용자의 이메일이 같은 경우
-	 if (loginUserType === "3" || login_email === authorEmail) {
-	     // 수정 버튼 추가
-	     if ($('#buttonbox').find('button:contains("수정")').length === 0) {
-	         $('#buttonbox').prepend(`
-	             <button type="button" class="button" onclick="validateAndSubmit('noticeBoardModifyView')">
-	                 <h5 class="but1">수정</h5>
-	             </button>
-	         `);
-	     }
-	     // 삭제 버튼 추가
-	     if ($('#buttonbox').find('button:contains("삭제")').length === 0) {
-	         $('#buttonbox').prepend(`
-	             <button type="button" class="button" onclick="validateAndSubmit('noticeBoardDelete')">
-	                 <h5 class="but2">삭제</h5>
-	             </button>
-	         `);
-	     }
-	 }
-
-	 // 댓글 작성 폼은 관리자인 경우 또는 작성자와 로그인한 사용자의 이메일이 같은 경우에만 표시
-	 if (loginUserType === "3" || login_email === authorEmail) {
-	     if ($('#commentBox').is(':empty')) {
-	         $('#commentBox').html(`
-	             <input type="text" id="commentContent" class="commentbox" placeholder="내용을 입력해주세요">
-	             <div class="buttonbox2">
-	                 <button onclick="commentWrite()" class="button">
-	                     <h5 class="but2">등록</h5>
-	                 </button>
-	             </div>
-	         `);
-	     }
-	 }
-});
-
-
-
-$(document).ready(function () {
-	    // 댓글 작성 버튼 클릭 시
-	    $(".buttonbox2 button").on("click", function(event) {
-	        event.preventDefault(); // 기본 클릭 동작 막기
-	    });
-	});
-
-	</script>
+    function clip() {
+        var url = window.document.location.href;
+        var textarea = document.createElement("textarea");
+        document.body.appendChild(textarea);
+        textarea.value = url;
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        alert("URL이 복사되었습니다.");
+    }
+</script>
 	
 </html>
 

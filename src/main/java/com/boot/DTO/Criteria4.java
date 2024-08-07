@@ -9,7 +9,6 @@ import lombok.Data;
 public class Criteria4 {  // 페이지당 글 갯수 설정 / 페 
 	private int pageNum;//페이지 번호
 	private int amount;//페이지당 글 갯수
-//	private String user_email;
 	
 	private String stackType;  // 기술스택 타입
 	private String locationType;  // 지역 타입

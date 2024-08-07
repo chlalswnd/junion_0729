@@ -3,20 +3,15 @@ package com.boot.Controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -34,16 +29,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import com.boot.DAO.ComNoticeDAO;
+import com.boot.DTO.CardPageDTO;
 import com.boot.DTO.ComNoticeAttachDTO;
 import com.boot.DTO.ComNoticeDTO;
-import com.boot.DTO.ComScrapDTO;
 import com.boot.DTO.RecentNoticeDTO;
 import com.boot.DTO.ResumeDTO;
+
+import com.boot.DTO.Standard;
 import com.boot.DTO.SubmitDTO;
 import com.boot.DTO.UserDTO;
+import com.boot.Service.CardPageService;
 import com.boot.Service.ComNoticeService;
-import com.boot.Service.IndividualService;
+import com.boot.Service.ScrapService;
 
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -56,24 +55,93 @@ public class ComNoticeController {
 	private ComNoticeService postService;
 	
 	@Autowired
-	private IndividualService userService;
+	private ScrapService scrapService;
+	
+	@Autowired
+	private CardPageService cardPageService;
 	
 
 	@RequestMapping("/jobPostList")
-	public String jobPost(Model model) {//대메뉴 -> 채용 클릭시 이동(페이징 처리를 위해 CardPageController 매핑됨)
-		log.info("jobPost");
+//	public String jobPost(Model model, HttpSession session) {//대메뉴 -> 채용 클릭시 이동(페이징 처리를 위해 CardPageController 매핑됨)
+//	public String jobPost(Model model) {//대메뉴 -> 채용 클릭시 이동(페이징 처리를 위해 CardPageController 매핑됨)
+		public String jobPost(Standard std, Model model, HttpSession session) {//대메뉴 -> 채용 클릭시 이동
+//		public String jobPost(@RequestParam(name = "orderType", required = false, defaultValue = "latest") String orderType, Standard std, Model model, HttpSession session) {//대메뉴 -> 채용 클릭시 이동
+		log.info("@# cardPage controller");
+		log.info("@# cardPage controller std!!=>"+std);
 		
+		ArrayList<ComNoticeDAO> list = cardPageService.cardPageList(std);//현재 진행중인 공고를 가져옴
+//		int total = pageService.getTotalCount();
+		int total = cardPageService.getTotalCount(std);
 		
-		ArrayList<ComNoticeDTO> dto = postService.JobPostCard();
-		model.addAttribute("jobPost", dto);
+		model.addAttribute("jobPost", list);//현재 진행중인 공고를 실어 보냄
+		model.addAttribute("paging", new CardPageDTO(total, std));
+
+		
+		ArrayList <String> careerList = cardPageService.getCareerList();
+		model.addAttribute("careerList", careerList);
+		ArrayList <String> stackList = cardPageService.getStackList();
+		model.addAttribute("stackList", stackList);
+		ArrayList <String> locationList = cardPageService.getLocationList();
+		model.addAttribute("locationList", locationList);
+		
+		 String user_email = (String) session.getAttribute("login_email");//세션에 저장된 사용자이메일 가져오기
+//		 log.info("@# jobPost user_email => "+user_email);
+		 
+		 if(user_email != null) {// 세션에 이메일 값이 있다면 해당 사용자의 이메일을 기반으로 관심 공고 목록을 가져옴
+			 ArrayList<Integer> noticeList = scrapService.getScrapNoticeNum(user_email);
+			 
+			 model.addAttribute("noticeList", noticeList);
+			 }
+		
 		
 		return "/recruitmentNotice/jobPostList";
 	}
 
 	
+	// 2024-08-01 지수 (공고 목록 사진 들고오기)
+//		이미지파일을 받아서 화면에 출력(byte 배열타입)
+		@GetMapping("/cardPageDisplay")
+		public ResponseEntity<byte[]> getFileAttach(String fileName) {
+			log.info("@# display fileName=>"+fileName);
+			
+//			업로드 파일경로+이름
+			File file = new File("C:\\devv\\upload\\"+fileName);
+			log.info("@# file=>"+file);
+			
+			ResponseEntity<byte[]> result=null;
+			HttpHeaders headers=new HttpHeaders();
+			
+			try {
+//				파일타입을 헤더에 추가
+				headers.add("Content-Type", Files.probeContentType(file.toPath()));
+//				파일정보를 byte 배열로 복사+헤더정보+http상태 정상을 결과에 저장
+				result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return result;
+		}
+		
+		@GetMapping(value = "/cardPageFileList")
+		public ResponseEntity<List<ComNoticeAttachDTO>> cardPageFileList(@RequestParam HashMap<String, String> param) {
+			log.info("@# cardPageFileList()");
+			log.info("@# param=>"+param);
+			log.info("@# param=>"+param.get("notice_num"));
+			
+			return new ResponseEntity<>(cardPageService.cardPageFileList(Integer.parseInt(param.get("notice_num"))), HttpStatus.OK);
+		}
+
+	
+	
+	
+	
+	
+	
+	
+	
 	@RequestMapping("/jobPostDetail")
 	public String JobPost(HttpSession session, int notice_num, Model model) {//채용공고 목록 -> 채용공고 상세 이동
-//		public String JobPost(int notice_num, Model model, @RequestParam HashMap<String, String> param) {//채용공고 상세
 		log.info("jobPostDetail");
 		log.info("notice_num!!!"+notice_num);
 		
@@ -114,21 +182,26 @@ public class ComNoticeController {
 	   
      // 24.07.30 연주  끝================================================================================
         
-        
+     
 	   		
 		ComNoticeDTO dto = postService.JobPost(notice_num);
-		postService.hitUP(notice_num);
-		model.addAttribute("company", dto);
-		model.addAttribute("noticeNumber",notice_num);
+		postService.hitUP(notice_num);// 조회수를 증가
+		model.addAttribute("company", dto);//공고 정보를 모델에 실어 보냄
+		model.addAttribute("noticeNumber",notice_num);//공고 번호를 모델에 실어서 보냄
 		
-		ArrayList<ComNoticeDTO> list = postService.otherJobPost(notice_num);
+		ArrayList<ComNoticeDTO> list = postService.otherJobPost(notice_num);//해당 기업의 다른 공고를 검색해 옴
 		int postNum = list.size();
 		model.addAttribute("otherPost", list);
 		model.addAttribute("postNum", postNum);
 		
-//		String com_email = dto.getCom_email();
-//		String com_location = postService.comLocation(com_email);
-//		model.addAttribute("com_location", com_location);
+//		log.info("user_email");
+		if(user_email != null) {//session의 이메일 정보를 얻어, 값이 있을 경우 로직 수행
+			String com_email = scrapService.existingCompany(user_email, notice_num);// 관심 기업
+			model.addAttribute("com_email", com_email);
+			
+			ArrayList<Integer> ScrapComList = scrapService.getScrapNoticeNum(user_email);// 스크랩 공고
+			model.addAttribute("ScrapComList", ScrapComList);
+		}
 		
 		return "/recruitmentNotice/jobPostDetail";
 	}
@@ -139,20 +212,15 @@ public class ComNoticeController {
 		log.info("profileInfo");
 		
 		int notice_num = Integer.parseInt(request.getParameter("notice_num"));// 공고 번호를 얻음
-//		log.info(notice_num);
 		ComNoticeDTO dto =postService.getNoticeInfo(notice_num);//공고 번호를 기반으로 notice_tb의 정보를 가져옴
 		model.addAttribute("notice", dto);
 		
 		HttpSession session = request.getSession();
-//		String login_name = (String) session.getAttribute("login_name");//session에서 얻은 name 값을 모델에 실어 보냄(쿼리 : 타입 오류 발생)
-//		model.addAttribute("user_name", login_name);
 		
 		String login_email = (String) session.getAttribute("login_email");
 		ArrayList<ResumeDTO> dtos = postService.getProfileList(login_email);
 		log.info("profileInfo dtos==>"+dtos);
 		model.addAttribute("userProfile", dtos);
-//		24.07.28 하진 : test 결과, 값을 가져가지 않고 세션의 email 값을 JS단에 바로 보낼 수 있음
-//		model.addAttribute("user_email", login_email);//session에서 얻은 값을 모델에 실어 보냄(쿼리 : 타입 오류 발생)
 
 		return "/recruitmentNotice/profileInfo";
 	}
@@ -165,8 +233,26 @@ public class ComNoticeController {
 		log.info("resumeUser!!!");
 		log.info("resumeUser!!! param" +param);
 		
+		// 24.08.04 연주 : 지원하기 누르면 해당공고로 제안한 이력확인 하고 offer_agree=지원완료, resume_submitDate=현재날짜 offer테이블에 저장하기==========================================================
+        
+		//offer 테이블에서 notice_num과 user_email 값이 있는지 확인
+		int notice_num = Integer.parseInt(param.get("notice_num"));
+		String user_email = param.get("user_email");
+		log.info("resumeUser!!! notice_num=" +notice_num+"user_email="+user_email);
 		
-//		postService.updateSubmitData(dto);//submit 테이블에 정보저장
+		
+		int offer_exist = postService.getOfferNum(notice_num,user_email);//offer 테이블 조회
+		log.info("제안한적 있으면 1, 없으면 0 ->>"+offer_exist);
+		
+		if(offer_exist == 1) {
+			log.info("제안한적 있어서 offer테이블 정보저장으로 분기 탐 ->>");
+			postService.updateOfferStatus(notice_num, user_email);//offer 테이블에 정보저장
+		}
+		
+		
+	     // 24.08.04 연주  끝================================================================================
+		
+		
 		boolean result = postService.updateSubmitData(param);//submit 테이블에 정보저장
 		log.info("지원 결과 ->>"+result);
 		
@@ -193,7 +279,7 @@ public class ComNoticeController {
 		return "comRegistCheck";
 	}
 	
-	//채용공고 등록 페이지
+	//채용공고 등록 페이지 
 	@RequestMapping("/comRegistUpload")
 	public String comRegistUpload(ComNoticeDTO comNoticeDTO, HttpServletRequest httpServletRequest, Model model) {
 		log.info("@# comRegistUpload");
@@ -206,38 +292,94 @@ public class ComNoticeController {
 		model.addAttribute("com_email",session.getAttribute("login_email"));
 		model.addAttribute("com_name", session.getAttribute("login_name"));
 		
-		
 		return "comRegistUpload";
 	}
 	
 	// 채용공고 등록
-	@RequestMapping("/registerNotice")
-	public String regiserNotice(ComNoticeDTO comNoticeDTO, HttpServletRequest httpServletRequest, Model model) {
-		log.info("@# registerNotice");
-		
-		HttpSession session = httpServletRequest.getSession();
-		session.getAttribute("login_email");
-		session.getAttribute("login_name");
-		log.info("@# session  =>"+(String) session.getAttribute("login_email"));
-		
-		model.addAttribute("com_email",session.getAttribute("login_email"));
-		model.addAttribute("com_name", session.getAttribute("login_name"));
-		
-
-		log.info("@# comNoticeDTO=>"+comNoticeDTO);
-		
-		if (comNoticeDTO.getComNoticeAttachList() != null) {
-			comNoticeDTO.getComNoticeAttachList().forEach(attach -> log.info("@# attach=>"+attach));
+		@RequestMapping("/registerNotice")
+		public String regiserNotice(ComNoticeDTO comNoticeDTO, HttpServletRequest httpServletRequest, Model model) {
+			log.info("@# registerNotice");
+			
+			HttpSession session = httpServletRequest.getSession();
+			session.getAttribute("login_email");
+			session.getAttribute("login_name");
+			log.info("@# session  =>"+(String) session.getAttribute("login_email"));
+			
+			model.addAttribute("com_email",session.getAttribute("login_email"));
+			model.addAttribute("com_name", session.getAttribute("login_name"));
+			
+			log.info("@# comNoticeDTO=>"+comNoticeDTO);
+			
+			if (comNoticeDTO.getComNoticeAttachList() != null) {
+				comNoticeDTO.getComNoticeAttachList().forEach(attach -> log.info("@# attach=>"+attach));
+			}
+			
+			service.registerNotice(comNoticeDTO);
+			
+			service.noticeInsertStack(comNoticeDTO);
+			service.noticeStauts(comNoticeDTO);
+			
+			httpServletRequest.setAttribute("msg", "공고를 등록하였습니다.");
+			httpServletRequest.setAttribute("url", "/companyMain");
+			return "/alert";
+			
 		}
-		service.registerNotice(comNoticeDTO);
 		
+		//2024-08-02 지수
+		//채용공고 수정 페이지
+		@RequestMapping("/comRegistModify")
+		public String comRegistModify(int notice_num, HttpServletRequest httpServletRequest, Model model) {
+		    log.info("@# comRegistModify");
+
+		    HttpSession session = httpServletRequest.getSession();
+		    session.getAttribute("login_email");
+		    session.getAttribute("login_name");
+		    log.info("@# session  =>" + (String) session.getAttribute("login_email"));
+
+		    model.addAttribute("com_email", session.getAttribute("login_email"));
+		    model.addAttribute("com_name", session.getAttribute("login_name"));
+
+		    ComNoticeDTO dto = service.JobPost(notice_num);
+		    
+		    dto.setNotice_num(notice_num); // @@@@@@ 여기에 notice_num을 넣어야 getNoticeStack()에서 dto.notice_num 사용할 수 있음 -깡아지- @@@@@@
+		    model.addAttribute("notice", dto);
+		    model.addAttribute("noticeNumber", notice_num);
+		    log.info("@#notice_num=>"+notice_num);
+
+		    // 스택 리스트를 가져와서 모델에 추가
+		    log.info("@# dto=>"+dto);
+		    List<String> stackList = service.getNoticeStack(dto);
+		    log.info("@# stackList=>"+stackList);
+		    String stackListString = String.join(",", stackList);
+		    log.info("@# stackListString=>"+stackListString);
+		    model.addAttribute("stackListString", stackListString);
+
+		    return "comRegistModify";
+		}
 		
-		httpServletRequest.setAttribute("msg", "공고를 등록하였습니다.");
-		httpServletRequest.setAttribute("url", "/companyMain");
-		return "/alert";
+		// 공고 수정 후 저장
+		@PostMapping("/updateRegisterNotice")
+		public String updateRegisterNotice(ComNoticeDTO comNoticeDTO, HttpServletRequest httpServletRequest) {
+		    log.info("@# updateRegisterNotice");
+		    
+		    HttpSession session = httpServletRequest.getSession();
+		    String loginEmail = (String) session.getAttribute("login_email");
+		    log.info("@# session login_email => " + loginEmail);
+		    
+		    comNoticeDTO.setCom_email(loginEmail);
+		    
+		    service.updateRegisterNotice(comNoticeDTO); //공고 수정 update
+		    service.noticeDeleteStack(comNoticeDTO.getNotice_num()); //스택 삭제 후
+		    service.noticeInsertStack(comNoticeDTO); // 스택 저장
+		    
+		    httpServletRequest.setAttribute("msg", "공고를 수정하였습니다.");
+			httpServletRequest.setAttribute("url", "/jobpostingList");
+			
+		    return "/alert";
+		}
+
+
 		
-	}
-	
 	
 	@PostMapping("/registUploadAjaxAction")
 //	public void uploadAjaxPost(MultipartFile[] uploadFile) {
@@ -297,7 +439,7 @@ public class ComNoticeController {
 //					썸네일 파일은 s_ 를 앞에 추가
 					FileOutputStream thumnail = new FileOutputStream(new File(uploadPath, "s_"+uploadFileName));
 					
-//					썸네일 파일 형식을 100/100 크기로 생성
+//					썸네일 파일 형식을 1200/1200 크기로 생성
 					Thumbnailator.createThumbnail(fis, thumnail, 1200, 1200);
 					
 					thumnail.close();

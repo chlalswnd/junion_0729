@@ -36,8 +36,12 @@ public interface jobpostingDAO {
     // 필터링된 지원자 목록을 가져오는 메서드
     ArrayList<jobpostingDTO> jobpostingSupportFiltered(Map<String, Object> params);
     
-    // submit_status 업데이트 메서드 추가
-    void updateSubmitStatus(@Param("resume_num") int resume_num, @Param("notice_num") int notice_num, @Param("status") String status);
+    // 이력서 열람시 상태값 "열람" 변경
+    void updateSubmitCheck(@Param("resumeNum") int resumeNum, @Param("noticeNum") int noticeNum, @Param("status") String status);
+    
+    
+    // 업데이트 합격, 불합격, 보류
+    void updateStatus(@Param("resumeNum") int resumeNum, @Param("noticeNum") int noticeNum, @Param("updateStatus") String updateStatus);
 
 
 }

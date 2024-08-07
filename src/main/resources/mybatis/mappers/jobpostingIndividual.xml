@@ -6,7 +6,7 @@
 
 	<sql id="orderType">
 <!--		<if test='(orderType == "recommendation" and cri.login_usertype == "1")'> 큰 따옴표 때문에 char타입이 적용이 안됐음 -->
-		<if test="(orderType == 'recommendation' and cri.login_usertype == '1')">
+		<if test="(orderType == 'recommendation' and cri.login_usertype == '1' and cri.jobNames != null and cri.jobNames.size() > 0)">
 <!--			ORDER BY r.resume_num-->
 <!--			ORDER BY stack_names like concat ('%','Android','%') DESC-->
 <!--			ORDER BY job_names like concat ('%','(SELECT job_name FROM user_job WHERE user_email = cri.login_email)','%') DESC-->
@@ -17,14 +17,17 @@
 	            ELSE 0
         	END) DESC
 		</if>
-		<if test="(orderType == 'recommendation' and cri.login_usertype == '2')">
+		<if test="(orderType == 'recommendation' and cri.login_usertype == '2' and cri.stackNames != null and cri.stackNames.size() > 0)">
 <!--			ORDER BY stack_names like concat ('%','(SELECT stack FROM com_stack WHERE com_email = cri.login_email)','%') DESC-->
 			ORDER BY (CASE
 	            <foreach item="stack" collection="cri.stackNames" separator=" " open="" close="">
-	                WHEN job_names LIKE '%${stack}%' THEN 1
+	                WHEN stack_names LIKE '%${stack}%' THEN 1
 	            </foreach>
 	            ELSE 0
         	END) DESC
+		</if>
+		<if test="(orderType == 'recommendation' and (cri.jobNames.size() == 0 and cri.stackNames.size() == 0))">
+			ORDER BY r.resume_num ASC
 		</if>
 		<if test='(orderType == "latest")'>
 			ORDER BY r.resume_num DESC
@@ -51,11 +54,12 @@
 <!--    <![CDATA[ : mybatis 에서 특수문자 인식처리 -->
     <select id="jobpostingIndividualSupport" resultType="com.boot.DTO.jobpostingIndividualDTO">
     <![CDATA[ 
-		select rownum, user_name, user_gender, resume_age, career_month, resume_writeDate, resume_num, stack_names, job_names, career_years
-			from (select rownum, user_name, user_gender, resume_age, career_month, resume_writeDate, resume_num, stack_names, job_names, career_years
+		select rownum, user_name, user_email, user_gender, resume_age, career_month, resume_writeDate, resume_num, korean_age, stack_names, job_names, career_years
+			from (select rownum, user_name, user_email, user_gender, resume_age, career_month, resume_writeDate, resume_num, korean_age, stack_names, job_names, career_years
 			from (select row_number() over(ORDER BY r.resume_num DESC) as rownum,
 									    u.user_name,
 									    u.user_gender,
+									    r.user_email,
 									    r.resume_age,
 									    r.career_month,
 									    r.resume_writeDate,
@@ -109,11 +113,23 @@
 			location
 	</select>
 
+<!--    <select id="getTotalCount" resultType="int"> -->
+<!--		SELECT-->
+<!--			count(*)-->
+<!--		FROM-->
+<!--			resume_tb-->
+<!--	</select>-->
+
     <select id="getTotalCount" resultType="int"> 
-		SELECT
+	<![CDATA[ 
+		SELECT 
 			count(*)
 		FROM
-			resume_tb
+			resume_tb r
+		JOIN
+			user_tb u ON r.user_email = u.user_email
+	]]>
+	 	<include refid="criteria3"></include>
 	</select>
 
     <select id="getJobNames" resultType="String"> 
@@ -144,6 +160,45 @@
 		AND datediff(notice_endDate, now()) >= 0
 	</select>
 	
+	<insert id="insertOffer">
+	    INSERT INTO
+	    	offer (notice_num, offer_content, user_email, com_email, resume_num)
+        VALUES
+        	(#{offer.notice_num}, #{offer.offer_content}, #{offer.user_email}, #{offer.com_email}, #{offer.resume_num})
+	</insert>
+	
+
+<!--	이력서 열람      -->
+
+	
+    <select id="userInfo" resultType="com.boot.DTO.UserDTO">
+		select user_email, user_name, user_gender, user_tel, user_location, user_location2, user_birthdate from user_tb where user_email=#{user_email};
+    </select>
+	
+    <select id="checkOffer" resultType="int">
+		select 
+			count(*)
+  		from
+  			offer
+ 		where
+ 			com_email = #{login_email} and resume_num = #{resumeNum}
+    </select>
+    
+    <select id="resumeInfo" resultType="com.boot.DTO.ResumeDTO">
+        select 
+        r.resume_num, resume_title, u.user_name, resume_age, u.user_gender, u.user_email, GROUP_CONCAT(rs.stack_name SEPARATOR ',') AS stack_name,
+        u.user_tel, u.user_location, u.user_location2, resume_pay, career_start, career_end, 
+        resume_comName, resume_comPart, resume_comPosition, resume_status,        
+        resume_eduStart, resume_eduEnd, resume_eduName, resume_eduMajor, resume_eduStatus,
+        resume_exStart, resume_exEnd, resume_exName, resume_exContent,
+        resume_licenseDate, resume_licenseContent,
+        resume_portfolio_name, resume_portfolio_url,
+        resume_intro
+        from resume_tb r
+        LEFT JOIN user_tb u ON r.user_email = u.user_email 
+        left join resume_stack rs ON r.resume_num = rs.resume_num
+        where r.resume_num = #{resume_num}
+    </select>
 </mapper>
 
 

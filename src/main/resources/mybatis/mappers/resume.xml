@@ -21,7 +21,7 @@
     
     <select id="resumeInfo" resultType="com.boot.DTO.ResumeDTO">
         select 
-        r.resume_num, resume_title, u.user_name, resume_age, u.user_gender, u.user_email, GROUP_CONCAT(rs.stack_name SEPARATOR ', ') AS stack_name,
+        r.resume_num, resume_title, u.user_name, resume_age, u.user_gender, u.user_email, GROUP_CONCAT(rs.stack_name SEPARATOR ',') AS stack_name,
         u.user_tel, u.user_location, u.user_location2, resume_pay, career_start, career_end, 
         resume_comName, resume_comPart, resume_comPosition, resume_status,        
         resume_eduStart, resume_eduEnd, resume_eduName, resume_eduMajor, resume_eduStatus,

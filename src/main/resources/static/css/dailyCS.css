@@ -18,6 +18,7 @@
 }
 
 .inputTabBtn 
+/*.inputTabBtn */
 {
   padding: 8px 20px;
   font-size: var(--font-size14);
@@ -64,16 +65,18 @@ section
   align-items: center;
 }
 
-.tabWrap .tab 
+.tabWrap .tab form
 {
-  gap: 0 12px;
+	display: flex;
+	align-items: center;
+	gap: 0 12px;
 }
 
 .questionCardWrap 
 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 0 40px;
+  gap: 40px;
   max-width: 1200px;
   margin-top: 40px;
 }
@@ -83,6 +86,11 @@ section
   border: 1px solid var(--input-gray);
   border-radius: 6px;
 }
+
+/*.questionCardWrap .card:nth-child(3) .cardB 
+{
+  padding-bottom: 40px;
+}*/
 
 .cardH, .cardB
 {
@@ -101,7 +109,7 @@ section
   color: var(--font-gray);
   font-size: var(--font-size14);
   border-bottom: 1px solid var(--input-gray);
-  padding-bottom: 24px;  
+  height: 60px;
 }
 
 .cardF 
@@ -250,4 +258,29 @@ button.popOpen
 .correct { border: 2px solid green !important; }
 .incorrect { border: 2px solid red !important; }
 .correct-answer { border: 2px solid green !important; }
+
+/* 페이징커스텀 */
+.div_page 
+{
+   margin-top: 40px;   
+}
+
+.div_page ul 
+{
+   display: flex;
+    align-items: center;
+    justify-content: center;   
+   gap: 0 20px;
+}
+
+.paginate_button 
+{
+   text-decoration: none;
+   padding: 8px 14px;
+   border-radius: 6px;
+}
+.paginate_button a 
+{
+   color: #111;
+}
 

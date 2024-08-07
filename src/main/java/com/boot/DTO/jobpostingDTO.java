@@ -135,7 +135,8 @@ public class jobpostingDTO {
     // 필터링에 사용할 추가 필드
     private String filterSubmitStatus; // 필터링에 사용
     private String filterSubmitCheck;  // 필터링에 사용
-    private String status; // status 필드 추가
+    private String status; // 열람, 미열람 
+    private String updateStatus; // 합격, 불합격, 보류
     private String submitStatus; // status 필드 추가
     
     

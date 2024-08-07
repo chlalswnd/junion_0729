@@ -1,6 +1,8 @@
 package com.boot.Controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -8,21 +10,15 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.boot.DTO.Criteria;
 import com.boot.DTO.JaewonCriteria;
-import com.boot.DTO.NoticeDTO;
-import com.boot.DTO.PageDTO;
-import com.boot.DTO.ResumeDTO;
-import com.boot.DTO.StarDTO;
 import com.boot.DTO.JoinManagementPageDTO;
+import com.boot.DTO.NoticeDTO;
+import com.boot.DTO.StarDTO;
 import com.boot.Service.JoinManagementPageService;
 import com.boot.Service.JoinManagementService;
-import com.boot.Service.PageService;
-import com.boot.Service.ResumeService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +35,8 @@ public class JoinManagementPageController {
 	// 게시판 목록 조회
 //	@RequestMapping("/listWithPaging")
 	@RequestMapping("/joinManagementList")
-	public String joinManagementPaging(Model model, JaewonCriteria cri3, HttpServletRequest request, String noticeCheck, String user_email) 
+	public String joinManagementPaging(Model model, JaewonCriteria cri3, HttpServletRequest request, 
+			String noticeCheck, String user_email, @RequestParam(name = "notice_num", required = false) Integer notice_num) 
 	{
 		// 세션에 이메일 담아서 쓰는 법
 		HttpSession session = request.getSession();		
@@ -49,18 +46,24 @@ public class JoinManagementPageController {
 		
 		ArrayList<NoticeDTO> noticeDTO = joinManagementPageService.joinManagementPaging(cri3, request);		
 //		ArrayList<ResumeDTO> resumeList = service.listWithPaging(cri,user_email);		
-		int total = joinManagementPageService.joinManagementGetTotalCount(user_email);
-		log.info("@# total=>"+total);
-		
-		log.info("@# noticeDTO" + noticeDTO);
-		log.info("@# cri3"+cri3);			
+		int total = joinManagementPageService.joinManagementGetTotalCount(user_email);				
 
+		joinManagementPageService.updateStatus();
+		
 		log.info("@# noticeDTO==>"+noticeDTO);
 		int total2 = joinManagementService.TotalJoinManagementNum(user_email, noticeCheck);
 		int check = joinManagementService.CheckJoinManagementNum(user_email, noticeCheck);
 		int uncheck = joinManagementService.UnCheckJoinManagementNum(user_email, noticeCheck);
 		
-			
+		for (NoticeDTO notice : noticeDTO) {
+	        notice_num = notice.getNotice_num();
+	        System.out.println("Notice Number: " + notice_num);
+
+	        // 별점 중복 체크
+	        int hasRated = joinManagementPageService.doublecomStarCheck(user_email, notice_num);
+	        notice.setHasRated(hasRated); // hasRated 값을 NoticeDTO 객체에 설정
+	    }	   
+		
 		model.addAttribute("total",total2);	
 		model.addAttribute("check",check);	
 		model.addAttribute("uncheck",uncheck);			
@@ -111,6 +114,7 @@ public class JoinManagementPageController {
 		stardto.setUser_email(user_email);
 		
 		String notice_num = stardto.getCom_email();
+		log.info("@# noticeStatus notice_num ===>"+ notice_num);
 		log.info("@# noticeStatus notice_num ===>"+ notice_num);
 		
 		joinManagementPageService.comStar(stardto);
