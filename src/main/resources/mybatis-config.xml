@@ -4,7 +4,6 @@
     "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<mappers>
-<!--		<mapper resource="mybatis/mappers/company_info.xml" />-->
 		<mapper resource="mybatis/mappers/board.xml"/>
 		<mapper resource="mybatis/mappers/boardBoard.xml"/>
 		<mapper resource="mybatis/mappers/boardComment.xml"/>
@@ -38,9 +37,11 @@
 		<mapper resource="mybatis/mappers/resume.xml"/>
 		<mapper resource="mybatis/mappers/resumeUpload.xml"/>
 		<mapper resource="mybatis/mappers/scrap.xml"/>
-<!--		<mapper resource="mybatis/mappers/scrapNotice.xml"/>-->
 		<mapper resource="mybatis/mappers/withdraw.xml"/>
-<!--		<mapper resource="mybatis/mappers/dailyCS.xml"/>		-->
+<!--		<mapper resource="mybatis/mappers/dailyCS.xml"/>	-->
+		<mapper resource="mybatis/mappers/userImageUpload.xml"/>
+		<mapper resource="mybatis/mappers/announcementsTerms.xml"/>
+		<mapper resource="mybatis/mappers/announcementsBoard.xml"/>
 	</mappers>
 </configuration>
 

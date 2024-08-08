@@ -563,25 +563,19 @@
                             <h5 class="title">${company.notice_title}</h5>
                         </div>
                         <div class="sub2">
-							<!-- <button class="icon"> -->
 							<span class="icon">
 								<!-- ${company.notice_num} -->
 								<c:choose>
 									<c:when test="${fn:contains(ScrapComList, noticeNumber)}">
 										<i id="bookmark${noticeNumber}" class="fa-solid fa-bookmark active"></i>
-										<!-- <i id="bookmark" class="fa-solid fa-bookmark active"></i> -->
 									</c:when>
 									<c:otherwise>
-										<!-- <i id="bookmark<span class='urlNotice'></span>" class="fa-regular fa-bookmark"></i> -->
 										<i id="bookmark${noticeNumber}" class="fa-regular fa-bookmark"></i>
 									</c:otherwise>
 								</c:choose>
-								<!-- <i id="bookmark" class="fa-regular fa-bookmark"></i> -->
-							<!-- </button> -->
 							</span>
 							<span class="icon">
 								<i class="fa-regular fa-heart" id="heart"></i>
-								<!-- <i class="fa-solid fa-heart" id="heart"></i> -->
 							</span>
 							<span class="icon">
 								<i class="fa-regular fa-share-from-square"></i>
@@ -601,19 +595,11 @@
                         </div>
                         <div class="boerder"></div>
                         <div class="columnAA">
-                            <!-- <div class="detail"> -->
                                 <p>
                                 급   여 : ${company.notice_pay1} <span class="case">${company.notice_pay2} 만원</span><br>
-                            <!-- </div> -->
-                            <!-- <div class="detail"> -->
                                 근무 부서 :${company.notice_department}<br>
-                            <!-- </div> -->
-                            <!-- <div class="detail"> -->
                                 직    책 : ${company.notice_position}<br>
-                            <!-- </div> -->
-                            <!-- <div class="detail"> -->
                                 모집 인원 : ${company.notice_recruitNum} 명<br>
-                            <!-- </div> -->
                             </p>
                         </div>
                     </div>
@@ -636,7 +622,6 @@
                         </div>
                         <div class="columnAA">
                             <h5 class="detail">
-                                <!-- ${company.notice_condition} -->
                                 <div class="textarea"><c:out value="${company.notice_condition}" /></div>
                             </h5>
                         </div>
@@ -648,7 +633,6 @@
                         </div>
                         <div class="columnAA">
                             <h5 class="detail">
-                                <!-- ${company.notice_prefer} -->
                                 <div class="textarea"><c:out value="${company.notice_prefer}" /></div>
                             </h5>
                         </div>
@@ -660,7 +644,6 @@
                         </div>
                         <div class="columnAA">
                             <h5 class="detail">
-                                <!-- ${company.notice_benefit} -->
 								<div class="textarea"><c:out value="${company.notice_benefit}" /></div>
                             </h5>
                         </div>
@@ -675,7 +658,6 @@
                                 <div class="sectionConBody tech">
                                     <div class="Bodycon tech">            
                                         <button class="tech" style="gap: 20px;">
-                                            <!-- <h5 class="mm1">JAVA</h5> -->
                                         </button>
                                     </div>                        
                                 </div> <!-- sectionConBody 끝 -->
@@ -699,19 +681,6 @@
                             <h5 class="title">회사 위치</h5>
                         </div>
                         <div class="columnBB">
-                            <!-- <h5 class="detail">/// -->
-                                <!-- <div class="kakaomap" id="map" style="width:730px;height:250px;">
-                                    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=de7cac757fedb4da8958fa692849033d"></script>
-                                    <script>
-                                        var container = document.getElementById('map');
-                                        var options = {
-                                            center: new kakao.maps.LatLng(33.450701, 126.570667),
-                                            level: 3
-                                        };
-                                
-                                        var map = new kakao.maps.Map(container, options);
-                                    </script>
-                                </div> -->
 								<div id="map" style="width:100%;height:350px;"></div>
                                 <h5 class="loc">${company.com_location}</h5>
                             <!-- </h5> -->
@@ -739,7 +708,6 @@
 									</div>
 									<div class="boxbox">
 										<button class="iconn">
-											<!-- <i class="fa-regular fa-bookmark" style = font-size:20px;></i> -->
 											<c:choose>
 												<c:when test="${fn:contains(ScrapComList, dto.notice_num)}">
 													<i id="bookmark${dto.notice_num}" class="fa-solid fa-bookmark active" onclick="return false;"></i>
@@ -756,13 +724,11 @@
 
                         <div class="pos" >
                             <button class="box3" >
-                                    <!-- <h5 class="m1">${postNum}개의 포지션</h5> -->
                                     <h5 class="m1" id="otherNotice">${postNum}개의 공고</h5>
                             </button>
                         </div>
                         <div class="pos">
                             <button class="box3" id="user_resume" onclick="resume()">
-                            <!-- <button class="box3 resume"> -->
                                     <h5 class="m1">지원하기</h5>
                             </button>
                         </div>
@@ -812,11 +778,8 @@
 		
 	// 관심 기업 DB 정보가 있을 경우, 해당 이미지 활성화
 	let scrap_email = "${com_email}";//스크랩 DB에서 얻는 com_meail
-	// console.log("scrap_email!!"+scrap_email);
 		if (scrap_email) {
-			// $("#heart").replace(".fa-solid fa-heart").addClass("active");
 			document.getElementById("heart").className ="fa-solid fa-heart";
-			// $(".fa-regular fa-heart").replace(".fa-solid fa-heart");
 			$("#heart").addClass("active");
 		}
 
@@ -845,8 +808,7 @@
 	// 주소로 좌표를 검색합니다
 
 	var getlocation ="${company.com_location}";
-	console.log("회사 주소는 잘 가져왔나요? "+getlocation);
-	// geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
+
 	geocoder.addressSearch(getlocation, function(result, status) {
 
     // 정상적으로 검색이 완료됐으면 
@@ -895,11 +857,9 @@
           if(user_type == 1){
           
 			var getid = $(this).attr("id");//해당 북마크의 id를 찾음
-			// console.log("찾은 id값은? "+getid);
 			const regex = /[^0-9]/g;// 정규표현식 : 숫자가 아닌 수들을 찾음
 			const result = getid.replace(regex,"");//replace(regex,"") -> regex에 해당하는 패턴을 모두 ""으로 변환 = 숫자가 아닌 문자 제거(형은 string임)
 			const notice_num = parseInt(result);//casting
-			// console.log("찾았나요 공고번호? "+notice_num);
             const user_email = "${login_email}";
 
 			$.ajax({

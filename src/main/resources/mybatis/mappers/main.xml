@@ -34,7 +34,7 @@
     </select>
 <!--추천 기업-->
     <select id="mainRecommendCom" resultType="com.boot.DTO.ComNoticeDTO">
-    	select c.com_name, c.com_email, count(s.com_email) as scrapCount
+    	select c.com_name, c.com_email, count(s.com_email) as scrapCount, c.com_content
 			from com_tb c join com_scrap s on c.com_email = s.com_email
 				group by com_email order by count(s.com_email) desc limit 12;
     </select>

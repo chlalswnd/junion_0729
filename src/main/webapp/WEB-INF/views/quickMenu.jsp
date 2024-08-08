@@ -39,40 +39,59 @@
 	.quickMenu
 	{
 		position: fixed;
-	    top: 50%;
-	    right: 40px;
-	    background: #ffffff;
-	    padding: 0 8px;
-	    border: 1px solid #f7f7f7;
-	    border-radius: 16px;
-	    transform: translateY(-50%);
-	    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
-	    width: 54px;
-		z-index: 9;
-	}
-	
-	.scrollTop  
-	{
-		position: fixed;
 	    bottom: 10%;
 	    right: 40px;
-	    background: #ffffff;
-	    /* padding: 16px; */
-	    border-radius: 50%;
-	    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
-	    width: 72px;
-	    height: 72px;
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-		cursor:pointer;
-		z-index: 9;
+	    padding: 0 8px;
+	    border-radius: 16px;
+	    /* transform: translateY(-50%); */
+	    width: 54px;
+	    z-index: 9;
+	}
+	
+	.quickMenu ul 
+	{
+		gap: 30px 0;
+		display: flex;
+		flex-direction: column;
 	}
 	
 	.quickMenuCon 
 	{
-		border-bottom: 1px solid #dadada;
-	    padding: 24px 0;
+		border-radius: 50%;
+		width: 52px;
+		height: 52px;
+		background: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+		cursor:pointer;
+	}
+	
+	.quickMenuCon:hover
+	{
+		background: var(--main-color);
+	}
+	
+	.quickMenuCon:hover > .menuCon > .icon 
+	{
+		color: #fff;
+	}
+	
+	.quickMenuCon:hover > .menuCon > .text 
+	{
+		display: block;
+	}
+	
+	.quickMenuCon.scrollTop
+	{
+		background: #772409;
+		margin-top: 10px;
+	}
+	
+	.quickMenuCon.scrollTop a 
+	{
+		color: #fff;
 	}
 	
 	.quickMenuCon:last-child 
@@ -83,23 +102,33 @@
 	a.menuCon 
 	{
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		color: #111;
+	    flex-direction: column;
+	    align-items: center;
+	    justify-content: center;
+	    color: #111;
+		position: relative;
 	}
 	
 	a.menuCon .icon 
 	{
-		font-size: 24px;
+		font-size: 20px;
 		font-weight: 300 !important;
 	}
 	
 	a.menuCon .text 
 	{
-		margin-top: 8px;
-	    font-size: 14px;
-	    font-weight: 300;
+		font-size: 12px;
+		font-weight: 300;
+		position: absolute;
+		left: -130px;
+		background: #fff;
+		color: #111;
+		min-width: 80px;
+		padding: 10px;
+		text-align: center;
+		border-radius: 6px;
+		box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+		display: none;
 	}
 </style>	
 </head>
@@ -138,21 +167,16 @@
 					</span>
 					<span class="text">공지사항</span>
 				</a>
-			</li>								
-		</ul>
-	</div>
-	
-	<div class="scrollTop">
-		<ul>
-			<li class="quickMenuCon2">
+			</li>	
+			<li class="quickMenuCon scrollTop">
 				<a class="menuCon">
 					<span class="icon">
 						<i class="fa-solid fa-arrow-up"></i>
 					</span>
 				</a>
-			</li>
+			</li>							
 		</ul>
-	</div>
+	</div>	
 </body>
 </html>
 <script>
@@ -161,7 +185,6 @@ $(document).ready(function() {
 	$('.scrollTop').on('click', function() {	
 		$(window).scrollTop(0);	
 	});
-
-
+	
 });
 </script>

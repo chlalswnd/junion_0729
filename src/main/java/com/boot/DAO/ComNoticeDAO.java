@@ -19,6 +19,10 @@ public interface ComNoticeDAO {
 	public void hitUP(int notice_num);//채용공고 선택시 조회수 증가
 	public ComNoticeDTO JobPost(int notice_num);//상세 채용공고 정보 가져오기
 	public ArrayList<ComNoticeDTO> otherJobPost(int notice_num);//상세 채용공고, 해당 기업의 다른 공고 정보 가져오기
+
+	
+	// 기업 상세페이지 : 사이드 공고 부분
+	public ArrayList<ComNoticeDTO> getNoticeLimit(String com_eamil);//기업정보 상세, 해당 기업의 다른 공고 정보 가져오기
 	
 	
 	// 지원하기 팝업 발생

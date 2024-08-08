@@ -26,6 +26,19 @@
 	</delete>
 
 
+<!--24.08.06 하진-->
+<!-- 1. 기업 목록에 개인 회원일 경우, 관심 기업 목록을 가져옴 -->
+	<select id="getScrapList" resultType="String">
+		select com_email from com_scrap where user_email=#{user_email}
+	</select>
+
+<!-- 2. 해당 기업이 관심 공고에 있는지 확인-->
+	<select id="getCheck" resultType="String">
+		select com_email from com_scrap where user_email=#{user_email} and com_email =#{com_email}
+	</select>
+
+
+
 
 <!--24.08.01 하진-->
 <!--24.08.02 하진 : 채용공고 목록 페이지에서 스크랩 기능을 위한 쿼리-->

@@ -412,6 +412,17 @@
 		// 팝업창 닫기
 		$('.close').click(function() {
 			$('#proposalPopup').css('display', 'none');
+			$('#offerMessage').val(''); // 텍스트 영역 초기화
+			$('#titleSelect').prop('selectedIndex', 0); // 드롭다운 초기화
+			$('#selectedTitle').text('공고 제목');
+			$('#selectedCompany').text('기업 이름');
+			$('#selectedJob').text('');
+			$('#selectedCareer').text('');
+			$('#selectedPay1').text('급여');
+			$('#selectedPay2').text('');
+			$('#noticeNum').val('');
+			$('#userEmail').val('');
+			$('#resumeNum').val('');
 		});
 
 		// 팝업창 외부 클릭 시 닫기

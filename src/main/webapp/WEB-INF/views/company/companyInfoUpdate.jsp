@@ -93,7 +93,7 @@
                     
                 </div>
                      
-				<form method="post" action="modify_Info">
+				<form method="post" id="comInfoUpdate" action="modify_Info">
                     <div class="tabCon detail">
                         <table class="tabCon" style="width:100%">
                             <input type="hidden" name="com_email" value="${companyInfo.com_email}">
@@ -109,15 +109,18 @@
                             </tr>
                             <tr>
                                 <th>인사담당자명</th>
-                                <td><input type="text" class="modify" name="com_person" placeholder="이름을 입력해주세요" required></td>
+                                <!-- <td><input type="text" class="modify" id="com_person" name="com_person" placeholder="이름을 입력해주세요" required></td> -->
+                                <td><input type="text" class="modify" id="com_person" name="com_person" placeholder="이름을 입력해주세요"></td>
                             </tr>
                             <tr>
                                 <th>연락처</th>
-                                <td><input type="text" class="modify" name="com_tel" placeholder="연락처를 입력해주세요" required></td>
+                                <!-- <td><input type="text" class="modify" id="com_tel" name="com_tel" placeholder="연락처를 입력해주세요" required></td> -->
+                                <td><input type="text" class="modify" id="com_tel" name="com_tel" placeholder="연락처를 입력해주세요"></td>
                             </tr>
                             <tr>
                                 <th>비밀번호</th>
-                                <td><input type="password" class="modify" id="checkPW"  placeholder="변경 확인을 위해 비밀번호를 입력해주세요" required></td>
+                                <!-- <td><input type="password" class="modify" id="checkPW"  placeholder="변경 확인을 위해 비밀번호를 입력해주세요" required></td> -->
+                                <td><input type="password" class="modify" id="checkPW"  placeholder="변경 확인을 위해 비밀번호를 입력해주세요"></td>
                             </tr>
                             <!-- ${login_pw} : 세션 설정 비밀번호 -> 따로 모델에 실어 보내지 않더라도 호출 가능 -->
                         </table><!-- table끝 -->
@@ -166,10 +169,25 @@
     }
     document.getElementById("dropdownSub").addEventListener("click", dropdown); // 드롭다운 메뉴 끝
 
-    $(".commodify").on("click", function () {
+
+    $(".commodify").on("click", function (e) {
+        e.preventDefault();
+
+        var person = $("#com_person").val();
+        console.log(person);
+        if (!person) {
+            alert("인사담당자명을 입력해주세요");
+            $("#com_person").focus();
+            return false;
+        }
+        var tell = $("#com_tel").val();
+        if (!tell) {
+            alert("연락처를 확인해주세요");
+            $("#com_tel").focus();
+            return false;
+        }
         var sessionPW = "${login_pw}";
         var checkPW = $("#checkPW").val();
-
         if (sessionPW == checkPW) {
             alert("변경이 완료되었습니다.");
         } else {
@@ -177,5 +195,7 @@
             $("#checkPW").focus();
             return false;
         }
+
+        $("#comInfoUpdate").submit();    
     });//수정 완료 버튼 클릭시 비밀번호 검사 로직
 </script>

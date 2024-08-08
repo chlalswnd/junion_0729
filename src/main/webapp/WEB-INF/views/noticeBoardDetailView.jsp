@@ -102,7 +102,7 @@
 								<div id="buttonbox" class="buttonbox">
 								    <!-- 여기에 동적으로 추가되는 버튼들이 위치하게 됩니다. -->
 
-								    <button type="submit" formaction="noticeBoardList" class="button">
+								    <button type="submit" formaction="noticeCommunity" class="button">
 								        <h5 class="but2">목록</h5>
 								    </button>
 								</div>

@@ -17,7 +17,8 @@ public interface IndividualService {
 	public List<UserStackDTO> getUserStack(String user_email);
 	public List<UserJobDTO> getUserJob(String user_email);
 //	public UserDTO contentView(HashMap<String, String> param);
-	public void modify(HashMap<String, String> param);
+//	public void modify(HashMap<String, String> param);
+	public void modify(UserDTO dto);
 //	public void insertJob(String user_email, String job_name);
 	public void insertJob(UserJobDTO dto);
 //	public void insertStack(String user_email, String stack_name);

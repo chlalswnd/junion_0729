@@ -259,7 +259,7 @@
                     </div>
                     
                     <div class="tabCon detail">
-                        <table class="tabCon detail disB" width="1200px" height="300px">
+                        <table class="detail disB" width="1200px" height="300px">
                             <tr>
                                 <th>기업이메일</th>
                                 <td>${companyInfo.com_email}</td>
@@ -279,7 +279,6 @@
                             </tr>
                             <tr>
                                 <th>비밀번호</th>
-                                <!-- <td><button type="button" value="변경하기" class="changepw"></td> -->
                                 <td><input type="button" value="변경하기" class="changepw" onclick="pwchange()"></td>
                             </tr>
                         </table>
@@ -287,7 +286,6 @@
                         
                     <div class="modify">
                         <input type="button" value="기업정보수정" class="commodify" onclick="location.href='companyInfoUpdate'">
-<!--                        <input type="button" value="기업정보수정" class="commodify" onclick="location.href='company_InfoUpdate?com_email=${companyInfo.com_email}'">-->
                     </div>
                     </div>
 

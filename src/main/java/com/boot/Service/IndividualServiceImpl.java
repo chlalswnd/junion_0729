@@ -44,11 +44,11 @@ public class IndividualServiceImpl implements IndividualService{
 
 
 	@Override
-	public void modify(HashMap<String, String> param) {
+	public void  modify(UserDTO dto) {
 		log.info("@# IndividualServiceImpl modify");
 		
 		IndividualDAO dao = sqlSession.getMapper(IndividualDAO.class);
-		dao.modify(param);
+		dao.modify(dto);
 	}
 
 

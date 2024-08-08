@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.boot.Service.ScrapService;
 
@@ -45,6 +46,14 @@ public class ScrapController {
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
+	@RequestMapping("/comListScrap")
+	@ResponseBody
+	public boolean comListScrap(@RequestParam HashMap<String, String> param) {
+		
+		boolean result = scrapService.comListScrap(param);
+		
+		return result;
+	}
 
 
 }

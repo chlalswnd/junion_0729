@@ -61,6 +61,7 @@ public class ComNoticeDTO {
 	
 	private int noticeDday; //공고 마감 디데이
 	
+	private String com_content;
 	
 	
 	

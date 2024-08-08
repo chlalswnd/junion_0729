@@ -20,6 +20,8 @@ public interface ComNoticeService {
 //	public String comLocation(String com_email);//상세 채용공고-회사 위치 가져오기
 	
 	
+	public ArrayList<ComNoticeDTO> getNoticeLimit(String com_eamil);//기업정보 상세, 해당 기업의 다른 공고 정보 가져오기
+	
 	//지원하기 팝업 발생
 	public ComNoticeDTO getNoticeInfo(int notice_num);//지원하기 클릭, 공고 정보 가져오기
 	public ArrayList<ResumeDTO> getProfileList(String user_email);//지원하기 클릭, 이력서 정보 가져오기

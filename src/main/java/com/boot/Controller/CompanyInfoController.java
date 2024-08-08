@@ -165,7 +165,7 @@ public class CompanyInfoController {
 	
 	
 	@RequestMapping("/modifyDetail")
-	public String modify_Detail(@RequestParam HashMap<String, String> param, CompanyInfoDTO companyInfoDTO) {//기업 상세 정보 수정
+	public String modify_Detail(@RequestParam HashMap<String, String> param, CompanyInfoDTO companyInfoDTO, HttpSession session) {//기업 상세 정보 수정
 		log.info("@# modify_Detail");
 		log.info("@# param modify_Detail=>"+param);
 		
@@ -176,6 +176,8 @@ public class CompanyInfoController {
 		}
 
 		infoService.modify_Detail(companyInfoDTO);
+		String com_name = param.get("com_name");
+		session.setAttribute("login_name", com_name);
 //		return "company/company_InfoManagement";
 		return "redirect:companyInfoManagement";
 	}

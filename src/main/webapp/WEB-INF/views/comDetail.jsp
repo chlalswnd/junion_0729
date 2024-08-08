@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +19,9 @@
 <!-- import js -->
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <!--   <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script>-->
+<!-- 지도 API -->
+<script type="text/javascript"
+src="//dapi.kakao.com/v2/maps/sdk.js?appkey=48ca63ceb0746787c922c8da8f33b705&libraries=services"></script>
 
 </head>
 <style>
@@ -154,15 +158,25 @@ section
     max-width: 90px ;
 }
 
-
-/* .wrap .main .sub2 .icon
+/* 북마크 배경 색 및 테두리 제거 */
+.side  .iconn,
+.wrap .main .sub2 .icon
 {
     font-size:20px;
-} */
+	border: none;
+	background-color: var(--color-white);
 
+}
 
-
-
+/* 해당 태그 위에 위치하는 마우스 커서의 모양 변경 */
+.fa-bookmark
+{
+	cursor: pointer;
+}
+.fa-bookmark.active
+{
+	color: var(--main-color);
+}
 
 
 .wrap .column
@@ -178,10 +192,10 @@ section
     border-bottom: 1px solid var(--input-gray);
 
 }
-.wrap .column .border
+/* .wrap .column .border
 {
 
-}
+} */
 
 
 .wrap .column .columnAA,
@@ -371,9 +385,6 @@ section
 
 }
 
-
-
-
 .wrap .right .box2 .box
 {
     /* max-height: 100px ; */
@@ -403,6 +414,7 @@ section
 .wrap .right .box4 .p1
 {
     font-size: var(--font-size16);
+	color: var(--color-black);
     font-weight: 200;
 }
 
@@ -539,7 +551,8 @@ font-weight: 200; */
 				</div>
 				<div class="sub2">
 					<button class="icon">
-						<i class="fa-regular fa-bookmark" style = font-size:20px;></i>
+						<!-- <i class="fa-regular fa-bookmark" style = font-size:20px;></i> -->
+						<i id="mainBookmark" class="fa-regular fa-bookmark"></i>
 					</button>
 	  
 				</div>
@@ -627,21 +640,22 @@ font-weight: 200; */
 					<h5 class="title">회사 위치</h5>
 				</div>
 				<div class="columnBB">
-					<h5 class="detail">
-						<div class="kakaomap" id="map" style="width:730px;height:250px;">
-						<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=de7cac757fedb4da8958fa692849033d"></script>
-						<script>
-							var container = document.getElementById('map');
-							var options = {
-								center: new kakao.maps.LatLng(33.450701, 126.570667),
-								level: 3
-							};
-					
-							var map = new kakao.maps.Map(container, options);
-						</script>
-						</div>
-						<h5 class="loc">${company.com_location}</h5>
-					</h5>
+					<!-- <h5 class="detail">/// -->
+					<!-- <div class="kakaomap" id="map" style="width:730px;height:250px;">
+		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=de7cac757fedb4da8958fa692849033d"></script>
+		<script>
+			var container = document.getElementById('map');
+			var options = {
+				center: new kakao.maps.LatLng(33.450701, 126.570667),
+				level: 3
+			};
+	
+			var map = new kakao.maps.Map(container, options);
+		</script>
+	</div> -->
+					<div id="map" style="width:100%;height:350px;"></div>
+					<h5 class="loc">${company.com_location}</h5>
+					<!-- </h5> -->
 				</div>
 			</div>
 
@@ -739,31 +753,29 @@ font-weight: 200; */
 
 			<div class="side">
 
-				<div class="box2">
-					<div class="box">
-						<div class="t1">개발</div>
-						<h5 class="t2">B2B 탄소회계 SaaS 웹 개발자</h5>
-						<h5 class="t3">서울 성동구 ∙ 경력 1-10년 ∙ 상시  </h5>
-					</div>
-					<div class="boxbox">
-						<button class="iconn">
-							<i class="fa-regular fa-bookmark" style = font-size:20px;></i>
-						</button>
-					</div>
-				</div>
-
-				<div class="box2">
-					<div class="box">
-						<h5 class="t1">영업</h5>
-						<h5 class="t2">B2B 탄소회계 Customer Succes Manager</h5>
-						<h5 class="t3">서울 성동구 ∙ 신입 ∙ 상시  </h5>
-					</div>
-					<div class="boxbox">
-						<button class="iconn">
-							<i class="fa-regular fa-bookmark" style = font-size:20px;></i>
-						</button>
-					</div>
-				</div>
+				<c:forEach var="dto" items="${noticeList}">
+					<a href="/jobPostDetail?notice_num=${dto.notice_num}">
+						<div class="box2">
+							<div class="box">
+								<div class="t1">${dto.notice_department} ∙ ${dto.notice_contactType}</div>
+								<h5 class="t2"> ${dto.notice_title}</h5>
+								<h5 class="t3">${dto.notice_area1} ${dto.notice_area2} ∙ <span class="career">경력</span><span class="noticeCareer">${dto.notice_career}</span> ∙ ${dto.notice_endDate}</h5>
+							</div>
+							<div class="boxbox">
+								<button class="iconn">
+									<c:choose>
+										<c:when test="${fn:contains(scrapList, dto.notice_num)}">
+											<i id="bookmark${dto.notice_num}" class="fa-solid fa-bookmark active" onclick="return false;"></i>
+										</c:when>
+										<c:otherwise>
+											<i id="bookmark${dto.notice_num}" class="fa-regular fa-bookmark" onclick="return false;"></i>
+										</c:otherwise>
+									</c:choose>
+								</button>
+							</div>
+						</div>
+					</a>
+				</c:forEach>
 
 				<div class="pos" >
 					<button class="box3" >
@@ -793,23 +805,130 @@ font-weight: 200; */
 
 
 </html>
+
 <script>
+	$(document).ready(function () {
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+						mapOption = {
+							center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+							level: 3 // 지도의 확대 레벨
+						};
 
-// 	$(document).ready(function(){
+					// 지도를 생성합니다    
+					var map = new kakao.maps.Map(mapContainer, mapOption);
 
-// 		const resumeStack = "${jobpostingIndividualSupport}";
-// 		console.log("@####"+resumeStack);
-// 		return false;
-// 		const stacks = resumeStack.split(','); // 콤마로 나눠서 배열로 저장
-// 		console.log(stacks);
-// 		let output = "";
-// 		for (let i = 0; i < stacks.length; i++) {
-// 			output += "<div class=mm1>" + stacks[i].trim() + "</div>";
-// 		}
-// 		console.log("@# output=>" + output);
-// 		$('#stack').html(output);
-// 	});
+					// 주소-좌표 변환 객체를 생성합니다
+					var geocoder = new kakao.maps.services.Geocoder();
 
+					// 주소로 좌표를 검색합니다
+
+					var getlocation = "${company.com_location}";
+					console.log("회사 주소는 잘 가져왔나요? " + getlocation);
+					// geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
+					geocoder.addressSearch(getlocation, function (result, status) {
+
+						// 정상적으로 검색이 완료됐으면 
+						if (status === kakao.maps.services.Status.OK) {
+
+							var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+							// 결과값으로 받은 위치를 마커로 표시합니다
+							var marker = new kakao.maps.Marker({
+								map: map,
+								position: coords
+							});
+
+							map.setCenter(coords);
+						}
+					});
+});//end of document ready function
+</script>
+
+<script>
+	$(document).ready(function(){
+
+
+		//24.08.07 : 하진
+		// 관심 기업 DB 정보가 있을 경우, 해당 이미지 활성화
+		let scrap_email = "${scrapEmail}";//스크랩 DB에서 정보를 조회, com_email 값을 가져옴
+			if (scrap_email) {
+				const mainBookmark = document.getElementById("mainBookmark");
+				mainBookmark.classList.replace("fa-regular","fa-solid");
+				mainBookmark.classList.add("active");
+			}
+
+	});//end of document ready function
+
+	//24.08.07 : 하진 : 사이드 공고 관심공고 추가/삭제 로직
+	var user_type = "${login_usertype}";
+	$(".side .fa-bookmark").click(function() {
+          if(user_type == 1){
+          
+			var getid = $(this).attr("id");//해당 북마크의 id를 찾음
+			const regex = /[^0-9]/g;// 정규표현식 : 숫자가 아닌 수들을 찾음
+			const result = getid.replace(regex,"");
+			const notice_num = parseInt(result);
+            const user_email = "${login_email}";
+			var bookmark = document.getElementById(getid);
+
+			$.ajax({
+				type : "POST",
+				url : "/scrapNotice",
+				data : {notice_num : notice_num, 
+						user_email : user_email
+					},
+					success : function(result){ 
+						if (result == true) {
+							alert("관심 공고 목록에 추가되었습니다.");
+							bookmark.classList.replace("fa-regular","fa-solid");
+							bookmark.classList.add("active");
+						}else{
+							alert("관심 공고에서 삭제되었습니다.");
+							bookmark.classList.replace("fa-solid","fa-regular");
+							bookmark.classList.remove("active");
+						}
+					}
+				});
+			}else if(!user_type){//user_type이 없으면 login 페이지로 이동
+			location.href="/login";
+			}
+    });//end of fa-bookmark click function
+
+
+	// 24.08.07 하진 : 관심 기업 등록
+	$("#mainBookmark").click(function() {
+	if(user_type == 1){
+	
+		const urlParams = new URLSearchParams(location.search);
+		var com_email = urlParams.get('com_email');//이렇게 해도 되고 아니면 이미 값을 가지고 갔기 때문에 출력해도 됨
+				
+		const user_email = "${login_email}";
+
+		let getid = $(this).attr("id");//해당 북마크의 id를 찾음
+		var bookmark = document.getElementById(getid);
+
+		$.ajax({
+				type : "POST",
+				url : "/comListScrap",				
+				data : {
+					user_email : user_email,
+					com_email : com_email
+					},
+				success : function(response){
+						if(response == true){
+							alert("관심 기업으로 등록되었습니다.");//아예 class명을을 삭제, 변경이 아니고 추가일 경우
+							bookmark.classList.replace("fa-regular","fa-solid");
+							bookmark.classList.add('active');
+							}else{
+							alert("관심 기업에서 삭제되었습니다.");
+							bookmark.classList.replace("fa-solid","fa-regular");
+							bookmark.classList.remove('active');
+
+						}
+					}
+				});//end of ajax
+		}
+	});//end of mainBookmark clcik function
 
 // 	var actionForm = $("#actionForm");
 

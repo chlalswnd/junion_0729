@@ -289,7 +289,7 @@ th
 
 td
 {
-  padding: 25px;
+  padding: 20px;
   width: calc(1200px - 360px);
 
 }
@@ -305,8 +305,7 @@ td .modifytext
 
 td .changepw
 {
-  background-color: none;
-  border: 1px solid #E5E5EC ;
+  border: 1px solid #E5E5EC;
   font-size: var(--font-size14);
   padding: 10px 20px;
   border-radius: 6px;
@@ -317,7 +316,7 @@ td .changepw
 {
   display: flex;
   justify-content: center;
-  margin-top: 50px;
+  /* margin-top: 50px; */
 }
 
 .modify .commodify
@@ -327,8 +326,9 @@ td .changepw
   height: 60px;
   border-radius: 6px;
   border: none;
+  margin-top: 40px;
   background-color: #999999;
-  color: white;
+  color: var(--color-white);
   cursor: pointer;
 }
 

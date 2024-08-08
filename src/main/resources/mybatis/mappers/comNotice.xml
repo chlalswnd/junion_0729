@@ -23,6 +23,15 @@
 <!--		SELECT location_name FROM location-->
 <!--	</select>-->
 	
+<!--	기업정보 상세 페이지 : 해당 기업의 진행중인 공고를 가져옴-->
+	<select id="getNoticeLimit" resultType="com.boot.DTO.ComNoticeDTO">
+	select notice_num, notice_title, notice_area1, notice_area2, notice_career, notice_endDate, 
+				notice_department, notice_contactType
+			from notice_tb where notice_endDate >= now() 
+			and com_email=#{com_email} order by notice_hit desc  limit 2
+	</select>
+	
+	
 	
 <!-- 	채용공고 클릭, 상세페이지 이동시 조회수 증가 -->
 	<update id="hitUP">
@@ -48,7 +57,7 @@
 	<select id="otherJobPost" resultType="com.boot.DTO.ComNoticeDTO">
 		select notice_num, notice_title, notice_area1, notice_area2, notice_career, notice_endDate, 
 				notice_department, notice_contactType 
-			from notice_tb where notice_endDate > now() 
+			from notice_tb where notice_endDate >= now() 
 			and com_email=(select com_email from notice_tb where notice_num=#{notice_num}) 
 			and notice_num != #{notice_num} order by notice_hit desc
 	</select>

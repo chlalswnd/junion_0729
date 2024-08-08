@@ -4,9 +4,13 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+//@Data
+@Setter @Getter @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
@@ -27,18 +31,16 @@ public class UserDTO {
 //	private Date user_birthdate;
 	private String user_gender;
 	
-	private List<UserAttachDTO> userAttachDTO;
-	private List<UserStackDTO> userStackDTO;
-	private List<UserJobDTO> userJobDTO;
+	private List<UserImageUploadDTO> userAttachList;
+	private List<UserStackDTO> stackInfo;
+	private List<UserJobDTO> jobInfo;
 	private List<NoticeScrapDTO> noticeScrapDTO;
 	private List<RecentNoticeDTO> recentNoticeDTO;
 	
-	private List<UserAttachDTO> userAttachList;
 	
-	
-	private String recent_noticeNumArray;
-	private String comScrapArray;
-	private String noticeScrapArray;
+//	private String recent_noticeNumArray;
+//	private String comScrapArray;
+//	private String noticeScrapArray;
 	private int user_no;
 	
 	private int stack_no;
@@ -46,4 +48,7 @@ public class UserDTO {
 	private int job_no;
 	private String job_name;
 	private String job_name2;
+	
+	
+	
 }

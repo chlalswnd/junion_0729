@@ -19,11 +19,12 @@
 	
 	<!-- AOS 라이브러리 불러오기-->
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"> 
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> 
 	
 	<!-- import js -->
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-    <script src="js/index.js"></script>
+    <script src="js/index.js"></script>	
  
 </head>
 <body>
@@ -31,44 +32,65 @@
 	<%@ include file="quickMenu.jsp" %>
     <main>
         <div class="banner">
-            <div class="mainBanner">
-                <div class="content">
-                    <h5 class="comTitle">JUNION</h5>
-                    <h5 class="mainTitle" style="margin-bottom:0;">주니온에서 지원하는</h5>
-                    <h5 class="mainTitle">신입개발자 취업성공패키지</h5>
-                    <div class="descText">면접에서부터 실무에서 필요한 스킬력까지 책임집니다.</div>
-                    <div class="descText">주니온에서 부터 한걸음 자바/스프링 백앤드 개발교육!</div>
-                </div>
-				<div class="cubeWrap one">
-					<div class="cube">
-				        <div class="top">
-				            <i class="fa-brands fa-java"></i>
-				        </div>
-				        <div class="box">
-				            <span style="--i:0;"></span>
-				            <span style="--i:1;"></span>
-				            <span style="--i:2;"></span>
-				            <span style="--i:3;"></span>
-				        </div>
+			<div class="swiper mySwiper">
+			    <div class="swiper-wrapper">
+					<div class="mainBanner swiper-slide one">
+						<div class="contentWrap">      
+					        <h2 class="junion">
+								JUNION<br>
+					            <span style="--i:0;" data-text="개발자 커리어의 시작">개발자 커리어의 시작</span>
+					            <span style="--i:2;" data-text="같이 달리자">같이 달리자</span>
+					            <span style="--i:1;" data-text="면접부터 실무에서 필요한 스킬까지">면접부터 실무에서 필요한 스킬까지</span>
+					        </h2>
+						</div>				        
 				    </div>
-				</div>
-				
-				<div class="cubeWrap two">
-					<div class="cube">
-				        <div class="top">
-				            <i class="fa-brands fa-css3-alt"></i>
-				        </div>
-				        <div class="box">
-				            <span style="--i:0;"></span>
-				            <span style="--i:1;"></span>
-				            <span style="--i:2;"></span>
-				            <span style="--i:3;"></span>
-				        </div>
-				    </div>
-				</div>
-                <!--<div class="bannerImage"></div>-->
-            </div>
+					<div class="mainBanner swiper-slide">
+						<div class="contentWrap">
+							<div class="content">
+			                    <h5 class="comTitle">JUNION</h5>
+			                    <h5 class="mainTitle" style="margin-bottom:0;">주니온에서 지원하는</h5>
+			                    <h5 class="mainTitle">신입개발자 취업성공패키지</h5>
+			                    <div class="descText">면접에서부터 실무에서 필요한 스킬력까지 책임집니다.</div>
+			                    <div class="descText">주니온에서 부터 한걸음 자바/스프링 백앤드 개발교육!</div>
+			                </div>
+							<div class="cubeWrap one">
+								<div class="cube">
+							        <div class="top">
+							            <i class="fa-brands fa-java"></i>
+							        </div>
+							        <div class="box">
+							            <span style="--i:0;"></span>
+							            <span style="--i:1;"></span>
+							            <span style="--i:2;"></span>
+							            <span style="--i:3;"></span>
+							        </div>
+							    </div>
+							</div>
+							<div class="cubeWrap two">
+								<div class="cube">
+							        <div class="top">
+							            <i class="fa-brands fa-css3-alt"></i>
+							        </div>
+							        <div class="box">
+							            <span style="--i:0;"></span>
+							            <span style="--i:1;"></span>
+							            <span style="--i:2;"></span>
+							            <span style="--i:3;"></span>
+							        </div>
+							    </div>
+							</div> 
+						</div> <!-- contentWrap 끝-->         					               
+		            </div> <!-- mainBanner 끝-->									
+			    </div>	<!-- swiper-wrapper -->
+				<div class="page">
+					<button id="playButton">
+						<i class="fa-solid fa-pause"></i>
+					</button>
+					<div class="swiper-pagination"></div>
+				</div> <!-- page-->								
+			</div> <!-- mySwiper -->								
         </div><!--banner 끝-->
+		
             <div class="innerCon">
                 <section>					
                     <div class="sectionA" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
@@ -120,17 +142,17 @@
                                 </div><!--sectionName-->
                                 <div class="themaSection">
                                     <ul class="one">
-                                        <c:forEach items="${mainNewCareer}" var="dto" varStatus="status">
-                                            <a href="jobPostDetail?notice_num=${dto.notice_num}">
-                                                <li class="data a ${status.first ? 'first-item' : ''}">
-                                                    <h5 class="number"><span>${status.index+1}</span></h5>
-                                                    <div class="name">
-                                                        <div class="conTitle">${dto.com_name}</div>
-                                                        <div class="conSub">${dto.notice_title}</div>
-                                                    </div>
-                                                    <div class="dDay"><span>D-${dto.noticeDday == 0 ? 'DAY' : dto.noticeDday}</span></div>
-                                                </li>
-                                            </a>
+                                        <c:forEach items="${mainNewCareer}" var="dto" varStatus="status">                                            
+                                            <li class="data a ${status.first ? 'first-item' : ''}">
+												<a href="jobPostDetail?notice_num=${dto.notice_num}">
+	                                                <h5 class="number"><span>${status.index+1}</span></h5>
+	                                                <div class="name">
+	                                                    <div class="conTitle">${dto.com_name}</div>
+	                                                    <div class="conSub">${dto.notice_title}</div>
+	                                                </div>
+	                                                <div class="dDay"><span>D-${dto.noticeDday == 0 ? 'DAY' : dto.noticeDday}</span></div>
+												</a>
+											</li>                                            
                                         </c:forEach> 
                                     </ul>
                                 </div><!--themaSection 리스트 영역-->
@@ -145,16 +167,16 @@
                                 <div class="themaSection">
                                     <ul class="one">
                                         <c:forEach items="${mainCareerhit}" var="dto" varStatus="status">
-                                            <a href="jobPostDetail?notice_num=${dto.notice_num}">
-                                                <li class="data a ${status.first ? 'first-item' : ''}">
-                                                    <h5 class="number"><span>${status.index+1}</span></h5>
-                                                    <div class="name">
-                                                        <div class="conTitle">${dto.com_name}</div>
-                                                        <div class="conSub">${dto.notice_title}</div>
-                                                    </div>
-                                                    <div class="dDay"><span>D-${dto.noticeDday == 0 ? 'DAY' : dto.noticeDday}</span></div>
-                                                </li>
-                                            </a>
+                                            <li class="data a ${status.first ? 'first-item' : ''}">
+												<a href="jobPostDetail?notice_num=${dto.notice_num}">
+	                                                <h5 class="number"><span>${status.index+1}</span></h5>
+	                                                <div class="name">
+	                                                    <div class="conTitle">${dto.com_name}</div>
+	                                                    <div class="conSub">${dto.notice_title}</div>
+	                                                </div>
+	                                                <div class="dDay"><span>D-${dto.noticeDday == 0 ? 'DAY' : dto.noticeDday}</span></div>
+												</a>
+											</li>                                            
                                         </c:forEach> 
                                     </ul>
                                 </div><!--themaSection 리스트 영역-->
@@ -168,17 +190,18 @@
                                 </div><!--sectionName-->
                                 <div class="themaSection">
                                     <ul class="one">
-                                        <c:forEach items="${mainTodayhit}" var="dto" varStatus="status">
-                                            <a href="jobPostDetail?notice_num=${dto.notice_num}">
-                                                <li class="data a ${status.first ? 'first-item' : ''}">
-                                                    <h5 class="number"><span>${status.index+1}</span></h5>
-                                                    <div class="name">
-                                                        <div class="conTitle">${dto.com_name}</div>
-                                                        <div class="conSub">${dto.notice_title}</div>
-                                                    </div>
-                                                    <div class="dDay"><span>D-${dto.noticeDday == 0 ? 'DAY' : dto.noticeDday}</span></div>
-                                                </li>
-                                            </a>
+                                        <c:forEach items="${mainTodayhit}" var="dto" varStatus="status">                                            
+                                            <li class="data a ${status.first ? 'first-item' : ''}">
+												<a href="jobPostDetail?notice_num=${dto.notice_num}">
+	                                                <h5 class="number"><span>${status.index+1}</span></h5>
+	                                                <div class="name">
+	                                                    <div class="conTitle">${dto.com_name}</div>
+	                                                    <div class="conSub">${dto.notice_title}</div>
+	                                                </div>
+	                                                <div class="dDay"><span>D-${dto.noticeDday == 0 ? 'DAY' : dto.noticeDday}</span></div>
+												</a>
+                                            </li>
+                                            
                                         </c:forEach> 
                                     </ul>
                                 </div><!--themaSection 리스트 영역-->
@@ -215,7 +238,7 @@
                                 </div>
                                 <div class="conProfile" onclick="location.href='comDetail?com_email=${dto.com_email}'" style="cursor:pointer;">
                                     <div class="conTitle">${dto.com_name}</div>
-                                    <div class="conSec">여기에 뭐 넣어여?</div>
+                                    <div class="conSec">${dto.com_content}</div>
                                 </div>
                                 <button type="button" class="more" onclick="location.href='comDetail?com_email=${dto.com_email}'" style="cursor:pointer;">바로가기</button>
                             </div>
@@ -224,44 +247,77 @@
                 </div><!--sectionC 끝-->
             </div><!--innerCon 끝-->
         </main>
-
-
-
-        <footer data-aos="fade-up" data-aos-anchor-placement="top-bottom">
-            <div class="footerInner">
-                <div class="left_conWrap f_conWrap">
-                    <h5 class="logo">
-                        <a href="#">
-                            <img src="images/logo.svg" alt="#">
-                        </a>
-                    </h5>
-                    <p class="textWrap">
-                        부산광역시 부산진구 중앙대로 688 한준빌딩 2층<br>
-                        대표이사 : 주니온<br>
-                        사업자등록번호 : 123-45-67890 / 통신판매업신고 : 9999-12345호<br>
-                        이메일 : abcde@naver.com
-                    </p>
-                </div>
-                <div class="right_conWrap f_conWrap">
-                    <h3>1234-5678</h3>
-                    <p class="textWrap">                        
-                        오전 9시 ~ 오후 6시(토요일, 공휴일 휴무)<br>
-                        Copyright ⓒ JUNION ALL RIGHTS RESERVED.
-                    </p>
-                </div>
-            </div>
-        </footer><!--footer 끝-->
+		<%@ include file="footer.jsp" %>        
     </div>
 	<!-- AOS 스크립트 시작 -->
 	<script> 
 	    AOS.init(); // 자바스크립트로 init()을 해야 동작한다.
 	</script>
+	
+	<!-- Swiper JS -->
+	  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+	  <!-- Initialize Swiper -->
+	  <script>
+		var swiper = new Swiper(".mySwiper", {
+	      spaceBetween: 0,
+	      centeredSlides: true,
+	      autoplay: {
+	        delay: 9500,
+	        disableOnInteraction: false,
+	      },
+	      pagination: {
+	        el: ".swiper-pagination",
+	        clickable: true,
+	      },
+	      navigation: {
+	        nextEl: ".swiper-button-next",
+	        prevEl: ".swiper-button-prev",
+	      },
+	    });
+		
+		// Play/Pause 버튼 기능
+		document.getElementById("playButton").addEventListener("click", function () {
+			var icon = playButton.querySelector("i");
+			playButton.addEventListener("click", function () {
+			  var icon = playButton.querySelector("i");
+			  
+			  if (icon.classList.contains("fa-play")) {
+			    icon.classList.remove("fa-play");
+			    icon.classList.add("fa-pause");
+			    swiper.autoplay.start(); // 슬라이더 재생
+			  } else {
+			    icon.classList.remove("fa-pause");
+			    icon.classList.add("fa-play");
+			    swiper.autoplay.stop(); // 슬라이더 정지
+			  }
+			});
+		});		
+		
+	  </script>	
+	
 </body>
 </html>
 
 <script>
 
  $(document).ready(function () {
+	
+	$('.conSec').each(function()
+     {
+         var length = 60; //표시할 글자 수 정하기
+    
+         $(this).each(function()
+         {
+
+             if($(this).text().length >= length)
+             {
+                 $(this).text($(this).text().substr(0, length) + '...');	//지정한 글자수 이후 표시할 텍스트 '...'
+             }
+         });
+
+     });
+		
     // con클래스 반복하면서 데이터 가져옴
     $('.con').each(function () {
         // con클래스 data-notice-num 속성에서 값을 가져옴

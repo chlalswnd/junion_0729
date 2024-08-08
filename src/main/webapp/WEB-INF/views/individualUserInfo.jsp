@@ -137,13 +137,35 @@ main
 {
   display : flex;
   gap: 50px;
+  min-width: 1200px;
   /* margin-top: 80px; */
 }
 
 /*회원사진*/
+.infoConLeft 
+{
+	width: 120px;
+}
+
+/*회원정보 테이블*/
+.infoConRight 
+{
+  /* width: 1030px; */
+}
+
+
+/*회원사진*/
 .infoCon img
 {
-  width: 100px;
+  width: 120px;
+  mask-image: url(images/circle100.png);
+  -webkit-mask-image: url(images/circle100.png);
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  /* mask-position: center top; */
+  mask-position: 50% 25%;/*0% 0% 가 왼쪽상단 100% 100%가 오른쪽 하단*/
+  -webkit-mask-position: 50% 25%;
+  /* clip-path: circle(100px at center); */
 }
 
 
@@ -152,6 +174,7 @@ main
 
 .userInfoTable
 {
+  width: 1030px;
   border: 1px solid var(--input-gray);
   border-radius: 10px;
   box-sizing: border-box;
@@ -166,7 +189,7 @@ main
 
 .userInfoTable td
 {
-  width: 750px;
+  /* width: 730px; */
 }
 .userInfoTable th, td
 {
@@ -263,7 +286,12 @@ main
                             <h2 class="infoTitle">회원 정보 수정</h2>
                             <div class="infoConWrap">
                                 <div class="infoCon left">
-                                    <img src="images/people.svg" alt="#" class="resumeImage">
+                                    <div class="uploadResult">
+                                        <ul>
+                          
+                                        </ul>
+                                    </div>
+                                    <!-- <img src="images/people.svg" alt="#" class="resumeImage"> -->
                                 </div>
                                 <div class="infoCon right">
                                     <table class="userInfoTable">	
@@ -291,7 +319,7 @@ main
                                           <th>희망직무</th>
                                           <td class="disF">
                                               <div class="position" id="position">
-                                                  <c:forEach items="${jobInfo}" var="dto">
+                                                  <c:forEach items="${userInfo.jobInfo}" var="dto">
                                                     <input type="button" class="Btn" value="${dto.job_name}">
                                                   </c:forEach>
                                               </div>
@@ -301,7 +329,7 @@ main
                                             <th>기술스택</th>
                                             <td class="disF">
                                                 <div class="stack" id="stack">
-                                                  <c:forEach items="${stackInfo}" var="dto">
+                                                  <c:forEach items="${userInfo.stackInfo}" var="dto">
                                                     <input type="button" class="Btn" value="${dto.stack_name}">
                                                   </c:forEach>  
                                                 </div>
@@ -328,6 +356,64 @@ main
 </body>
 </html>
 <script>
+
+  $(document).ready(function () {
+				
+				/*
+				2024-8-06 서연주(comRegistModify 참고)
+				이미지 파일 로딩//즉시실행함수
+				*/
+				// user-email 변수 가져오기
+				// var user_email = $(".userImage").data('user-email'); // 파일노출되는 div의 클래스명과 data이용
+				var user_email = "<c:out value='${userInfo.user_email}'/>"; //c:out으로
+				console.log("user_email:", user_email);
+
+				// var uploadResultContainer = $(".userImage").find('.uploadResult ul');
+
+				if (user_email) {
+					$.ajax({
+						url: '/getUserImageList',
+						type: 'GET',
+						data: { user_email: user_email },
+						dataType: 'json',
+						success: function (data) {
+							console.log("Ajax success:", data);
+							showUploadResult(data);
+						},
+						error: function (xhr, status, error) {
+							console.error('Error fetching file list for user_email ' + user_email + ':', error);
+						}
+					});
+				}
+
+
+				// 이미지 파일 표시
+				function showUploadResult(uploadResultArr) {
+					if (!uploadResultArr || uploadResultArr.length === 0) {
+						return;
+					}
+
+					var uploadUL = $(".uploadResult ul");
+					var str = "";
+
+					$(uploadResultArr).each(function (i, obj) {
+						var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+
+						str += "<li data-path='" + obj.uploadPath + "'";
+						str += " data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'>";
+						str += "<div>";
+						str += "<span style='display:none;'>" + obj.fileName + "</span>";
+						str += "<img src='/userImageDisplay?fileName=" + fileCallPath + "' alt='" + obj.fileName + "'>";//이미지 출력처리(컨트롤러단)
+						str += "</div></li>";
+					});
+
+					uploadUL.append(str);
+				}//showUploadResult function 끝
+
+  });//document ready 끝
+
+
+
   // 드롭다운 메뉴 (하지수)
 
   function dropdown() {
