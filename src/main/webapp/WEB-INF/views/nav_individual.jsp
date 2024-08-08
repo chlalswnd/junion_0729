@@ -208,7 +208,7 @@
 	                </a>
 	            </li>
 	            <li>
-	                <a href="jobOffer">
+	                <a href="individualJobOffer">
 	                    <span class="icon">
 	                        <i class="fa-regular fa-envelope"></i>
 	                    </span>
@@ -216,7 +216,7 @@
 	                </a>
 	            </li>
 	            <li>
-	                <a href="recentNotice">
+	                <a href="individualrecentNotice">
 	                    <span class="icon">
 	                        <i class="fa-solid fa-list-check"></i>
 	                    </span>
@@ -228,7 +228,7 @@
 	                    <span class="icon">
 	                        <i class="fa-regular fa-bookmark"></i>
 	                    </span>
-	                    <span class="title">스크랩</span>
+	                    <span class="title">스크랩 공고</span>
 	                </a>
 	            </li>
 	            <li>

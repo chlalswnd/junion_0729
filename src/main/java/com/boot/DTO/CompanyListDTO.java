@@ -18,7 +18,8 @@ public class CompanyListDTO {
 	private char com_image;
 //	private char user_type;//개인.기업 구분 : 기업 :2
 	private String com_tel;
-	private int com_star;
+//	private int com_star; // 기업 평점
+	private Double com_star; // 기업 평점
 	private String com_location;
 	private String com_year;//창립일
 	private String com_content;//회사소개

@@ -56,7 +56,7 @@ public class ResumeDTO {
 	private String resume_portfolio_url; //	포토폴리오(파일명)	
 	
 	private int portfolioNum; //포트폴리오넘버
-	private String resume_stack; //기술스택툴
+	private String stack_name; //기술스택툴
 	private String resume_intro; //자기소개서
 	//private String resume_agree; //포지션 제안 수락여부
 	//private Timestamp resume_agreeDate; //제안수락일

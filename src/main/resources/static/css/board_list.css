@@ -58,7 +58,7 @@ header
 {
     font-size: var(--input-tab-size);
     color: var(--color-black);
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .rightMenu 
@@ -133,7 +133,7 @@ section
 .board .head
 {
     font-size: var(--font-size32);
-    font-weight: 300;
+    font-weight: 400;
     /* line-height: 2; */
 }
 
@@ -141,8 +141,9 @@ section
 .subbox .s1
 {
     font-size: var(--font-size14);
-    font-weight: 200;
+    font-weight: 400;
     /* line-height: 2; */
+	color: #111;
 }
 
 
@@ -165,6 +166,7 @@ section
     {
         background: var(--main-color);
         color: #fff;
+		border: 1px solid var(--main-color);
     }
 }
 
@@ -181,7 +183,7 @@ section
 .board .but2
 {
     font-size: var(--font-size14);
-    font-weight: 200;
+    font-weight: 400;
     /* line-height: 2; */
 }
 
@@ -210,6 +212,7 @@ section
 .paginate_button a 
 {
 	color: #111;
+	font-weight: 400;
 }
 
 
@@ -255,7 +258,7 @@ footer
 .footerInner .right_conWrap h3
 {
     font-size:var(--sub-title-size);
-    font-weight: 500;
+    font-weight: 400;
     color: #222;
     margin-bottom: 20px;
 }

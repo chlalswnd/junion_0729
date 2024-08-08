@@ -21,57 +21,57 @@
 </head>
 <body>
 	<div class="container">
-		<%@ include file="header.jsp" %>
+		<%@ include file="header.jsp" %>		 
 		<section>
             <div class="sectionInner">
-                <div class="infoWrap">
-                    <h3 class="resumeTitle">${resumeInfo.resume_title}</h3>
-                    <div class="resumeConWrap">
-                        <div class="resumeCon left">
-                            <div class="resumeConTop">								
-                                <h5 class="name">${user_name}</h5>
-                                <div class="ageSex">
-                                    <h5 class="age"></h5>
-                                    <!-- <h5 class="age">${resumeInfo.resume_age}</h5> -->
-                                    <h5 class="sex">${user_gender}</h5>
-                                </div>
-                            </div>
-                            <div class="resumeConBottom">
-                                <div class="resumeCon mail">
-                                    <span class="icon">
-                                        <i class="fa-solid fa-envelope"></i>
-                                    </span>
-                                    <h5>${resumeInfo.user_email}</h5>
-                                </div>
-                                <div class="resumeCon tel">
-                                    <span class="icon">
-                                        <i class="fa-solid fa-phone"></i>
-                                    </span>
-                                    <h5>${user_tel}</h5>
-                                </div>
-                                <div class="resumeCon location">
-                                    <span class="icon">
-                                        <i class="fa-solid fa-location-dot"></i>
-                                    </span>
-                                    <h5>${user_location} ${user_location2}</h5>
-                                </div>
-                                <div class="resumeCon wantPay">
-                                    <span class="icon">
-                                        <i class="fa-solid fa-money-check"></i>
-                                    </span>
-                                    <h5>${resumeInfo.resume_pay}만원</h5>
-                                </div>
+				<div class="infoWrap">
+                <h3 class="resumeTitle">${resumeInfo.resume_title}</h3>
+                <div class="resumeConWrap">
+                    <div class="resumeCon left">
+                        <div class="resumeConTop">								
+                            <h5 class="name">${user_name}</h5>
+                            <div class="ageSex">
+                                <h5 class="age"></h5>
+                                <!-- <h5 class="age">${resumeInfo.resume_age}</h5> -->
+                                <h5 class="sex">${user_gender}</h5>
                             </div>
                         </div>
-                        <div class="resumeCon right">
-							<div class="uploadResult">
-								<ul class="resumeImage">
-								</ul>
-							</div>
-                            
+                        <div class="resumeConBottom">
+                            <div class="resumeCon mail">
+                                <span class="icon">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </span>
+                                <h5>${resumeInfo.user_email}</h5>
+                            </div>
+                            <div class="resumeCon tel">
+                                <span class="icon">
+                                    <i class="fa-solid fa-phone"></i>
+                                </span>
+                                <h5>${user_tel}</h5>
+                            </div>
+                            <div class="resumeCon location">
+                                <span class="icon">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </span>
+                                <h5>${user_location} ${user_location2}</h5>
+                            </div>
+                            <div class="resumeCon wantPay">
+                                <span class="icon">
+                                    <i class="fa-solid fa-money-check"></i>
+                                </span>
+                                <h5>${resumeInfo.resume_pay}만원</h5>
+                            </div>
                         </div>
-                    </div> <!-- resumeConWrap 끝-->
-                </div> <!--infoWrap끝 : 개인정보  -->
+                    </div>
+                    <div class="resumeCon right">
+						<div class="uploadResult">
+							<ul class="resumeImage">
+							</ul>
+						</div>
+                        
+                    </div>
+                </div> <!-- resumeConWrap 끝-->
+            </div> <!--infoWrap끝 : 개인정보  -->
 
                 <div class="sectionCon careerWrap">
                     <h3 class="sectionTitle carrer">경력</h3>
@@ -301,7 +301,6 @@
         let age = today.getFullYear() - birth+ 1;
         const Age = document.querySelector('.age');
 
-		
         console.log(birth);
         console.log(today);
         console.log(age);

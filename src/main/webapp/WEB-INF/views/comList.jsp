@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 		<!-- 경력계산 민중 07/25 12:07 -->
 		<%@ page import="java.util.Calendar" %>
 			<%@ page import="java.util.Date" %>
@@ -118,8 +119,11 @@
 
 
 					/* 버튼시작 */
-
-					.right .fil2 {
+					/* 
+					240801 버튼 css수정
+					민중
+					 */
+					.right .f1 .tab-btn.fil2{
 						margin-left: 8px;
 						border: 1px solid var(--input-gray);
 						background-color: var(--color-white);
@@ -128,15 +132,31 @@
 						width: 80px;
 						height: 40px;
 						cursor: pointer;
+						background: #fff;
+						color: #111;
 
 						&:hover {
 							background: var(--main-color);
 							color: #fff;
 						}
 					}
+					.right .f1 .tab-btn.fil2.active {
+					background: #111;
+					color: #fff;
+				}
 
+				/* 북마크 : 스크랩 기능 관련 CSS */
+				.fa-bookmark
+				{
+					font-size: 20px;
+					color: var(--input-gray);
+					cursor: pointer;
+				}
 
-
+				.fa-bookmark.active
+				{
+					color: var(--main-color);
+				}
 
 					/* 버튼 끝 */
 
@@ -200,10 +220,15 @@
 
 					}
 
-					/* .latest 추가 */
+					/* 
+					240801 기업이름 css수정
+					민중
+					 */
 					.menutitle .title .t1 {
 						font-size: var(--font-size16);
 						font-weight: 600;
+						/* 추가 */
+						color: #111;
 					}
 
 					.menubox {
@@ -212,15 +237,31 @@
 						position: relative;
 					}
 
-					.menubox .img {
+					/*
+					24/08/05
+					민중 기업목록 이미지
+					css 수정 시작
+					*/
+					.menubox .con .image {
 						width: 270px;
 						height: 180px;
-						background-image: url(../images/company.svg);
+						/* background-image: url(../images/company.svg); */
+						background-color: #dad1d1;
 						background-position: center;
 						background-size: cover;
 						border-radius: 10px;
 
 					}
+					.con .uploadResult img {
+						width: 270px;
+						height: 180px;
+						border-radius: 10px;
+					}
+										/*
+					24/08/05
+					민중 기업목록 이미지
+					css 수정 끝
+					*/
 
 					.menubox .scrap {
 						position: absolute;
@@ -254,8 +295,26 @@
 						margin-bottom: 60px;
 					}
 
-					.pagingbox {
-						margin-bottom: 60px;
+					/* 페이징커스텀 */
+					.div_page {
+						margin-top: 40px;
+					}
+
+					.div_page ul {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						gap: 0 20px;
+					}
+
+					.paginate_button {
+						text-decoration: none;
+						padding: 8px 14px;
+						border-radius: 6px;
+					}
+
+					.paginate_button a {
+						color: #111;
 					}
 				</style>
 
@@ -269,40 +328,25 @@
 						<section>
 							<div class="wrap">
 								<div class="devlist">
-
-									<div class="selectbox">
-										<div class="select">
-											<input class="title" type="text" placeholder="검색어를 입력해 주세요">
-										</div> <!-- 콘텐트박스 끝-->
-										<div class="icon">
-											<div class="i1">
-												<a href="#" class="fa-solid fa-magnifying-glass"
-													style="color: #ffa500;"></a>
-											</div>
-										</div>
-									</div> <!-- selectbox 끝-->
-
-
-
-
 									<form method="get" id="searchForm">
+										<div class="selectbox">
+											<div class="select">
+												<input class="title" type="text" name="keyword"
+													value="${pageMaker.cri.keyword}" placeholder="검색어를 입력해 주세요">
+											</div> <!-- 콘텐트박스 끝-->
+
+											<div class="icon">
+												<div class="i1">
+													<a href="#" class="fa-solid fa-magnifying-glass"
+														style="color: #ffa500;"></a>
+												</div>
+											</div>
+										</div> <!-- selectbox 끝-->
+
 										<!-- 추천순/최신순 탭 정보 보냄 -->
 										<input type="hidden" name="orderType" id="orderType" value="${orderType}">
 										<div class="filterbox">
 											<div class="left">
-												<!-- 직군/직무 사용 X -->
-												<!-- <div class="sbox">
-													<select class="select1" id="jobSelect" name="jobType">
-														<option value="" <c:out
-															value="${pageMaker.cri.jobType == null ? 'selected':''}" />
-														>직군/직무 무관</option>
-														<c:forEach var="job" items="${jobList}">
-															<option value="${job}" <c:out
-																value="${pageMaker.cri.jobType eq job ? 'selected':''}" />
-															>${job}</option>
-														</c:forEach>
-													</select>
-												</div> -->
 												<div class="sbox">
 													<select class="select1" id="stackSelect" name="stackType">
 														<option value="" <c:out
@@ -342,11 +386,11 @@
 											<div class="right">
 												<div class="f1">
 													<button
-														class="tab-btn ${orderType == 'recommendation' ? 'active' : ''}"
+														class="tab-btn fil2 ${orderType == 'recommendation' ? 'active' : ''}"
 														onclick="switchTab('recommendation', event)">추천순</button>
 												</div>
 												<div class="f1">
-													<button class="tab-btn ${orderType == 'latest' ? 'active' : ''}"
+													<button class="tab-btn fil2 ${orderType == 'latest' ? 'active' : ''}"
 														onclick="switchTab('latest', event)">최신순</button>
 												</div>
 												${orderType}
@@ -377,13 +421,26 @@
 										<c:forEach var="dto" items="${comList}">
 											<div class="menutitle">
 												<div class="menubox">
-													<a href="/comDetail?com_email=${dto.com_email}" class="tag">
-														<div class="img"></div>
+													<a class="con" href="/comDetail?com_email=${dto.com_email}"
+														data-com-email="${dto.com_email}">
+														<div class="image">
+															<div class="uploadResult">
+																<ul>
+
+																</ul>
+															</div>
+														</div>
 													</a>
 													<div class="scrap">
 														<div class="s1">
-															<a href="#" class="fa-solid fa-bookmark"
-																style="font-size: 20px; color: #e5e5ec;"></a>
+															<c:choose>
+																<c:when test="${fn:contains(getScrapList, dto.com_email)}">
+																	<i id="bookmark${dto.com_email}" class="fa-solid fa-bookmark active"></i>
+																</c:when>
+																<c:otherwise>
+																	<i id="bookmark${dto.com_email}" class="fa-solid fa-bookmark"></i>
+																</c:otherwise>
+															</c:choose>
 														</div>
 													</div>
 												</div>
@@ -413,39 +470,40 @@
 										</c:forEach>
 									</div> <!--  mtlist 끝-->
 
-									<h3>${pageMaker}</h3>
+									<!-- 페이징 기능 시작-->
+									<!--									<h3>${pageMaker}</h3>-->
 									<div class="div_page">
 										<ul>
 											<c:if test="${pageMaker.prev}">
-												<!-- <li>[Previous]</li> -->
+												<!-- <li>Previous</li> -->
 												<li class="paginate_button">
 													<a href="${pageMaker.startpage - 1}">
-														[Previous]
+														Previous
 													</a>
 												</li>
 											</c:if>
 											<c:forEach var="num" begin="${pageMaker.startpage}"
 												end="${pageMaker.endpage}">
-												<!-- <li>[${num}]</li> -->
-												<!-- <li ${pageMaker.cri.pageNum == num ? "style='color: red;'" : ""}> -->
+												<!-- <li>${num}</li> -->
+												<!-- <li ${pageMaker.cri.pageNum == num ? "style='color:#f00; font-weight: 600';'" : ""}>${num}</li> -->
+												<!-- <li ${pageMaker.cri.pageNum == num ? "style='color:#f00; font-weight: 600';'" : ""}> -->
 												<li class="paginate_button" ${pageMaker.cri.pageNum==num
-													? "style='background-color: yellow;'" : "" }>
-													<!-- [${num}] -->
+													? "style='border:2px solid #FFA500; font-weight: 900';'" : "" }>
 													<a href="${num}">
-														[${num}]
+														${num}
 													</a>
 												</li>
 											</c:forEach>
 											<c:if test="${pageMaker.next}">
-												<!-- <li>[Next]</li> -->
-												<li class="paginate_button">
+												<!-- <li>next</li> -->
+												<li class="paginate_button"><input type="hidden" name="">
 													<a href="${pageMaker.endpage + 1}">
-														[Next]
+														Next
 													</a>
 												</li>
 											</c:if>
 										</ul>
-									</div>
+									</div> <!-- div_page-->
 
 									<form id="actionForm" method="get">
 										<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
@@ -453,7 +511,6 @@
 										<!-- 페이징 검색시 페이지 번호 클릭할 때 필요한 파라미터 -->
 										<input type="hidden" name="stackType" value="${pageMaker.cri.stackType}">
 										<input type="hidden" name="locationType" value="${pageMaker.cri.locationType}">
-										<!-- <input type="hidden" name="jobType" value="${pageMaker.cri.jobType}"> -->
 										<!-- hidden 값 미스매치로 페이지가 나오지 않는 오류 있었음 -->
 									</form>
 
@@ -466,61 +523,122 @@
 
 				</html>
 				<script>
-					document.addEventListener("DOMContentLoaded", function () {
+					$(document).ready(function () {
 						// 검색 버튼 클릭 이벤트
-						document.querySelector(".fa-magnifying-glass").addEventListener("click", function () {
-							document.getElementById("searchForm").submit();
+						$(".fa-magnifying-glass").on("click", function () {
+							$("#searchForm").submit();
 						});
 
 						// 필터 버튼 클릭 이벤트
-						document.querySelector(".fil2").addEventListener("click", function () {
-							document.getElementById("searchForm").submit();
+						$(".fil2").on("click", function () {
+							$("#searchForm").submit();
 						});
 
 						// 추천순/최신순 탭 클릭 이벤트
-						document.querySelectorAll("#tab-btn").forEach(function (tab) {
-							tab.addEventListener("click", function (event) {
-								event.preventDefault();
-								switchTab(tab, tab.innerText.trim() === "추천순" ? "recommendation" : "latest");
-							});
+						$(".tab-btn").on("click", function (event) {
+							event.preventDefault();
+							switchTab(this, this.innerText.trim() === "추천순" ? "recommendation" : "latest");
 						});
 
 						// 페이지 버튼 클릭 이벤트
-						document.querySelectorAll(".paginate_button a").forEach(function (pageLink) {
-							pageLink.addEventListener("click", function (event) {
-								event.preventDefault();
-								var form = document.createElement("form");
-								form.method = "get";
-								form.action = "companyPageList";
-								var pageNumInput = document.createElement("input");
-								pageNumInput.type = "hidden";
-								pageNumInput.name = "pageNum";
-								pageNumInput.value = this.getAttribute("href");
-								form.appendChild(pageNumInput);
-								document.body.appendChild(form);
-								form.submit();
-							});
+						$(".paginate_button a").on("click", function (event) {
+							event.preventDefault();
+							var form = $('<form>', {
+								method: 'get',
+								action: 'comList'
+							}).append($('<input>', {
+								type: 'hidden',
+								name: 'pageNum',
+								value: $(this).attr("href")
+							}));
+							$('body').append(form);
+							form.submit();
+						});
+
+						// con 클래스 반복하면서 데이터 가져옴
+						$('.con').each(function () {
+							var comEmail = $(this).data('com-email');
+							var uploadResultContainer = $(this).find('.uploadResult ul');
+
+							if (comEmail) {
+								$.ajax({
+									url: '/comFileList',
+									type: 'GET',
+									data: { com_email: comEmail },
+									dataType: 'json',
+									success: function (data) {
+										showUploadResult(data, uploadResultContainer);
+									},
+									error: function (xhr, status, error) {
+										console.error('Error fetching file list for com_email ' + comEmail + ':', error);
+									}
+								});
+							}
 						});
 					});
 
 					// 다른 탭 눌렀을 때 input 정보 삭제
-					function switchTab(tab, event) {
-						// event.preventDefault(); // 기본 동작 방지
-
-						// 모든 form-box와 tab-btn에서 'active' 클래스를 제거
-						// document.querySelectorAll('.form-box').forEach(function (el) {
-						// 	el.classList.remove('active');
-						// });
-						document.querySelectorAll('.tab-btn').forEach(function (el) {
-							el.classList.remove('active');
-						});
-
-						// 선택된 탭과 관련된 콘텐츠에 'active' 클래스 추가
-						// document.getElementById(tab).classList.add('active');
-						// event.currentTarget.classList.add('active');
+					function switchTab(tab, type) {
+						// 모든 tab-btn에서 'active' 클래스를 제거
+						$('.tab-btn').removeClass('active');
+						$(tab).addClass('active');
 
 						// 'orderType' 히든 필드의 값을 설정하고 폼을 제출
-						document.getElementById('orderType').value = tab;
-						document.getElementById('searchForm').submit();
+						$('#orderType').val(type);
+						$('#searchForm').submit();
 					}
-				</script>
+
+					function showUploadResult(uploadResultArr, uploadResultContainer) {
+						if (!uploadResultArr || uploadResultArr.length === 0) {
+							return;
+						}
+
+						var str = "";
+						$(uploadResultArr).each(function (i, obj) {
+							var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+
+							str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.image + "'>";
+							str += "<div>";
+							str += "<span style='display:none;'>" + obj.fileName + "</span>";
+							str += "<img src='/comListDisplay?fileName=" + fileCallPath + "' alt='" + obj.fileName + "'>";
+							str += "</div></li>";
+						});
+
+						uploadResultContainer.empty().append(str);
+					}
+
+
+
+					// 24.08.07 하진 : 관심 기업 정보 기능 추가
+					var user_type = "${login_usertype}";
+					$(".fa-bookmark").click(function() {
+					if(user_type == 1){
+					
+						let getid = $(this).attr("id");//해당 북마크의 id를 찾음
+						let com_email = getid.replace("bookmark","");
+						const user_email = "${login_email}";
+						var bookmark = document.getElementById(getid);
+
+						$.ajax({
+								type : "POST",
+								url : "/comListScrap",				
+								data : {
+									user_email : user_email,
+									com_email : com_email
+									},
+								success : function(response){
+										if(response == true){
+											alert("관심 기업으로 등록되었습니다.");//아예 class명을을 삭제, 변경이 아니고 추가일 경우
+											bookmark.classList.add('active');
+											}else{
+											alert("관심 기업에서 삭제되었습니다.");
+											bookmark.classList.remove('active');
+
+										}
+									}
+								});//end of ajax
+								
+						}
+					});//end of fa-bookmark clcik function
+
+				</script>			

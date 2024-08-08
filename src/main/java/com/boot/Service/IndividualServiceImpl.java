@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.boot.DAO.IndividualDAO;
 import com.boot.DTO.ComScrapDTO;
+import com.boot.DTO.NoticeScrapDTO;
+import com.boot.DTO.OfferInfoDTO;
+import com.boot.DTO.RecentNoticeDTO;
 import com.boot.DTO.UserDTO;
 import com.boot.DTO.UserJobDTO;
 import com.boot.DTO.UserStackDTO;
@@ -41,11 +44,11 @@ public class IndividualServiceImpl implements IndividualService{
 
 
 	@Override
-	public void modify(HashMap<String, String> param) {
+	public void  modify(UserDTO dto) {
 		log.info("@# IndividualServiceImpl modify");
 		
 		IndividualDAO dao = sqlSession.getMapper(IndividualDAO.class);
-		dao.modify(param);
+		dao.modify(dto);
 	}
 
 
@@ -130,6 +133,48 @@ public class IndividualServiceImpl implements IndividualService{
 		log.info("@# IndividualServiceImpl comScrapDelete");
 		IndividualDAO dao = sqlSession.getMapper(IndividualDAO.class);
 		dao.comScrapDelete(dto);
+	}
+	
+	
+	@Override
+	public void noticeScrapDelete(NoticeScrapDTO dto) {
+		log.info("@# IndividualServiceImpl noticeScrapDelete");
+		IndividualDAO dao = sqlSession.getMapper(IndividualDAO.class);
+		try {
+		    dao.noticeScrapDelete(dto);
+		} catch (Exception e) {
+		    log.error("Error executing SQL: ", e);
+		}
+	}
+
+
+
+	@Override
+	public void recentNoticeDelete(RecentNoticeDTO dto) {
+		log.info("@# IndividualServiceImpl recentNoticeDelete");
+		IndividualDAO dao = sqlSession.getMapper(IndividualDAO.class);
+		try {
+		    dao.recentNoticeDelete(dto);
+		} catch (Exception e) {
+		    log.error("Error executing SQL: ", e);
+		}
+		
+	}
+
+
+
+
+
+	@Override
+	public void offerDelete(int offer_no) {
+		log.info("@# IndividualServiceImpl offerDelete");
+		IndividualDAO dao = sqlSession.getMapper(IndividualDAO.class);
+		try {
+			dao.offerDelete(offer_no);
+		} catch (Exception e) {
+		    log.error("Error executing SQL: ", e);
+		}
+		
 	}
 
 

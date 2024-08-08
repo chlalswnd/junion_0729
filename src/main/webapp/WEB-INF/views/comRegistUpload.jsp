@@ -111,15 +111,15 @@
                         <div class="salay">
                             <h5 class="value">급여 </h5>
                             <span>
-                                <select name="notice_pay1" class="pay">
+                                <select name="notice_pay1" class="pay" id="payOption">
                                     <option value="연봉" selected>연봉</option>
                                     <option value="월급">월급</option>
                                     <option value="면접 후 결정">면접 후 결정</option>
                                 </select>
                             </span>
-                            <span class="none">
-                                <input type="number" class="postPay" name="notice_pay2" placeholder="급여를 입력해주세요."> 만원
-                            </span>
+                            <span class="none" id="payInptutId">
+                                <input type="number" class="postPay" name="notice_pay2" placeholder="급여를 입력해주세요." id="payInput"> 만원
+							</span>
                             <div class="lowPay">(2024년 최저시급 9,860원)</div>
                         </div><!--salay-->
 
@@ -439,6 +439,24 @@
 		handleCheckboxChange(careerCheckboxes);
 		handleCheckboxChange(contactCheckboxes); //체크박스 끝
 	});
+
+	// 2024-08-01 하지수
+	// 급여 면접 후 결정 선택 시 notice_pay2 input 창 display none
+	document.getElementById('payOption').addEventListener('change', function() {
+        var payInput = document.getElementById('payInput');
+        var payInptutId = document.getElementById('payInptutId');
+        if (this.value === '면접 후 결정') {
+            // payInput.disabled = true;
+            payInput.value = 0; // 값 0으로 설정
+			payInptutId.style.display = 'none';
+        } else {
+            // payInput.disabled = false;
+            if (payInput.value == 0) { // 값이 0인 경우 초기화
+                payInput.value = '';
+				payInptutId.style.display = 'block';
+            }
+        }
+    });
 
 </script>
 

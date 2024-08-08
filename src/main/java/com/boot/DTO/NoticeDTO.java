@@ -43,6 +43,8 @@ public class NoticeDTO {
 	private String noticeCheck; // 공고열람 여부
 	private int companyRating; // 공고 평점
 	private String resume_num; // 공고열람 여부
+	
+	private int hasRated;
 	// 기업사진 : 이미지업로드 파일 붙어야함
 }
 

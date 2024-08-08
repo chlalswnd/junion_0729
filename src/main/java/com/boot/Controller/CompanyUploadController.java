@@ -98,7 +98,7 @@ public class CompanyUploadController {
 						FileOutputStream thumnail= new FileOutputStream(new File(uploadPath, "s_"+uploadFileName));
 						
 //						썸네일 파일 형식을 100/100 크기로 형성
-						Thumbnailator.createThumbnail(fis, thumnail, 100, 100);
+						Thumbnailator.createThumbnail(fis, thumnail, 1200, 1200);
 						
 						thumnail.close();
 					}

@@ -1,0 +1,66 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.DAO.announcementsTermsDAO">
+    <select id="boardList" resultType="com.boot.DTO.announcementsTermsDTO"> <!-- 리스트 목록 페이지-->
+		SELECT 
+		 substr(login_email, 1, instr(login_email, '@') - 1) AS login_email,
+			board_no,
+			board_title,
+			board_content,
+		 replace(substr(create_date, 6, 5), '-', '.') AS create_date,
+		 term_type
+		FROM 
+		    terms_tb
+		ORDER BY 
+		    board_no DESC;
+    </select>
+    
+
+    <insert id="boardWrite" useGeneratedKeys="true" keyProperty="board_no"> <!-- 글 작성 버튼 -->
+		insert into terms_tb(login_email, board_title, board_content, term_type)
+		select #{login_email},#{board_title},#{board_content},#{term_type}
+
+    </insert>
+				
+    <select id="boardDetailView" resultType="com.boot.DTO.announcementsTermsDTO"> <!-- 글 수정 페이지, 글 상세 페이지 (이 값들 가져와서 글 상세 페이지에도 넣어도 될것같음)-->
+                SELECT 
+            board_no,
+            login_email,
+            board_title,
+            board_content,
+            create_date
+        FROM 
+            terms_tb
+        WHERE 
+            board_no = #{board_no}
+    </select>
+    <select id="boardModifyView" resultType="com.boot.DTO.announcementsTermsDTO"> <!-- 글 수정 페이지, 글 상세 페이지 (이 값들 가져와서 글 상세 페이지에도 넣어도 될것같음)-->
+        select board_no, login_email, board_title, board_content, create_date from terms_tb where board_no=#{board_no}
+    </select>
+
+    <update id="boardModify"> <!-- 글 수정 버튼 -->
+		update terms_tb set login_email=login_email, board_title=#{board_title}, board_content=#{board_content} where board_no=#{board_no}
+    </update>
+    
+    <delete id="boardDelete"> <!-- 글 삭제 버튼-->
+		delete from terms_tb where board_no=#{board_no}
+    </delete>
+    
+
+    
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

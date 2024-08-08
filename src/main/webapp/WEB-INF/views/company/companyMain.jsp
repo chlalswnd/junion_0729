@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>기업-마이페이지-메인</title>
+<title>기업 마이페이지 - 메인</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/default.css">
 <!--<link rel="stylesheet" href="src/main/resources/static/css/style.css">-->
 <!-- import font-awesome, line-awesome -->
@@ -18,6 +18,23 @@
 <!-- import js -->
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <style>
+:root 
+{
+  /* 컬러 모음 */
+  --main-color:#FFA500;
+  --color-black: #111;
+  --color-white: #fff;
+  --color-gray: #787878;
+  --input-gray: #e5e5ec;
+  --button-gray: #f7f7f7;
+  --border-color-gray: #dadada;
+  --font-size32: 32px;
+  --font-size24: 24px;
+  --font-size20: 20px;
+  --font-size16: 16px;
+  --font-size14: 14px;
+  --font-size12: 12px;
+}
 
 /* 드롭다운 메뉴 */
 .dorpdowmMain
@@ -45,7 +62,7 @@
 	width: 160px;
 	background-color: var(--color-white);
 	border-radius: 5px;
-	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	/* box-shadow: 0 2px 5px rgba(0,0,0,0.2); */
 	right: 11px;
 }
 
@@ -92,7 +109,7 @@ main .mainContainer .memberInfo img.memberImg
 
 main .mainContainer .memberInfo .memberName 
 {
-  font-size: var(--main-title-size);
+  font-size: var(--font-size24);
   font-weight: 600;
   margin-right: 15px;
 } 
@@ -102,7 +119,7 @@ main .mainContainer .memberInfo .confirm
   background-color: var(--main-color);
   border-radius: 30px;
   padding: 4px 20px;
-  font-size: var(--button-text-size);
+  font-size: var(--sub-title-size);
   color: var(--color-white);
   margin-right: 12px;
 } 
@@ -123,7 +140,8 @@ main .mainContainer .tabWrap .tabCon
 
 main .mainContainer .tabWrap .tabTitle a
 {
-  font-size: var(--sub-title-size);
+  /* font-size: var(--sub-title-size); */
+  font-size: var(--font-size24);
   font-weight: 600;
   color: var(--color-black);
   margin-right: 12px;
@@ -131,7 +149,8 @@ main .mainContainer .tabWrap .tabTitle a
 
 main .mainContainer .tabWrap .tabNum a  
 {
-  font-size: var(--sub-title-size);
+  /* font-size: var(--sub-title-size); */
+  font-size: var(--font-size24);
   font-weight: 600;
   color: var(--main-color);
 }
@@ -174,7 +193,8 @@ main .mainContainer .cardWrap .cardConWrap .cardCon
 .cardWrap .cardConWrap .cardCon .cardConTop .date,
 .cardWrap .cardConWrap .cardCon .cardConBottom .description 
 {
-  font-size: var(--small-text-size);
+  /* font-size: var(--small-text-size); */
+  font-size: var(--font-size14);
   color: #777;
   font-weight: 300;
 }
@@ -395,7 +415,7 @@ main .subContainer .resume .resumeBody .people .resumeDate
 								<a href="#">마감된 공고</a>
 							</h3>
 							<h3 class="tabNum">
-								<a href="#">0</a>
+								<a href="#" class="endDate">${endNum}</a>
 							</h3>
 						</div>
 					</div><!--memberInfo-->
@@ -533,52 +553,28 @@ main .subContainer .resume .resumeBody .people .resumeDate
 
 
 						<div class="cardConWrap colsePost"><!--마감된 공고-->
-							<div class="cardCon">
-								<div class="cardConTop">
-									<h5 class="type">마감된 공고</h5>
-									<h5 class="date">2024.06.19</h5>
+							<c:forEach var="dtod" items="${endlist}" begin="0" end="3">
+								<div class="cardCon">
+									<a href="jobPostDetail?notice_num=${dtod.notice_num}">
+										<div class="cardConTop">
+											<h5 class="type">마감된 공고</h5>
+											<!-- <h5 class="date">${dtod.notice_endDate}</h5> -->
+											<h5 class="date"></h5>
+										</div>
+										<div class="cardConBottom">
+											<h3 class="title">${dtod.notice_title}</h3>
+											<h5 class="description">${dtod.notice_job} · ${dtod.notice_career}</h5>
+										</div>
+									</a>
 								</div>
-								<div class="cardConBottom">
-									<h3 class="title">Java, 백앤드 포지션 경력무관 모집합니다</h3>
-									<h5 class="description">브레인즈컴퍼니</h5>
-								</div>
-							</div>
-							<div class="cardCon">
-								<div class="cardConTop">
-									<h5 class="type">마감된 공고</h5>
-									<h5 class="date">2024.06.19</h5>
-								</div>
-								<div class="cardConBottom">
-									<h3 class="title">Java, 백앤드 포지션 경력무관 모집합니다</h3>
-									<h5 class="description">브레인즈컴퍼니</h5>
-								</div>
-							</div>
-							<div class="cardCon">
-								<div class="cardConTop">
-									<h5 class="type">마감된 공고</h5>
-									<h5 class="date">2024.06.19</h5>
-								</div>
-								<div class="cardConBottom">
-									<h3 class="title">Java, 백앤드 포지션 경력무관 모집합니다</h3>
-									<h5 class="description">브레인즈컴퍼니</h5>
-								</div>
-							</div>
-							<div class="cardCon">
-								<div class="cardConTop">
-									<h5 class="type">마감된 공고</h5>
-									<h5 class="date">2024.06.19</h5>
-								</div>
-								<div class="cardConBottom">
-									<h3 class="title">Java, 백앤드 포지션 경력무관 모집합니다</h3>
-									<h5 class="description">브레인즈컴퍼니</h5>
-								</div>
-							</div>
+							</c:forEach>
 						</div> <!-- cardConWrap colsePost 끝 -->
 					</div> <!-- cardWrap 끝 -->
 
 					<div class="subContainer">
 						<div class="notice">
-							<a  href="#" class="noticeTitle">공고 작성하러 가기</a>
+							<!-- <a  href="comRegistUpload" class="noticeTitle">공고 작성하러 가기</a> -->
+							<div class="noticeTitle">공고 작성하러 가기</div>
 							<div class="noticeBody">
 								<div class="noticeList">
 									<div class="noticeContent">
@@ -607,7 +603,7 @@ main .subContainer .resume .resumeBody .people .resumeDate
 									</div>
 								</div><!--noticeList-->
 								<div class="noticeList">
-								<button type="button" class="getNotice">새 공고 작성
+								<button type="button" class="getNotice" onclick="location.href='comRegistUpload'">새 공고 작성
 									<i class="fa-solid fa-plus"></i>
 								</button>
 								</div>
@@ -615,7 +611,8 @@ main .subContainer .resume .resumeBody .people .resumeDate
 						</div><!--notice-->
 
 						<div class="resume">
-							<a href="#" class="resumeTitle">인재풀 바로가기</a>
+							<!-- <a href="#" class="resumeTitle">인재풀 바로가기</a> -->
+							<div class="resumeTitle">인재풀 바로가기</div>
 							<div class="resumeBody">
 								<div class="people">
 									<div class="profile">
@@ -743,9 +740,21 @@ main .subContainer .resume .resumeBody .people .resumeDate
     });
 
 
+	var endlist = "${endlist}";
+	console.log(endlist);
+	var end = endlist.split("[");
+	console.log(end);
+
+	console.log("마감된공고 수 테스트!! ->"+'${dtod.notice_endDate}');
+	var endDate = "${dtod.notice_endDate}";
+	if(!endDate){
+		endDate = 0;
+		console.log("마감된공고 수 테스트!! ->"+endDate);
+	}
+	var endDateElement = document.querySelector('.endDate');
+	endDateElement.textContent = endDate;
 
 });
-    
 </script>
 <script>
     // 드롭다운 메뉴 (하지수)

@@ -31,6 +31,7 @@ public class JoinManagementPageServiceImpl implements JoinManagementPageService{
 	public  ArrayList<NoticeDTO> joinManagementPaging(JaewonCriteria cri3, HttpServletRequest request) {
 		log.info("@# JoinManagementPageServiceImpl joinManagementPaging");
 		log.info("@# JoinManagementPageServiceImpl cri3==>"+ cri3);
+		log.info("@# JoinManagementPageServiceImpl cri3==>"+ cri3);
 		
 		// 세션에 이메일 담아서 쓰는 법
 		HttpSession session = request.getSession();		
@@ -83,6 +84,23 @@ public class JoinManagementPageServiceImpl implements JoinManagementPageService{
 		dao.comStar(stardto);
 		
 		
+	}
+
+	// 공고 업데이트
+	@Override
+	public void updateStatus() {
+		joinManagementPageDAO dao = sqlSession.getMapper(joinManagementPageDAO.class);
+		dao.updateStatus();		
+	}
+
+	@Override
+	public int doublecomStarCheck(String user_email, int notice_num) {
+		joinManagementPageDAO dao = sqlSession.getMapper(joinManagementPageDAO.class);
+		// DAO를 사용하여 데이터베이스에서 해당 사용자의 별점 기록을 조회합니다.
+	    int count = dao.doublecomStarCheck(user_email, notice_num);
+
+	    // 만약 조회된 레코드의 수가 0보다 크다면 이미 별점을 준 것이므로 true를 반환
+	    return count;
 	}
 
 	

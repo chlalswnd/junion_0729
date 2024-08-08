@@ -71,5 +71,7 @@
         insert into COM_TB (com_name, com_email, com_pw, com_pw_check,com_serial_number) 
         values(#{com_name},#{com_email},#{com_pw},#{com_pw_check},#{com_serial_number})        
     </insert>
-      
+    
+      <!-- 24.07.24 임하진 : com_stack 테이블에 com_email 값 넣어줌(Join 오류 방지)  -->
+<insert id="joinCompanyStack"> insert into com_stack(com_email) values(#{com_email}) </insert>
 </mapper>

@@ -78,7 +78,7 @@
 		                                <div>
 		                                    <h5 class="r2">
 												<span >
-													<a href="#" onclick="clip(); return false;">
+													<a href="#" onclick="clip(); return false;" class="r1">
 														URL복사
 													</a>
 												</span>

@@ -102,6 +102,20 @@
     <insert id="comStar">    	
         insert into com_star_tb (user_email, com_email,com_star,notice_num) values(#{user_email},#{com_email},#{com_star},#{notice_num})      
     </insert>
+
+	<select id="doublecomStarCheck" resultType="int">
+	    select count(*) from com_star_tb where user_email=#{user_email} AND notice_num=#{notice_num}
+    </select>
+    
+    <update id="updateStatus">
+    	<![CDATA[
+		UPDATE notice_tb SET notice_status = 
+					   	CASE
+                       	WHEN notice_endDate <= NOW() THEN '공고마감'
+                       	ELSE '공고중'
+						END;
+		]]>
+    </update>
         
     
 </mapper>

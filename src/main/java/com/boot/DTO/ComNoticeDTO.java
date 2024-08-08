@@ -35,9 +35,18 @@ public class ComNoticeDTO {
 	private String notice_condition;//자격 요건
 	private String notice_prefer;//우대사항
 	private String notice_benefit;//혜택/복지
+	private String update_date;//혜택/복지
+	
+	private String resume_num;//notice list 불러올때 submit_tb에서 조회해서 가지고 가야되서 DTO에 필드만 넣음(연주0728)
+	private String joincompany_date;//notice list 불러올때 submit_tb에서 조회해서 가지고 가야되서 DTO에 필드만 넣음 (연주0728)
+	
+	
+	private String com_location;//채용공고 상세에 필요한 회사 위치
+	
+	
+	
 	private String resumeNoArr;//지원자 이력서번호 배열
 	
-
 	private String uuid; // uuid
 	private String uploadPath;  // 경로
 	private String fileName; // 파일이름
@@ -51,4 +60,9 @@ public class ComNoticeDTO {
 	private String notice_status; //공고 상태
 	
 	private int noticeDday; //공고 마감 디데이
+	
+	private String com_content;
+	
+	
+	
 }
